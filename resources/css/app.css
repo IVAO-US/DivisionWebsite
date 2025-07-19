@@ -1,0 +1,332 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+@source '../views';
+
+@theme {
+    /* Necessary directive for theme use */
+    --font-sans: 'Poppins', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+        'Segoe UI Symbol', 'Noto Color Emoji';
+}
+
+
+/**
+    The lines above are intact.
+    The lines below were added by maryUI installer.
+*/
+
+/** daisyUI */
+@plugin "daisyui";
+
+/** daisyUI Themes: IVAO - Light; as per https://brand.ivao.aero/ */
+@plugin "daisyui/theme" {
+    name: "ivao";
+    default: true;          /* Set as default */
+    prefersdark: false;     /* Force theme if user has set dark-mode on his system */
+    color-scheme: light;    /* Designator of browser-provided UI */
+
+        /* === IVAO PRIMARY COLORS === */
+        /* Primary Blue: #0D2C99 - Official main color */
+        --color-primary: #0D2C99;
+        --color-primary-content: #FFFFFF;
+        
+        /* Light Blue: #3C55AC - Official secondary blue */
+        --color-secondary: #3C55AC;
+        --color-secondary-content: #FFFFFF;
+        
+        /* Purple: #7C3AED - Refined violet for elegant accent */
+        --color-accent: #7C3AED;
+        --color-accent-content: #FFFFFF;
+        
+        /* Grey: #D7D7DC - Official grey for neutral */
+        --color-neutral: #D7D7DC;
+        --color-neutral-content: #222222;
+
+        /* === IVAO SEMANTIC COLORS === */
+        /* Info Blue: #7EA2D6 - Official info blue */
+        --color-info: #7EA2D6;
+        --color-info-content: #FFFFFF;
+        
+        /* Green: #2EC662 - Official green for success */
+        --color-success: #2EC662;
+        --color-success-content: #FFFFFF;
+        
+        /* Yellow: #F9CC2C - Official yellow for warning */
+        --color-warning: #F9CC2C;
+        --color-warning-content: #222222;
+        
+        /* Red: #E93434 - Official red for error */
+        --color-error: #E93434;
+        --color-error-content: #FFFFFF;
+
+        /* === BACKGROUND COLORS === */
+        /* Main background - White slightly tinted with IVAO blue */
+        --color-base-100: #F8F8F8;  /* Background from your original IVAO CSS */
+        --color-base-200: #F2F2F2;
+        --color-base-300: #D7D7DC;  /* Official IVAO grey */
+        /* Main text - Official IVAO color */
+        --color-base-content: #222222; /* Color from your original IVAO CSS */
+
+        /* border radius */
+        --radius-selector: 0.5rem;
+        --radius-field: 0.25rem;
+        --radius-box: 0.5rem;
+
+        /* base sizes */
+        --size-selector: 0.25rem;
+        --size-field: 0.25rem;
+
+        /* border size */
+        --border: 1px;
+
+        /* effects */
+        --depth: 1;
+        --noise: 0;
+}
+
+/** daisyUI Themes: IVAO - Dark; no guideline provided at https://brand.ivao.aero/ */
+@plugin "daisyui/theme" {
+    name: "ivao-dark";
+    default: false;         /* Set as default */
+    prefersdark: false;     /* Force theme if user has set dark-mode on his system */
+    color-scheme: dark;     /* Designator of browser-provided UI */
+
+        /* === IVAO PRIMARY COLORS (Enhanced for dark mode) === */
+        /* Primary Blue: Enhanced #0D2C99 - Brighter for dark contrast */
+        --color-primary: #4A6BD6;
+        --color-primary-content: #FFFFFF;
+        
+        /* Light Blue: Enhanced #3C55AC - Brighter secondary blue for dark */
+        --color-secondary: #6B7ED6;
+        --color-secondary-content: #FFFFFF;
+        
+        /* Purple: #A855F7 - Brighter refined violet for dark elegance */
+        --color-accent: #A855F7;
+        --color-accent-content: #FFFFFF;
+        
+        /* Grey: Dark mode neutral - Dark grey with blue tint */
+        --color-neutral: #3A3A42;
+        --color-neutral-content: #E5E5E7;
+
+        /* === IVAO SEMANTIC COLORS (Subtle for dark mode harmony) === */
+        /* Info Blue: Subtle #7EA2D6 - Muted info blue for dark elegance */
+        --color-info: #6B8DC7;
+        --color-info-content: #FFFFFF;
+        
+        /* Green: Subtle #2EC662 - Muted success green for dark elegance */
+        --color-success: #2FB357;
+        --color-success-content: #FFFFFF;
+        
+        /* Yellow: Subtle #F9CC2C - Muted warning yellow for dark elegance */
+        --color-warning: #D4A017;
+        --color-warning-content: #1A1A1A;
+        
+        /* Red: Subtle #E93434 - Muted error red for dark elegance */
+        --color-error: #CC2E2E;
+        --color-error-content: #FFFFFF;
+
+        /* === BACKGROUND COLORS (Dark theme optimized) === */
+        /* Main background - Very dark with subtle IVAO blue tint */
+        --color-base-100: #1A1B23;
+        /* Secondary background - Slightly lighter with blue tint */
+        --color-base-200: #22232B;
+        /* Tertiary background - Medium dark with blue tint */
+        --color-base-300: #2D2E36;
+        /* Main text - Light grey with excellent contrast */
+        --color-base-content: #E5E5E7;
+
+        /* border radius */
+        --radius-selector: 0.5rem;
+        --radius-field: 0.25rem;
+        --radius-box: 0.5rem;
+
+        /* base sizes */
+        --size-selector: 0.25rem;
+        --size-field: 0.25rem;
+
+        /* border size */
+        --border: 1px;
+
+        /* effects */
+        --depth: 1;
+        --noise: 0;
+}
+    /** Theme toggle: remember to edit "Theme Toggle" Livewire Component if theme names are changed below */
+    @custom-variant dark (&:where([data-theme=ivao-dark], [data-theme=ivao-dark] *));
+
+
+/** maryUI */
+@source "../../vendor/robsontenorio/mary/src/View/Components/**/*.php";
+
+
+/** Tailwind Scrollbar */
+@plugin 'tailwind-scrollbar' {
+    nocompatible: true;
+    preferredStrategy: 'pseudoelements';
+}
+
+
+/**
+* Paginator - Traditional style
+* Because Laravel defaults does not match well the design of daisyUI.
+*/
+
+.mary-table-pagination span[aria-current="page"] > span {
+    @apply bg-primary text-base-100
+}
+
+.mary-table-pagination button {
+    @apply cursor-pointer
+}
+
+
+/**
+* Theme customization
+* 
+*/
+
+/* IVAO Customisation: load fonts */
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:opsz,wght@6..12,400;6..12,500;6..12,600;6..12,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+@layer base {
+    html {
+        /* IVAO Customisation: content font */
+        --font-sans: 'Poppins', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+        'Segoe UI Symbol', 'Noto Color Emoji';
+        font-family: var(--font-sans);
+        @apply text-base; /* 1rem = 16px as per IVAO Branding */
+		
+		/* Scrollbar requires @plugin 'tailwind-scrollbar': https://adoxography.github.io/tailwind-scrollbar/ */
+        @apply !scrollbar-thumb-rounded-full !scrollbar-track-rounded-full !scroll-smooth;
+    }
+
+    /* IVAO Customisation: header font styles */
+    h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+        font-family: "Nunito Sans", ui-sans-serif, system-ui, sans-serif;
+        font-optical-sizing: auto;
+        font-weight: 600 !important;
+        font-style: normal;
+        font-variation-settings: "wdth" 100, "YTLC" 500;
+        text-align: left;
+        color: var(--color-primary);
+    }
+
+    /* IVAO Customisation: header font sizes */
+    h1, .h1 { font-size: 2.50rem !important; } /* 40px */
+    h2, .h2 { font-size: 2.00rem; } /* 32px */
+    h3, .h3 { font-size: 1.75rem; } /* 28px */
+    h4, .h4 { font-size: 1.50rem; } /* 24px */
+    h5, .h5 { font-size: 1.25rem; } /* 20px */
+    h6, .h6 { font-size: 1.00rem; } /* 16px */
+
+    /* IVAO Customisation: to maintain correct size of headers */
+    span:not(.h1):not(.h2):not(.h3):not(.h4):not(.h5):not(.h6) {
+        font-size: 1rem; /* text-base = 16px */
+    }
+        .h1 span, .h2 span, .h3 span, .h4 span, .h5 span, .h6 span {
+            font-size: inherit !important;
+        }
+
+    /* MaryUI: remove the default padding with drawer */
+    .drawer-content {   
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+    }
+}
+
+@layer components {
+    /* Remove the strange vertical alignment of MaryUI */
+    span.block svg {
+        @apply mb-0.5;
+    }
+	
+    /* IVAO Customisation: Transform all x-header title to h5 */
+    .text-xl {
+        font-family: "Nunito Sans", ui-sans-serif, system-ui, sans-serif;
+        font-optical-sizing: auto;
+        font-weight: 500 !important;
+        font-style: normal;
+        font-variation-settings: "wdth" 100, "YTLC" 500;
+        font-size: 1.25rem !important;
+        text-align: left;
+    }
+
+    .text-sm {
+        font-size: 1.00rem !important; /* 16px for better readability */
+    }
+
+    .fieldset-legend {
+        font-size: 1.00rem !important; /* 16px for better readability */
+    }
+
+    .input {
+        font-size: 1.00rem !important; /* 16px for better readability */
+    }
+
+    .tab {  
+        font-size: 1.00rem !important; /* 16px for better readability */
+    }
+
+    .table {
+        font-size: 1.00rem !important; /* 16px for better readability */
+    }
+        .table :where(th) {
+            font-size: 1.00rem !important; /* 16px for better readability */
+            @apply text-primary;
+        }
+
+    .badge {  
+        font-size: 1.00rem !important; /* 16px for better readability */
+    }
+	
+
+    /* IVAO Customisation: MaryUI Card Titles */
+    div.text-xl.font-bold {
+        font-size: 1.50rem !important;
+        color: var(--color-primary);
+    }
+
+    /* IVAO Customisation: MaryUI Card Subtitles */
+    div.text-base-content\/50.text-sm.mt-1  {
+        color: color-mix(in oklab, var(--color-base-content) 66%, transparent) !important;
+    }
+	
+    /* IVAO Customisation: MaryUI Modal titles */
+    .flex.items-center.text-xl.font-extrabold > span {
+        font-size: 1.25rem !important;
+        @apply text-primary;
+    }
+}
+
+/* Scrollbar requires @plugin 'tailwind-scrollbar': https://adoxography.github.io/tailwind-scrollbar/ */
+:root {
+    /* Scrollbar */
+    scrollbar-color: var(--color-base-content) var(--color-base-300) !important;
+    --scrollbar-thumb: var(--color-base-content) !important;
+    --scrollbar-track: var(--color-base-300) !important;
+
+    /* Livewire */
+    --livewire-progress-bar-color: var(--color-primary) !important;
+}
+
+
+/**
+* Custom utilities
+*
+*/
+
+main {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+
+/**
+* Custom CSS
+*
+*/
