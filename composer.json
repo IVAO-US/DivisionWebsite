@@ -1,8 +1,8 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "josalzi/ivao--echoes--voting-system",
+    "name": "josalzi/ivao-us--mainframe",
     "type": "project",
-    "description": "A Laravel Modern Start fresh project templated to IVAO Branding standards",
+    "description": "IVAO United States Main Website running on Laravel 12",
     "keywords": [
         "laravel",
         "framework"
