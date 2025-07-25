@@ -9,7 +9,7 @@ use App\Models\User;
 use Mary\Traits\Toast;
 
 new 
-#[Layout('components.layouts.app')]
+#[Layout('components.layouts.homepage')]
 #[Title('Welcome')]
 class extends Component {
     use Toast;
@@ -42,13 +42,72 @@ class extends Component {
 }; ?>
 
 <div x-data x-init="$wire.pendingToast()">
-    <x-header title="Welcome!" size="h1" subtitle="Vote for the HQ ATC of the year" class="!mb-5" />
-
-	<x-card title="Who's the next HQ ATC of the year?" subtitle="Vote for the member of your choice" shadow separator>
-		@auth
-			You are logged in!
-		@else
-			Log in to cast your vote!
-		@endauth
-	</x-card>
+    
+    {{-- Hero Section with Video Background --}}
+    <livewire:homepage_components-hero-video />
+    
+    {{-- What We Offer Section --}}
+    <section class="py-16 bg-base-200">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-4xl font-bold text-center mb-12">What we offer</h2>
+                
+                <div class="grid md:grid-cols-2 gap-8">
+                    {{-- ATC Card --}}
+                    <livewire:homepage_components-offer-card
+                        icon="radar"
+                        title="Air Traffic Controllers"
+                        subtitle="Why joining as ATC?"
+                        :reasons="[
+                            'Professional ATC training program',
+                            'Real-world procedures and protocols',
+                            'Active community and mentorship',
+                            'Advanced simulation technology'
+                        ]"
+                        link-text="Get Started"
+                        link-url="#"
+                    />
+                    
+                    {{-- Pilots Card --}}
+                    <livewire:homepage_components-offer-card
+                        icon="plane"
+                        title="Pilots"
+                        subtitle="What makes it so nice to fly on IVAO?"
+                        :reasons="[
+                            'Realistic flight experiences',
+                            'Professional air traffic control',
+                            'Global network of airports',
+                            'Educational flight training'
+                        ]"
+                        link-text="Discover More"
+                        link-url="#"
+                    />
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    {{-- Free Education Section --}}
+    <section class="py-16 bg-base-100">
+        <div class="container mx-auto px-4">
+            <h2 class="text-4xl font-bold text-center mb-12">Free Education</h2>
+            <livewire:homepage_components-offer-card />
+        </div>
+    </section>
+    
+    {{-- Event Schedule Section --}}
+    <section class="py-16 bg-base-300">
+        <div class="container mx-auto px-4">
+            <h2 class="text-4xl font-bold text-center mb-12 text-white">Event Schedule</h2>
+            <livewire:homepage_components-event-schedule />
+        </div>
+    </section>
+    
+    {{-- Tours & VAs Section --}}
+    <section class="py-16 bg-base-200">
+        <div class="container mx-auto px-4">
+            <h2 class="text-4xl font-bold text-center mb-12 text-white">Event Schedule</h2>
+            <livewire:homepage_components-bento-grid />
+        </div>
+    </section>
 </div>

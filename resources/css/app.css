@@ -28,51 +28,54 @@
     prefersdark: false;     /* Force theme if user has set dark-mode on his system */
     color-scheme: light;    /* Designator of browser-provided UI */
 
-        /* === IVAO US PRIMARY COLORS (Refined Modern Palette) === */
-        /* Primary Blue: #1A73E8 - Keeping the modern blue from 2025 */
+        /* === IVAO US AMERICAN COLORS (Red-White-Blue Harmony) === */
+        /* Primary Blue: #1A73E8 - The authoritative blue from 2025 project */
         --color-primary: #1A73E8;
         --color-primary-content: #FFFFFF;
         
-        /* Secondary Blue: Enhanced sophisticated intermediate blue */
-        --color-secondary: #3B82F6;
+        /* Secondary Blue: Refined intermediate between primary and light */
+        --color-secondary: #0152B9;
         --color-secondary-content: #FFFFFF;
         
-        /* Accent: Elegant coral-pink for sophisticated contrast */
-        --color-accent: #EC4899;
+        /* Accent Red: #E63946 - The authentic American red from ChatGPT 2025 */
+        --color-accent: #E63946;
         --color-accent-content: #FFFFFF;
         
-        /* Neutral: Warm sophisticated grey */
+        /* Neutral: Clean American grey */
         --color-neutral: #E5E7EB;
         --color-neutral-content: #374151;
 
-        /* === IVAO US SEMANTIC COLORS (Harmonious Modern Palette) === */
-        /* Info: Sophisticated cyan that harmonizes with blue palette */
-        --color-info: #06B6D4;
+        /* === SEMANTIC COLORS (Extended from Red-White-Blue Palette) === */
+        /* Info: Harmonious cyan that complements the blue palette */
+        --color-info: #0891B2;
         --color-info-content: #FFFFFF;
         
-        /* Success: Modern emerald green for premium feel */
-        --color-success: #10B981;
+        /* Success: Classic American green, refined */
+        --color-success: #059669;
         --color-success-content: #FFFFFF;
         
-        /* Warning: Enhanced amber more refined than original yellow */
-        --color-warning: #F59E0B;
-        --color-warning-content: #1F2937;
+        /* Warning: Golden amber that harmonizes with red-blue */
+        --color-warning: #D97706;
+        --color-warning-content: #FFFFFF;
         
-        /* Error: Modern refined red, less harsh than Bootstrap */
-        --color-error: #EF4444;
+        /* Error: Enhanced version of accent red for consistency */
+        --color-error: #DC2626;
         --color-error-content: #FFFFFF;
 
-        /* === BACKGROUND COLORS (Premium Modern Layering) === */
-        /* Main background - Pure white for modern cleanliness */
+        /* === BACKGROUND COLORS (Clean American Aesthetic) === */
+        /* Main background - Pure patriotic white */
         --color-base-100: #FFFFFF;
-        /* Secondary background - Sophisticated warm grey */
+        /* Secondary background - Subtle warm grey */
         --color-base-200: #F9FAFB;
-        /* Tertiary background - Modern neutral with warmth */
+        /* Tertiary background - Light neutral for depth */
         --color-base-300: #F3F4F6;
-        /* Main text - Rich dark for excellent readability */
+        /* Main text - Strong readable dark */
         --color-base-content: #111827;
 
         /* === REFINED MODERN STYLING === */
+        /* Button outline */
+        --btn-color: #FFFFFF;
+
         /* Border radius - Contemporary premium feel */
         --radius-selector: 0.5rem;   /* 12px - modern sophistication */
         --radius-field: 0.25rem;       /* 8px - refined elegance */
@@ -86,7 +89,7 @@
         --border: 1px;
 
         /* Effects - Enhanced depth for premium feel */
-        --depth: 1;
+        --depth: 0;
         --noise: 0;
 }
 
@@ -97,51 +100,54 @@
     prefersdark: false;      /* Force theme if user has set dark-mode on his system */
     color-scheme: dark;     /* Designator of browser-provided UI */
 
-        /* === IVAO US PRIMARY COLORS (Dark Mode Enhanced Elegance) === */
-        /* Primary Blue: Enhanced luminosity for dark contrast */
+        /* === IVAO US AMERICAN COLORS (Dark Mode Red-White-Blue) === */
+        /* Primary Blue: Enhanced luminosity while keeping American spirit */
         --color-primary: #60A5FA;
         --color-primary-content: #FFFFFF;
         
-        /* Secondary Blue: Sophisticated bright blue for dark mode */
-        --color-secondary: #3B82F6;
+        /* Secondary Blue: Bright American blue for dark contrast */
+        --color-secondary: #0152B9;
         --color-secondary-content: #FFFFFF;
         
-        /* Accent: Enhanced coral-pink with perfect dark mode luminosity */
-        --color-accent: #F472B6;
+        /* Accent Red: Enhanced #E63946 for dark mode visibility */
+        --color-accent: #F87171;
         --color-accent-content: #FFFFFF;
         
-        /* Neutral: Dark sophisticated grey with blue undertone */
+        /* Neutral: Sophisticated dark grey */
         --color-neutral: #374151;
         --color-neutral-content: #D1D5DB;
 
-        /* === IVAO US SEMANTIC COLORS (Dark Mode Harmony) === */
-        /* Info: Enhanced cyan perfect for dark backgrounds */
+        /* === SEMANTIC COLORS (Dark American Palette) === */
+        /* Info: Enhanced cyan that maintains harmony with blues */
         --color-info: #22D3EE;
         --color-info-content: #0F172A;
         
-        /* Success: Enhanced emerald with dark mode optimization */
+        /* Success: Enhanced American green for dark mode */
         --color-success: #34D399;
         --color-success-content: #064E3B;
         
-        /* Warning: Enhanced amber with perfect dark contrast */
+        /* Warning: Enhanced amber maintaining red-blue harmony */
         --color-warning: #FBBF24;
         --color-warning-content: #1F2937;
         
-        /* Error: Enhanced coral red for premium dark feel */
-        --color-error: #F87171;
-        --color-error-content: #1F2937;
+        /* Error: Enhanced red consistent with accent */
+        --color-error: #EF4444;
+        --color-error-content: #FFFFFF;
 
-        /* === BACKGROUND COLORS (Premium Dark Sophistication) === */
-        /* Main background - Rich dark with subtle blue warmth */
+        /* === BACKGROUND COLORS (Dark American Sophistication) === */
+        /* Main background - Deep patriotic dark */
         --color-base-100: #0F172A;
-        /* Secondary background - Sophisticated dark grey-blue */
+        /* Secondary background - American dark blue-grey */
         --color-base-200: #1E293B;
-        /* Tertiary background - Elevated dark surface with depth */
+        /* Tertiary background - Elevated American dark */
         --color-base-300: #334155;
-        /* Main text - Premium light with excellent contrast */
+        /* Main text - Clear patriotic white */
         --color-base-content: #F1F5F9;
 
         /* === REFINED MODERN STYLING (Matching Light Theme) === */
+        /* Button outline */
+        --btn-color: #FFFFFF;
+
         /* Border radius - Contemporary premium feel */
         --radius-selector: 0.5rem;   /* 12px - modern sophistication */
         --radius-field: 0.25rem;       /* 8px - refined elegance */
@@ -155,7 +161,7 @@
         --border: 1px;
 
         /* Effects - Enhanced depth for premium dark experience */
-        --depth: 2;
+        --depth: 0;
         --noise: 0;
 }
     /** Theme toggle: remember to edit "Theme Toggle" Livewire Component if theme names are changed below */
@@ -303,6 +309,107 @@
     .flex.items-center.text-xl.font-extrabold > span {
         font-size: 1.25rem !important;
         @apply text-primary;
+    }
+
+
+
+    /** IVAO US Specific Styling */
+
+    /* Target the actual menu item links/buttons */
+    .menu-horizontal li > *,
+    .menu-horizontal .menu-item {
+        @apply px-6 py-3 text-base font-medium;
+        border: 2px solid transparent !important;
+        border-radius: 0.5rem !important;
+        transition: all 0.2s ease-in-out !important;
+        min-height: 3rem !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        background-color: transparent !important;
+        color: white !important; /* Default white text on blue navbar */
+    }
+    
+    /* Hover state: white border */
+    .menu-horizontal li > *:hover,
+    .menu-horizontal .menu-item:hover {
+        border-color: white !important;
+        background-color: transparent !important;
+        color: white !important;
+    }
+    
+    /* Active state: secondary background with white border - TARGET MARYUI ACTIVE CLASS */
+    .menu-horizontal li > *.active,
+    .menu-horizontal li > *[aria-current="page"],
+    .menu-horizontal li > *.mary-active-menu,
+    .menu-horizontal .menu-item.active,
+    .menu-horizontal .menu-item[aria-current="page"],
+    .menu-horizontal .menu-item.mary-active-menu {
+        background-color: var(--color-secondary) !important;
+        border-color: white !important;
+        color: white !important;
+    }
+    
+    /* Ensure text color remains white for active items */
+    .menu-horizontal li > *.active *,
+    .menu-horizontal li > *[aria-current="page"] *,
+    .menu-horizontal li > *.mary-active-menu *,
+    .menu-horizontal .menu-item.active *,
+    .menu-horizontal .menu-item[aria-current="page"] *,
+    .menu-horizontal .menu-item.mary-active-menu * {
+        color: white !important;
+    }
+    
+    /* Remove default outline styles from MaryUI buttons */
+    .menu-horizontal .btn-outline {
+        border-color: transparent !important;
+        color: white !important;
+    }
+    
+    .menu-horizontal .btn-outline:hover {
+        border-color: white !important;
+        background-color: transparent !important;
+        color: white !important;
+    }
+    
+    /* Override any potential dark text from MaryUI/DaisyUI */
+    .menu-horizontal .btn-outline.mary-active-menu {
+        background-color: var(--color-secondary) !important;
+        border-color: white !important;
+        color: white !important;
+    }
+    
+    /* Mobile menu items styling */
+    .menu-vertical li > *,
+    .menu-vertical .menu-item {
+        @apply px-4 py-3 text-base font-medium;
+        border: 2px solid transparent !important;
+        border-radius: 0.5rem !important;
+        transition: all 0.2s ease-in-out !important;
+        min-height: 3rem !important;
+        margin: 0.25rem 0 !important;
+        background-color: transparent !important;
+        color: white !important;
+    }
+    
+    /* Mobile hover state */
+    .menu-vertical li > *:hover,
+    .menu-vertical .menu-item:hover {
+        border-color: white !important;
+        background-color: rgba(255, 255, 255, 0.1) !important;
+        color: white !important;
+    }
+    
+    /* Mobile active state */
+    .menu-vertical li > *.active,
+    .menu-vertical li > *[aria-current="page"],
+    .menu-vertical li > *.mary-active-menu,
+    .menu-vertical .menu-item.active,
+    .menu-vertical .menu-item[aria-current="page"],
+    .menu-vertical .menu-item.mary-active-menu {
+        background-color: var(--color-secondary) !important;
+        border-color: white !important;
+        color: white !important;
     }
 }
 

@@ -82,7 +82,7 @@ new class extends Component
         <div class="hidden lg:block">
             <x-dropdown right>
                 <x-slot:trigger>
-                    <x-button icon="lucide.user-2" label="{{ $user->first_name }}" iconRight="lucide.chevron-down" class="rounded-lg bg-primary text-primary-content" />
+                    <x-button icon="lucide.user-2" label="{{ $user->first_name }}" class="rounded-lg bg-accent text-accent-content border-accent" />
                 </x-slot:trigger>
 
                 @php echo $this->userMenuItems(); @endphp
@@ -91,7 +91,7 @@ new class extends Component
 
         {{-- Mobile --}}
         <div class="lg:hidden">
-            <x-menu-sub title="{{ $user->first_name }}" icon="lucide.user-2" icon-classes="p-0.5 font-semibold bg-transparent text-primary rounded-xl">
+            <x-menu-sub title="{{ $user->first_name }}" icon="lucide.user-2" icon-classes="p-0.5 font-semibold bg-accent text-accent rounded-xl">
                 @php echo $this->userMenuItems(); @endphp
             </x-menu-sub>
         </div>
@@ -103,7 +103,7 @@ new class extends Component
             <x-button 
                 label="Log in" 
                 icon="lucide.key-round" 
-                class="btn-primary" 
+                class="btn-accent" 
                 wire:click="login" 
                 spinner />
         </div>
@@ -113,7 +113,7 @@ new class extends Component
             <x-menu-item 
                 title="Log in" 
                 icon="lucide.key-round" 
-                class="text-primary" 
+                class="text-accent" 
                 wire:click="login" 
                 spinner />
         </div>

@@ -1,8 +1,6 @@
 <?php
 use Livewire\Volt\Component;
-
 use Illuminate\Support\Facades\Auth;
-
 use function Livewire\Volt\{state};
 
 new class extends Component
@@ -13,17 +11,58 @@ new class extends Component
 ?>
 
 <div class="{{ $this->className }}">
-    <x-menu-item title="Home" icon="lucide.home" link="{{ route('home') }}" exact />
-    <x-menu-item title="Item #1" icon="lucide.area-chart" link="{{ route('users') }}" />
-
-    {{-- Protected menu items --}}
-    @auth
-        <x-menu-item title="Logged #1" icon="lucide.book-open-text" link="{{ route('hello') }}" />
-    @endauth
+    {{-- Main navigation items matching the original design --}}
+    <x-menu-item 
+        title="Home" 
+        link="{{ route('home') }}" 
+        class="btn-outline navbar-item-custom"
+        exact 
+    />
+    
+    <x-menu-item 
+        title="Division" 
+        link="{{ route('users') }}" 
+        class="btn-outline navbar-item-custom"
+    />
+    
+    <x-menu-item 
+        title="Training" 
+        link="{{ route('hello') }}" 
+        class="btn-outline navbar-item-custom"
+    />
+    
+    <x-menu-item 
+        title="Pilots" 
+        link="#" 
+        class="btn-outline navbar-item-custom"
+    />
+    
+    <x-menu-item 
+        title="ATCs" 
+        link="#" 
+        class="btn-outline navbar-item-custom"
+    />
+    
+    <x-menu-item 
+        title="Socials" 
+        link="#" 
+        class="btn-outline navbar-item-custom"
+    />
 
     {{-- User details on mobile --}}
     <div class="lg:hidden">
-        <x-menu-separator />
+        <x-menu-separator class="border-white/20" />
+        
+        {{-- Protected menu items for mobile --}}
+        @auth
+            <x-menu-item 
+                title="Logged #1" 
+                icon="lucide.book-open-text" 
+                link="{{ route('hello') }}" 
+                class="btn-outline navbar-item-custom"
+            />
+        @endauth
+        
         <livewire:app_layout-auth-button />
     </div>
 </div>
