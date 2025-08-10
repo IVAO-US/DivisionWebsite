@@ -233,13 +233,18 @@
     h5, .h5 { font-size: 1.25rem; } /* 20px */
     h6, .h6 { font-size: 1.00rem; } /* 16px */
 
-    /* IVAO Customisation: to maintain correct size of headers */
+    /* IVAO Customisation: navbar font-size */
     span:not(.h1):not(.h2):not(.h3):not(.h4):not(.h5):not(.h6) {
-        font-size: 1rem; /* text-base = 16px */
+        font-size: 1rem;
+    }
+    @media (min-width: 1280px) { /* @screen xl */
+        span:not(.h1):not(.h2):not(.h3):not(.h4):not(.h5):not(.h6) {
+            font-size: 1.125rem;
+        }
     }
         .h1 span, .h2 span, .h3 span, .h4 span, .h5 span, .h6 span {
             font-size: inherit !important;
-        }
+        } 
 
     /* MaryUI: remove the default padding with drawer */
     .drawer-content {   

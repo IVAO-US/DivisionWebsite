@@ -26,7 +26,7 @@ class AppHeadline extends Component
                     <div class="bg-accent">
                         <div class="text-white text-center font-semibold max-w-7xl mx-auto py-3">
                             <div class="flex items-center justify-center gap-2">
-                                <x-icon name="lucide.megaphone" class="w-5 h-5 font-bold" label="Happening now!" />
+                                <x-icon name="lucide.megaphone" class="w-5 h-5 font-bold xl:text-lg" label="Happening now!" />
                                 <span>Online Day is active between 18:00 UTC and 06:00 UTC.</span>
                             </div>
                         </div>
