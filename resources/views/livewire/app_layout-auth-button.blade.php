@@ -26,9 +26,8 @@ new class extends Component
     public function userMenuItems(): string
     {
         $blade = implode("\n", [
-            '<x-menu-item title="Settings" icon="lucide.wrench" :link="$settingsUrl" />',
-            '<x-menu-separator />',
-            '<x-menu-item title="Log out" icon="lucide.power" wire:click="logout" />',
+            '<x-menu-item title="Settings" icon="lucide.wrench" iconClasses="!hidden lg:!block" :link="$settingsUrl" />',
+            '<x-menu-item title="Log out" icon="lucide.power" iconClasses="!hidden lg:!block" wire:click="logout" />',
         ]);
 
         return Blade::render($blade, [
@@ -91,7 +90,7 @@ new class extends Component
 
         {{-- Mobile --}}
         <div class="lg:hidden">
-            <x-menu-sub title="{{ $user->first_name }}" icon="lucide.headset" icon-classes="p-0.5 font-semibold bg-accent text-accent rounded-xl">
+            <x-menu-sub title="{{ $user->first_name }}" icon="lucide.headset" icon-classes="font-semibold text-accent rounded-xl">
                 @php echo $this->userMenuItems(); @endphp
             </x-menu-sub>
         </div>

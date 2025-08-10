@@ -142,39 +142,23 @@ new class extends Component
             </div>
             
             {{-- Mobile: Expandable menu section --}}
-            <div class="lg:hidden">
-                <x-menu-item 
-                    title="{{ $item['title'] }}" 
-                    link="{{ $item['route'] ? route($item['route']) : '#' }}" 
-                    class="btn-outline navbar-item-custom"
-                />
-                
-                {{-- Mobile submenu items with indentation --}}
-                <div class="ml-4 mt-1 border-l-2 border-base-300 pl-3">
+            <div class="lg:hidden">              
+                <x-menu-sub title="{{ $item['title'] }}">
                     @foreach($item['submenus'] as $submenu)
-                        <a href="{{ $submenu['link'] }}" 
-                           class="block py-2 text-sm text-base-content/70 hover:text-base-content transition-colors">
-                            {{ $submenu['title'] }}
-                        </a>
+                        <x-menu-item 
+                            title="{{ $submenu['title'] }}" 
+                            link="{{ $submenu['link'] }}" 
+                            class="text-lg pl-6"
+                        />
                     @endforeach
-                </div>
+                </x-menu-sub>
             </div>
         @endif
     @endforeach
 
     {{-- User details on mobile --}}
     <div class="lg:hidden">
-        <x-menu-separator class="border-white/20" />
-        
-        @auth
-            <x-menu-item 
-                title="Logged #1" 
-                icon="lucide.book-open-text" 
-                link="{{ route('hello') }}" 
-                class="btn-outline navbar-item-custom"
-            />
-        @endauth
-        
+        <x-menu-separator class="!border-white" />        
         <livewire:app_layout-auth-button />
     </div>
 </div>

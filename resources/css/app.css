@@ -390,37 +390,32 @@
         color: white !important;
     }
     
+
     /* Mobile menu items styling */
     .menu-vertical li > *,
     .menu-vertical .menu-item {
-        @apply px-4 py-3 text-base font-medium;
-        border: 2px solid transparent !important;
+        @apply text-base;
+        border: 1px solid transparent !important;
         border-radius: 0.5rem !important;
         transition: all 0.2s ease-in-out !important;
-        min-height: 3rem !important;
+        min-height: 2rem !important;
         margin: 0.25rem 0 !important;
         background-color: transparent !important;
         color: white !important;
     }
-    
-    /* Mobile hover state */
-    .menu-vertical li > *:hover,
-    .menu-vertical .menu-item:hover {
-        border-color: white !important;
-        background-color: rgba(255, 255, 255, 0.1) !important;
-        color: white !important;
+
+    details > ul.mary-hideable > li > a {
+        padding-left: calc(var(--spacing) * 2) !important;
     }
     
-    /* Mobile active state */
-    .menu-vertical li > *.active,
-    .menu-vertical li > *[aria-current="page"],
-    .menu-vertical li > *.mary-active-menu,
-    .menu-vertical .menu-item.active,
-    .menu-vertical .menu-item[aria-current="page"],
-    .menu-vertical .menu-item.mary-active-menu {
-        background-color: var(--color-secondary) !important;
+
+    /* Separators */
+    hr {
         border-color: white !important;
-        color: white !important;
+    }
+
+    .menu :where(li ul):before {
+        visibility: hidden;
     }
 }
 
