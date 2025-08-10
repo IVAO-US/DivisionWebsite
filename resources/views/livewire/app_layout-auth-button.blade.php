@@ -112,6 +112,7 @@ new class extends Component
             <x-menu-item 
                 title="Log in" 
                 icon="lucide.key-round" 
+                icon-classes="font-semibold text-accent rounded-xl"
                 class="text-accent" 
                 wire:click="login" 
                 spinner />
