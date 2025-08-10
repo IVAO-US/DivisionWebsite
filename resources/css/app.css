@@ -334,6 +334,12 @@
         background-color: transparent !important;
         color: white !important; /* Default white text on blue navbar */
     }
+    @media (min-width: 1280px) { /* @screen xl */
+        .menu-horizontal li > *,
+        .menu-horizontal .menu-item {
+            @apply mx-4;
+        }
+    }
     
     /* Hover state: white border */
     .menu-horizontal li > *:hover,

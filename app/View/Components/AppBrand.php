@@ -26,7 +26,7 @@ class AppBrand extends Component
                     <div {{ $attributes->class([]) }}>
                         <div class="flex items-center gap-2 max-h-20">
                             <img src="/assets/img/IVAO-US_white.svg" alt="IVAO US Logo" class="h-18 w-18" />
-                            <h3 class="text-white">IVAO US</h1>
+                            <h3 class="text-white hidden md:block">IVAO US</h1>
                         </div>
                     </div>
                 </a>

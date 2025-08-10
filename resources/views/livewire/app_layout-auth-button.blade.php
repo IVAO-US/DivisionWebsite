@@ -80,7 +80,7 @@ new class extends Component
     @auth
         {{-- Desktop --}}
         <div class="hidden lg:block">
-            <x-dropdown right>
+            <x-dropdown>
                 <x-slot:trigger>
                     <x-button icon="lucide.headset" label="{{ $user->first_name }}" class="rounded-lg bg-accent text-accent-content border-accent" />
                 </x-slot:trigger>

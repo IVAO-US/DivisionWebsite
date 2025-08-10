@@ -16,7 +16,7 @@ new class extends Component
 
 <div>
     {{-- NAVBAR --}}
-    <x-nav full-width class="!px-0 !py-0 !mb-0 lg:!mb-3 !bg-primary !border-b-0">
+    <x-nav full-width class="!px-0 !py-0 !mb-0 lg:!mb-1 !bg-primary !border-b-0">
         <x-slot:brand>
             <div class="w-full h-16 hidden lg:grid grid-cols-3 items-center">
                 
@@ -42,15 +42,19 @@ new class extends Component
 
             {{-- Mobile layout --}}
             <div class="w-full flex justify-between items-center h-16 lg:hidden">
+                {{-- Left section AppBranding --}}
+                <div class="justify-start">
+                    <x-app-brand />
+                </div>
+
                 {{-- Mobile burger button --}}
-                <button wire:click="toggleMenu" class="btn btn-accent btn-soft">
-                    <x-icon name="lucide.menu" />
-                </button>
-                
-                {{-- Mobile actions --}}
-                <div class="flex items-center">
-                    <x-button icon="lucide.wrench" class="btn-white btn-circle btn-outline mr-2" tooltipBottom="Admin Panel" spinner />
-                    <livewire:app_layout-theme-toggle />
+                <div class="justify-end">
+                    {{-- Mobile actions --}}
+                    <div class="flex items-center">
+                        <x-button icon="lucide.menu" wire:click="toggleMenu" class="btn btn-accent mx-2" />
+                        <x-button icon="lucide.wrench" class="btn-white btn-circle btn-outline" tooltipBottom="Admin Panel" spinner />
+                        <livewire:app_layout-theme-toggle />
+                    </div>
                 </div>
             </div>
         </x-slot:brand>
