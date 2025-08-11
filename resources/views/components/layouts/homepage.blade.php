@@ -33,14 +33,12 @@
         {{-- MAIN CONTENT AREA --}}
         <div class="mx-auto flex-1">
             <x-main with-nav full-width class="!p-0">
-                <x-slot:content class="mt-8 mb-20">
-                    
+                <x-slot:content>
                     {{-- Breadcrumbs --}}
                     <livewire:app_layout-breadcrumbs :title="$title" />
 
                     {{-- Page App --}}
                     {{ $slot }}
-
                 </x-slot:content>
             </x-main>
         </div>

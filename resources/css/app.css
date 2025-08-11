@@ -248,8 +248,7 @@
 
     /* MaryUI: remove the default padding with drawer */
     .drawer-content {   
-        padding-top: 0 !important;
-        padding-bottom: 0 !important;
+        padding: 0 !important;
     }
 }
 
