@@ -20,7 +20,7 @@ new class extends Component {
 }; ?>
 
 <div>
-    <section class="hero-section relative w-full h-[calc(100vh-144px)] flex items-center justify-center overflow-hidden">
+    <section class="hero-section relative w-full min-h-[calc(100vh-144px)] flex items-center justify-center overflow-hidden">
         {{-- Video Background --}}
         <div    class="video-wrap absolute inset-0 w-full h-full z-0 bg-cover bg-center bg-no-repeat" 
                 style="background-image: url('{{ $fallbackImagePath }}');">
