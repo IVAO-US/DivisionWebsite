@@ -339,26 +339,25 @@
             @apply mx-4;
         }
     }
-    
-    /* Hover state: white border */
-    .menu-horizontal li > *:hover,
-    .menu-horizontal .menu-item:hover {
-        border-color: white !important;
-        background-color: transparent !important;
-        color: white !important;
-    }
-    
-    /* Active state: secondary background with white border - TARGET MARYUI ACTIVE CLASS */
-    .menu-horizontal li > *.active,
-    .menu-horizontal li > *[aria-current="page"],
-    .menu-horizontal li > *.mary-active-menu,
-    .menu-horizontal .menu-item.active,
-    .menu-horizontal .menu-item[aria-current="page"],
-    .menu-horizontal .menu-item.mary-active-menu {
-        background-color: var(--color-secondary) !important;
-        border-color: white !important;
-        color: white !important;
-    }
+        /* Hover state: white border */
+        .menu-horizontal li > *:hover,
+        .menu-horizontal .menu-item:hover {
+            border-color: white !important;
+            background-color: transparent !important;
+            color: white !important;
+        }
+
+        /* Active state: secondary background with white border - TARGET MARYUI ACTIVE CLASS */
+        .menu-horizontal li > *.active,
+        .menu-horizontal li > *[aria-current="page"],
+        .menu-horizontal li > *.mary-active-menu,
+        .menu-horizontal .menu-item.active,
+        .menu-horizontal .menu-item[aria-current="page"],
+        .menu-horizontal .menu-item.mary-active-menu {
+            background-color: var(--color-secondary) !important;
+            border-color: white !important;
+            color: white !important;
+        }
     
     /* Ensure text color remains white for active items */
     .menu-horizontal li > *.active *,

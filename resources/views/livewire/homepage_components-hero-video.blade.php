@@ -32,43 +32,48 @@ new class extends Component {
         <div class="section-overlay absolute inset-0 bg-black/40 z-10"></div>
 
         {{-- Content Container --}}
-        <div class="relative z-20 w-full max-w-4xl mx-auto px-6 pt-16 md:pt-0 flex flex-col items-center justify-center text-center space-y-2 md:space-y-4 lg:space-y-8">
+        <div class="relative z-20 h-full w-full max-w-4xl mx-auto px-6 flex flex-col items-center justify-between text-center">
             
-            {{-- Logo --}}
-            <div class="logo-container">
-                <object type="image/svg+xml" 
-                        data="{{ $logoPath }}" 
-                        class="homepage-logo w-80 md:w-120 lg:w-160 h-auto mx-auto block">
-                </object>
+            <div class="flex flex-col items-center space-y-6">
+                {{-- Logo --}}
+                <div class="logo-container">
+                    <object type="image/svg+xml" 
+                            data="{{ $logoPath }}" 
+                            class="homepage-logo w-80 md:w-100 lg:w-120 xl:w-160 h-auto mx-auto block">
+                    </object>
+                </div>
+
+                {{-- Title --}}
+                <p class="text-white text-center mb-16 h3 md:text-[2rem] lg:text-[3.50rem] xl:text-[5rem] font-bold leading-tight">
+                    {{ $title }}
+                </p>
             </div>
 
-            {{-- Title --}}
-            <h1 class="text-white text-center mb-16 !h3 md:!h4 lg:!h5 xl:!h6 font-bold leading-tight">
-                {{ $title }}
-            </h1>
+            <div class="flex flex-col items-center space-y-6 mb-16">
+                {{-- Call to Action Button --}}
+                <div class="cta-container">
+                    <x-button 
+                        link="{{ $joinUrl }}"
+                        external
+                        class="btn btn-accent text-white px-4 py-6 md:py-8 mb-4 md:mb-10 font-bold"
+                    >
+                        <span class="text-[1.00rem] md:text-[1.25rem] lg:text-[1.50rem]">Join Today!</span>
+                    </x-button>
+                </div>
 
-            {{-- Call to Action Button --}}
-            <div class="cta-container">
-                <x-button 
-                    label="Join today!" 
-                    link="{{ $joinUrl }}"
-                    external
-                    class="bg-accent text-white px-8 py-4 text-lg font-bold rounded-lg border-none shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-                />
-            </div>
-
-            {{-- Social Links --}}
-            <div class="social-links flex justify-center items-center">
-                <div class="flex flex-wrap gap-4 justify-center">
-                    @foreach($socialLinks as $social)
-                        <a href="{{ $social['url'] }}" 
-                        class="w-12 h-12 bg-white/90 text-primary flex items-center justify-center rounded-full transition-all duration-300 transform hover:scale-110 hover:shadow-lg hover:bg-primary hover:text-white"
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        aria-label="{{ ucfirst($social['platform']) }}">
-                            <x-icon name="{{ $social['icon'] }}" class="w-5 h-5" />
-                        </a>
-                    @endforeach
+                {{-- Social Links --}}
+                <div class="social-links flex justify-center items-center">
+                    <div class="flex flex-wrap gap-4 justify-center">
+                        @foreach($socialLinks as $social)
+                            <a href="{{ $social['url'] }}" 
+                            class="w-12 h-12 bg-white/90 text-primary flex items-center justify-center rounded-full transition-all duration-300 transform hover:scale-110 hover:shadow-lg hover:bg-primary hover:text-white"
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            aria-label="{{ ucfirst($social['platform']) }}">
+                                <x-icon name="{{ $social['icon'] }}" class="w-5 h-5" />
+                            </a>
+                        @endforeach
+                    </div>
                 </div>
             </div>
         </div>
