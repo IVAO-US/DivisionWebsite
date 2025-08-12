@@ -32,7 +32,7 @@ new class extends Component {
         <div class="section-overlay absolute inset-0 bg-black/40 z-10"></div>
 
         {{-- Content Container --}}
-        <div class="relative z-20 h-full w-full max-w-4xl mx-auto px-6 flex flex-col items-center justify-between text-center mb-10 md:mb-0">
+        <div class="relative z-20 h-full w-full max-w-4xl mx-auto px-6 flex flex-col items-center justify-center md:justify-between text-center">
             
             <div class="flex flex-col items-center space-y-6">
                 {{-- Logo --}}
@@ -62,9 +62,10 @@ new class extends Component {
                 </div>
 
                 {{-- Social Links --}}
-                <div class="social-links flex justify-center items-center">
-                    <div class="flex flex-wrap gap-4 justify-center">
-                        @foreach($socialLinks as $social)
+                {{-- Mobile --}}
+                <div class="flex flex-col items-center space-y-3 md:hidden">
+                    <div class="flex gap-4 justify-center">
+                        @foreach(array_slice($socialLinks, 0, 4) as $social)
                             <a href="{{ $social['url'] }}" 
                             class="w-12 h-12 bg-white/90 text-primary flex items-center justify-center rounded-full transition-all duration-300 transform hover:scale-110 hover:shadow-lg hover:bg-primary hover:text-white"
                             target="_blank" 
@@ -74,6 +75,31 @@ new class extends Component {
                             </a>
                         @endforeach
                     </div>
+                    
+                    <div class="flex gap-4 justify-center">
+                        @foreach(array_slice($socialLinks, 4) as $social)
+                            <a href="{{ $social['url'] }}" 
+                            class="w-12 h-12 bg-white/90 text-primary flex items-center justify-center rounded-full transition-all duration-300 transform hover:scale-110 hover:shadow-lg hover:bg-primary hover:text-white"
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            aria-label="{{ ucfirst($social['platform']) }}">
+                                <x-icon name="{{ $social['icon'] }}" class="w-5 h-5" />
+                            </a>
+                        @endforeach
+                    </div>
+                </div>
+                
+                {{-- Desktop --}}
+                <div class="hidden md:flex gap-4 justify-center">
+                    @foreach($socialLinks as $social)
+                        <a href="{{ $social['url'] }}" 
+                        class="w-12 h-12 bg-white/90 text-primary flex items-center justify-center rounded-full transition-all duration-300 transform hover:scale-110 hover:shadow-lg hover:bg-primary hover:text-white"
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        aria-label="{{ ucfirst($social['platform']) }}">
+                            <x-icon name="{{ $social['icon'] }}" class="w-5 h-5" />
+                        </a>
+                    @endforeach
                 </div>
             </div>
         </div>
