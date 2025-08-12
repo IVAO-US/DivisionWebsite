@@ -32,7 +32,7 @@ new class extends Component {
         <div class="section-overlay absolute inset-0 bg-black/40 z-10"></div>
 
         {{-- Content Container --}}
-        <div class="relative z-20 h-full w-full max-w-4xl mx-auto px-6 flex flex-col items-center justify-between text-center">
+        <div class="relative z-20 h-full w-full max-w-4xl mx-auto px-6 flex flex-col items-center justify-between text-center mb-10 md:mb-0">
             
             <div class="flex flex-col items-center space-y-6">
                 {{-- Logo --}}
@@ -44,7 +44,7 @@ new class extends Component {
                 </div>
 
                 {{-- Title --}}
-                <p class="text-white text-center mb-16 h3 md:text-[2rem] lg:text-[3.50rem] xl:text-[5rem] font-bold leading-tight">
+                <p class="text-white text-center mb-16 h3 md:text-[2rem] lg:text-[4.00rem] xl:text-[5rem] font-bold leading-tight">
                     {{ $title }}
                 </p>
             </div>
