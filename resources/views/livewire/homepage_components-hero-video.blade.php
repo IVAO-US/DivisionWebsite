@@ -4,6 +4,7 @@ use Livewire\Volt\Component;
 new class extends Component {
     public string $logoPath = './assets/img/ivao-branding-transparent.svg';
     public string $videoPath = './assets/video/hero-background.mp4';
+    public string $fallbackImagePath = './assets/img/fallback-video-bg.png';
     public string $title = 'United States Division';
     public string $joinUrl = 'https://ivao.aero/members/person/ADJregister3.asp';
     
@@ -21,9 +22,18 @@ new class extends Component {
 <div>
     <section class="hero-section relative w-full h-[calc(100vh-144px)] flex items-center justify-center overflow-hidden">
         {{-- Video Background --}}
-        <div class="video-wrap absolute inset-0 w-full h-full z-0">
-            <video autoplay loop muted playsinline class="custom-video w-full h-full object-cover object-center">
+        <div    class="video-wrap absolute inset-0 w-full h-full z-0 bg-cover bg-center bg-no-repeat" 
+                style="background-image: url('{{ $fallbackImagePath }}');">
+            <video 
+                autoplay 
+                loop 
+                muted 
+                playsinline 
+                webkit-playsinline
+                disablepictureinpicture
+                class="custom-video w-full h-full object-cover object-center">
                 <source src="{{ $videoPath }}" type="video/mp4">
+                <source src="{{ str_replace('.mp4', '.webm', $videoPath) }}" type="video/webm">
                 Your browser does not support the video tag.
             </video>
         </div>
