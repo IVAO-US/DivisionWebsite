@@ -38,7 +38,7 @@ class extends Component {
                 'title' => $pendingToast['title'] ?? 'Notification',
                 'description' => $pendingToast['description'] ?? '',
                 'position' => $pendingToast['position'] ?? 'toast-top toast-end',
-                'icon' => $pendingToast['icon'] ?? 'lucide.info',
+                'icon' => $pendingToast['icon'] ?? 'phosphor.info',
                 'css' => $pendingToast['css'] ?? 'alert-info',
                 'timeout' => $pendingToast['timeout'] ?? 3000,
                 'redirectTo' => $pendingToast['redirectTo'] ?? null
@@ -61,8 +61,8 @@ class extends Component {
     <x-card title="Livewire/Volt Check" subtitle="Your name should be displayed" shadow separator>
         <div class="md:w-96 mx-auto">
             <x-form>
-                <x-input    label="Name"                    icon="lucide.user-2"   wire:model="name"  readonly />
-                <x-input    label="Email"                   icon="lucide.at-sign"  wire:model="email" readonly />
+                <x-input    label="Name"                    icon="phosphor.user"   wire:model="name"  readonly />
+                <x-input    label="Email"                   icon="phosphor.at"  wire:model="email" readonly />
             </x-form>
         </div>
     </x-card>

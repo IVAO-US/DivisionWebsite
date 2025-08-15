@@ -35,7 +35,7 @@ new class extends Component
                 {{-- Right section with actions --}}
                 <div class="flex justify-end items-center">
                     <livewire:app_layout-auth-button />
-                    <x-button icon="lucide.wrench" class="btn-white btn-circle btn-outline ml-2" tooltipBottom="Admin Panel" spinner />
+                    <x-button icon="phosphor.wrench" class="btn-white btn-circle btn-outline ml-2" tooltipBottom="Admin Panel" spinner />
                     <livewire:app_layout-theme-toggle />
                 </div>
             </div>
@@ -51,8 +51,8 @@ new class extends Component
                 <div class="justify-end">
                     {{-- Mobile actions --}}
                     <div class="flex items-center">
-                        <x-button icon="lucide.menu" wire:click="toggleMenu" class="btn btn-accent mx-2" />
-                        <x-button icon="lucide.wrench" class="btn-white btn-circle btn-outline" tooltipBottom="Admin Panel" spinner />
+                        <x-button icon="phosphor.list" wire:click="toggleMenu" class="btn btn-accent mx-2" />
+                        <x-button icon="phosphor.wrench" class="btn-white btn-circle btn-outline" tooltipBottom="Admin Panel" spinner />
                         <livewire:app_layout-theme-toggle />
                     </div>
                 </div>

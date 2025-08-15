@@ -80,7 +80,7 @@ class IvaoController extends Controller
                 'title' => 'Welcome!',
                 'description' => 'You have successfully logged in via IVAO.',
                 'position'      => 'toast-top toast-end', 
-                'icon'          => 'lucide.heart',
+                'icon'          => 'phosphor.heart',
                 'css'          => 'alert-success',
                 'timeout'       => 5000 ,
                 'redirectTo'    => null
@@ -185,7 +185,7 @@ class IvaoController extends Controller
             'title' => 'Authentication Error',
             'description' => $message,
             'position'      => 'toast-top toast-end', 
-            "icon"          => 'lucide.heart-crack',
+            "icon"          => 'phosphor.heart-break',
             "css"           => 'alert-error',
             "timeout"       => 5000,
             'redirectTo'    => null

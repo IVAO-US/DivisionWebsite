@@ -7,16 +7,6 @@ new class extends Component {
     public string $fallbackImagePath = './assets/img/fallback-video-bg.png';
     public string $title = 'United States Division';
     public string $joinUrl = 'https://ivao.aero/members/person/ADJregister3.asp';
-    
-    public array $socialLinks = [
-        ['platform' => 'facebook', 'url' => 'https://www.facebook.com/ivaousa', 'icon' => 'lucide.facebook'],
-        ['platform' => 'instagram', 'url' => 'https://www.instagram.com/ivaousa/', 'icon' => 'lucide.instagram'],
-        ['platform' => 'twitch', 'url' => 'https://www.twitch.tv/ivao_usa', 'icon' => 'lucide.twitch'],
-        ['platform' => 'tiktok', 'url' => 'https://www.tiktok.com/@ivao_usa', 'icon' => 'lucide.video'],
-        ['platform' => 'youtube', 'url' => 'https://www.youtube.com/@IVAO_US', 'icon' => 'lucide.youtube'],
-        ['platform' => 'discord', 'url' => 'https://discord.us.ivao.aero/', 'icon' => 'lucide.message-circle'],
-        ['platform' => 'email', 'url' => 'mailto:us-hq@ivao.aero', 'icon' => 'phosphor.discord-logo-fill']
-    ];
 }; ?>
 
 <div>

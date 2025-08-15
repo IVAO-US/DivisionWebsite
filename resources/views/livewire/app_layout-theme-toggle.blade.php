@@ -20,7 +20,7 @@ new class extends Component
     /* Adjust the toggle icon based on current theme */
     public function getThemeIconProperty(): string
     {
-        return $this->isDarkMode ? 'lucide.moon' : 'lucide.sun';
+        return $this->isDarkMode ? 'phosphor.moon' : 'phosphor.sun';
     }
     
     /* Theme toggler wired with wire:click */

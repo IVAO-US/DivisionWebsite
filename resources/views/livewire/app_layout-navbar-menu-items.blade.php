@@ -109,7 +109,7 @@ new class extends Component
                         exact
                     >
                         <x-slot:actions>
-                            <x-icon name="lucide.chevron-down" class="w-4 h-4 transition-transform duration-200 group-hover:rotate-180" />
+                            <x-icon name="phosphor.caret-down" class="w-4 h-4 transition-transform duration-200 group-hover:rotate-180" />
                         </x-slot:actions>
                     </x-menu-item>
                 @else
@@ -119,7 +119,7 @@ new class extends Component
                         class="btn-outline navbar-item-custom group-hover:bg-primary/10"
                     >
                         <x-slot:actions>
-                            <x-icon name="lucide.chevron-down" class="w-4 h-4 transition-transform duration-200 group-hover:rotate-180" />
+                            <x-icon name="phosphor.caret-down" class="w-4 h-4 transition-transform duration-200 group-hover:rotate-180" />
                         </x-slot:actions>
                     </x-menu-item>
                 @endif

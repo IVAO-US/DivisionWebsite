@@ -20,7 +20,7 @@
         <x-slot:brand> 
             {{-- Brand --}}
             <a href="{{ url()->route('home') }}">
-                <x-icon name="lucide.circle-arrow-left" class="cursor-pointer" label="Home" />
+                <x-icon name="phosphor.arrow-circle-left" class="cursor-pointer" label="Home" />
             </a>
         </x-slot:brand>
     </x-nav>

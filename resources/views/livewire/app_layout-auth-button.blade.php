@@ -26,8 +26,8 @@ new class extends Component
     public function userMenuItems(): string
     {
         $blade = implode("\n", [
-            '<x-menu-item title="Settings" icon="lucide.wrench" iconClasses="!hidden lg:!block" :link="$settingsUrl" />',
-            '<x-menu-item title="Log out" icon="lucide.power" iconClasses="!hidden lg:!block" wire:click="logout" />',
+            '<x-menu-item title="Settings" icon="phosphor.wrench" iconClasses="!hidden lg:!block" :link="$settingsUrl" />',
+            '<x-menu-item title="Log out" icon="phosphor.power" iconClasses="!hidden lg:!block" wire:click="logout" />',
         ]);
 
         return Blade::render($blade, [
@@ -46,7 +46,7 @@ new class extends Component
                 "title"         => 'Error!',
                 "description"   => "Unable to connect to IVAO authentication service.",
                 "position"      => 'toast-top toast-end', 
-                "icon"          => 'lucide.heart-crack',
+                "icon"          => 'phosphor.heart-break',
                 "css"           => 'alert-error',
                 "timeout"       => 5000,
                 "redirectTo"    => null
@@ -66,7 +66,7 @@ new class extends Component
             "title"         => 'Success!',
             "description"   => "You have been logged out.",
             "position"      => 'toast-top toast-end', 
-            "icon"          => 'lucide.door-open',
+            "icon"          => 'phosphor.door-open',
             "css"           => 'alert-success',
             "timeout"       => 5000,
             "redirectTo"    => route('home')
@@ -81,7 +81,7 @@ new class extends Component
         <div class="hidden lg:block">
             <x-dropdown>
                 <x-slot:trigger>
-                    <x-button icon="lucide.headset" label="{{ $user->first_name }}" class="rounded-lg bg-accent text-accent-content border-accent" />
+                    <x-button icon="phosphor.headset" label="{{ $user->first_name }}" class="rounded-lg bg-accent text-accent-content border-accent" />
                 </x-slot:trigger>
 
                 @php echo $this->userMenuItems(); @endphp
@@ -90,7 +90,7 @@ new class extends Component
 
         {{-- Mobile --}}
         <div class="lg:hidden">
-            <x-menu-sub title="{{ $user->first_name }}" icon="lucide.headset" icon-classes="font-semibold text-accent rounded-xl">
+            <x-menu-sub title="{{ $user->first_name }}" icon="phosphor.headset" icon-classes="font-semibold text-accent rounded-xl">
                 @php echo $this->userMenuItems(); @endphp
             </x-menu-sub>
         </div>
@@ -101,7 +101,7 @@ new class extends Component
         <div class="hidden lg:block">
             <x-button 
                 label="Log in" 
-                icon="lucide.key-round" 
+                icon="phosphor.key" 
                 class="btn-accent" 
                 wire:click="login" 
                 spinner />
@@ -111,7 +111,7 @@ new class extends Component
         <div class="lg:hidden">
             <x-menu-item 
                 title="Log in" 
-                icon="lucide.key-round" 
+                icon="phosphor.key" 
                 icon-classes="text-accent"
                 wire:click="login" 
                 spinner />

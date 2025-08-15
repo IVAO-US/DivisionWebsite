@@ -76,7 +76,7 @@ new class extends Component {
 @if($enabled)
 	<x-breadcrumbs 
 		:items="$breadcrumbs"
-		separator="lucide.minus"
+		separator="phosphor.minus"
 		separator-class="text-primary mx-1"
 		class="bg-base-300 p-3 rounded-lg mb-4 font-semibold"
 		icon-class="text-primary"

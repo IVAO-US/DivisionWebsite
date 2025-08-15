@@ -24,7 +24,7 @@ class extends Component {
                 'title' => $pendingToast['title'] ?? 'Notification',
                 'description' => $pendingToast['description'] ?? '',
                 'position' => $pendingToast['position'] ?? 'toast-top toast-end',
-                'icon' => $pendingToast['icon'] ?? 'lucide.info',
+                'icon' => $pendingToast['icon'] ?? 'phosphor.info',
                 'css' => $pendingToast['css'] ?? 'alert-info',
                 'timeout' => $pendingToast['timeout'] ?? 3000,
                 'redirectTo' => $pendingToast['redirectTo'] ?? null
