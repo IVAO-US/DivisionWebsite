@@ -19,7 +19,7 @@ new class extends Component
     // Current application version
     public function version(): string
     {
-        return config('app.version', '1.0.0');
+        return '1.0.0';
     }
 };
 ?>
