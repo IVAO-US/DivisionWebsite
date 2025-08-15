@@ -27,7 +27,7 @@ new class extends Component {
         <div class="row choose-us bg-white rounded-lg p-8 opacity-85">
             
             <div class="col-lg-8 col-12 mx-auto">
-                <h2 class="text-center mb-4 text-3xl font-bold">What we offer</h2>
+                <h2 class="text-center mb-4 text-3xl font-bold">We are now boarding!</h2>
             </div>
 
             {{-- Air Traffic Controllers Card --}}

@@ -66,9 +66,9 @@
         /* Main background - Pure patriotic white */
         --color-base-100: #FFFFFF;
         /* Secondary background - Subtle warm grey */
-        --color-base-200: #F9FAFB;
+        --color-base-200: #E1E1E1;
         /* Tertiary background - Light neutral for depth */
-        --color-base-300: #F3F4F6;
+        --color-base-300: #9E9E9E;
         /* Main text - Strong readable dark */
         --color-base-content: #111827;
 
@@ -102,15 +102,15 @@
 
         /* === IVAO US AMERICAN COLORS (Dark Mode Red-White-Blue) === */
         /* Primary Blue: Enhanced luminosity while keeping American spirit */
-        --color-primary: #60A5FA;
+        --color-primary: #0065E5;
         --color-primary-content: #FFFFFF;
         
         /* Secondary Blue: Bright American blue for dark contrast */
-        --color-secondary: #0152B9;
+        --color-secondary: #60A5FA;
         --color-secondary-content: #FFFFFF;
         
         /* Accent Red: Enhanced #E63946 for dark mode visibility */
-        --color-accent: #F87171;
+        --color-accent: #d82828;
         --color-accent-content: #FFFFFF;
         
         /* Neutral: Sophisticated dark grey */

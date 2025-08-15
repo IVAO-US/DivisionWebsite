@@ -46,8 +46,13 @@ class extends Component {
     {{-- Hero Section with Video Background --}}
     <livewire:homepage_components-hero-video />
     
+    {{-- Event Schedule Section --}}
+    <section class="mx-auto px-5 md:px-15 py-10 bg-base-200">
+        <livewire:homepage_components-division-highlights />
+    </section>
+    
     {{-- What We Offer Section --}}
-    <section class="py-16 bg-base-200">
+    <section class="py-16 bg-base-100">
         <div class="container mx-auto px-4">
             <div class="max-w-4xl mx-auto">
                 <h2 class="text-4xl font-bold text-center mb-12">What we offer</h2>
@@ -92,14 +97,6 @@ class extends Component {
         <div class="container mx-auto px-4">
             <h2 class="text-4xl font-bold text-center mb-12">Free Education</h2>
             <livewire:homepage_components-offer-card />
-        </div>
-    </section>
-    
-    {{-- Event Schedule Section --}}
-    <section class="py-16 bg-base-300">
-        <div class="container mx-auto px-4">
-            <h2 class="text-4xl font-bold text-center mb-12 text-white">Event Schedule</h2>
-            <livewire:homepage_components-event-schedule />
         </div>
     </section>
     

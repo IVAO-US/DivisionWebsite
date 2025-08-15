@@ -37,10 +37,9 @@ new class extends Component {
             <div class="flex flex-col items-center space-y-6">
                 {{-- Logo --}}
                 <div class="logo-container">
-                    <object type="image/svg+xml" 
-                            data="{{ $logoPath }}" 
-                            class="homepage-logo w-80 md:w-100 lg:w-120 xl:w-160 h-auto mx-auto block">
-                    </object>
+                    <img src="{{ $logoPath }}" 
+                         alt="IVAO Logo"
+                         class="w-80 md:w-100 lg:w-120 xl:w-160 h-auto mx-auto block">
                 </div>
 
                 {{-- Title --}}
