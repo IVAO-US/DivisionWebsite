@@ -17,7 +17,7 @@ trait BreadcrumbsTrait
             [
                 'label' => '',
                 'link' => route('home'),
-                'icon' => 'lucide.home',
+                'icon' => 'phosphor.house',
             ]
         ];
         

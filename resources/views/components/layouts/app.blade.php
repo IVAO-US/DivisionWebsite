@@ -19,13 +19,8 @@
     <x-app-headline />
 
     {{-- NAV BAR --}}
-    <div class="w-full bg-base-100">
-        <div class="max-w-7xl mx-auto flex items-center">
-
-            {{-- APP BRANDING --}}
-                {{-- Centering of navbar menu can be achieved by editing the w-XX properties of app branding thereafter --}}
-                <x-app-brand class="w-66 lg:w-44 xl:w-62 2xl:w-66 pl-5 sm:pl-14 lg:pl-10"/>
-
+    <div class="w-full bg-primary sticky top-0 z-40">
+        <div class="mx-auto flex items-center">
             {{-- NAVBAR --}}
             <div class="flex-1">
                 <livewire:app_layout-navbar />
@@ -38,7 +33,7 @@
         {{-- MAIN CONTENT AREA --}}
         <div class="max-w-7xl mx-auto flex-1">
             <x-main with-nav full-width>
-                <x-slot:content class="mt-8 mb-20 px-5 sm:px-15 lg:px-10">
+                <x-slot:content class="mt-8 mb-20 px-5 lg:px-10">
                     
                     {{-- Breadcrumbs --}}
                     <livewire:app_layout-breadcrumbs :title="$title" />

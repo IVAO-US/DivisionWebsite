@@ -23,7 +23,7 @@
  *     :use-grouped="true|false"        // Whether to use optgroup structure (default: false)
  *     label="Select Label"             // Label for the select
  *     placeholder="Select..."          // Placeholder text
- *     icon="lucide.tag"                // Icon to display (uses MaryUI icon naming)
+ *     icon="phosphor.tag"                // Icon to display (uses MaryUI icon naming)
  *     hint="Optional help text"        // Help text displayed below the select
  *     :option-value="'id'"             // Key to use for option values (default: 'id')
  *     :option-label="'name'"           // Key to use for option labels (default: 'name')
@@ -218,7 +218,7 @@ new class extends Component {
                     <x-slot:append>
                         <x-button 
                             label=""
-                            icon="lucide.search"
+                            icon="phosphor.magnifying-glass-light"
                             wire:click="toggleNewOptionInput"
                             class="join-item btn-primary"
                             tooltip-bottom="Search/Add"
@@ -242,7 +242,7 @@ new class extends Component {
                     <x-slot:append>
                         <x-button 
                             label=""
-                            icon="lucide.search"
+                            icon="phosphor.magnifying-glass-light"
                             wire:click="toggleNewOptionInput"
                             class="join-item btn-primary"
                             tooltip-bottom="Search/Add"
@@ -271,7 +271,7 @@ new class extends Component {
                     <x-slot:append>
                         <x-button 
                             label=""
-                            icon="lucide.search"
+                            icon="phosphor.magnifying-glass-light"
                             wire:click="toggleNewOptionInput"
                             class="join-item btn-primary"
                             tooltip-bottom="Search/Add"
@@ -295,7 +295,7 @@ new class extends Component {
                     <x-slot:append>
                         <x-button 
                             label=""
-                            icon="lucide.search"
+                            icon="phosphor.magnifying-glass-light"
                             wire:click="toggleNewOptionInput"
                             class="join-item btn-primary"
                             tooltip-bottom="Search/Add"
@@ -330,8 +330,8 @@ new class extends Component {
                 :maxlength="$maxlength"
             />
             @endif
-            <x-button wire:click="createNewOption" icon="lucide.plus" class="btn-primary btn-sm" />
-            <x-button wire:click="cancel" icon="lucide.x-circle" class="btn-ghost btn-sm" />
+            <x-button wire:click="createNewOption" icon="phosphor.plus" class="btn-primary btn-sm" />
+            <x-button wire:click="cancel" icon="phosphor.x-circle" class="btn-ghost btn-sm" />
         </div>
         @error('newOptionName') 
             <div class="text-error text-sm mt-1">{{ $message }}</div>

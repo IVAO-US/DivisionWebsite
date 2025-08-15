@@ -20,7 +20,7 @@ new class extends Component
     /* Adjust the toggle icon based on current theme */
     public function getThemeIconProperty(): string
     {
-        return $this->isDarkMode ? 'lucide.moon' : 'lucide.sun';
+        return $this->isDarkMode ? 'phosphor.moon' : 'phosphor.sun';
     }
     
     /* Theme toggler wired with wire:click */
@@ -45,6 +45,6 @@ new class extends Component
 ?>
 
 <div>
-    <x-button :icon="$this->themeIcon" wire:click="toggleTheme" wire:loading.class="opacity-50" class="btn-secondary btn-circle btn-outline mx-2" tooltipBottom="Theme" spinner />
+    <x-button :icon="$this->themeIcon" wire:click="toggleTheme" wire:loading.class="opacity-50" class="btn-secondary btn-circle mx-2" tooltipBottom="Theme" spinner />
     <x-theme-toggle lightTheme="{{ $this->lightThemeName }}" darkTheme="{{ $this->darkThemeName }}" class="hidden" />
 </div>

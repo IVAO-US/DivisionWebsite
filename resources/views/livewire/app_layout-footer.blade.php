@@ -19,7 +19,7 @@ new class extends Component
     // Current application version
     public function version(): string
     {
-        return config('app.version', '1.0.0');
+        return '1.0.0';
     }
 };
 ?>
@@ -31,9 +31,9 @@ new class extends Component
             <div class="flex flex-col items-center lg:items-start">
                 <div class="text-sm text-base-content/70 text-center sm:text-left">
                     <div class="flex flex-col sm:flex-row items-center sm:items-baseline sm:space-x-1">
-                        <span>&copy; {{ $this->year() }} <a href="https://www.ivao.aero/" class="font-bold hover:text-primary transition-colors">IVAO</a></span>
+                        <span>&copy; {{ $this->year() }} <a href="https://www.ivao.aero/" class="font-bold hover:text-primary transition-colors">IVAO</a> United States</span>
                         <span class="hidden sm:block">-</span>
-                        <span>Coded by <a class="font-semibold hover:underline" target="_blank" href="https://www.ivao.aero/Login.aspx?r=Member.aspx?Id=200696">Joey Salzmann | 200696</a>.</span>
+                        <span>Coded by <a class="font-semibold hover:underline" target="_blank" href="https://www.ivao.aero/Member.aspx?Id=200696">Joey Salzmann | 200696</a>.</span>
                     </div>
                 </div>
                 <div class="text-xs text-base-content/50 mt-1">
@@ -51,12 +51,7 @@ new class extends Component
                 <span class="hidden lg:inline mx-3 text-base-content/30">|</span>
 
                 <div class="flex gap-4 justify-center w-full lg:w-auto mt-3 lg:mt-0">
-                    <a href="https://www.ivao.aero/Login.aspx?r=Member.aspx?Id=200696" target="_blank" class="hover:text-primary transition-colors" aria-label="Contact">
-                        <x-icon name="lucide.mail" class="w-5 h-5" />
-                    </a>
-                    <a href="https://github.com/josalzi" target="_blank" class="hover:text-primary transition-colors" aria-label="GitHub">
-                        <x-icon name="lucide.github" class="w-5 h-5" />
-                    </a>
+                    <livewire:app_layout-social-links />
                 </div>
             </div>
         </div>

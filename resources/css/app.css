@@ -21,137 +21,147 @@
 /** daisyUI */
 @plugin "daisyui";
 
-/** daisyUI Themes: IVAO - Light; as per https://brand.ivao.aero/ */
+/** daisyUI Themes: IVAO US - Light Refined; Enhanced modern elegance */
 @plugin "daisyui/theme" {
     name: "ivao";
     default: true;          /* Set as default */
     prefersdark: false;     /* Force theme if user has set dark-mode on his system */
     color-scheme: light;    /* Designator of browser-provided UI */
 
-        /* === IVAO PRIMARY COLORS === */
-        /* Primary Blue: #0D2C99 - Official main color */
-        --color-primary: #0D2C99;
+        /* === IVAO US AMERICAN COLORS (Red-White-Blue Harmony) === */
+        /* Primary Blue: #1A73E8 - The authoritative blue from 2025 project */
+        --color-primary: #1A73E8;
         --color-primary-content: #FFFFFF;
         
-        /* Light Blue: #3C55AC - Official secondary blue */
-        --color-secondary: #3C55AC;
+        /* Secondary Blue: Refined intermediate between primary and light */
+        --color-secondary: #0152B9;
         --color-secondary-content: #FFFFFF;
         
-        /* Purple: #7C3AED - Refined violet for elegant accent */
-        --color-accent: #7C3AED;
+        /* Accent Red: #E63946 - The authentic American red from ChatGPT 2025 */
+        --color-accent: #E63946;
         --color-accent-content: #FFFFFF;
         
-        /* Grey: #D7D7DC - Official grey for neutral */
-        --color-neutral: #D7D7DC;
-        --color-neutral-content: #222222;
+        /* Neutral: Clean American grey */
+        --color-neutral: #E5E7EB;
+        --color-neutral-content: #374151;
 
-        /* === IVAO SEMANTIC COLORS === */
-        /* Info Blue: #7EA2D6 - Official info blue */
-        --color-info: #7EA2D6;
+        /* === SEMANTIC COLORS (Extended from Red-White-Blue Palette) === */
+        /* Info: Harmonious cyan that complements the blue palette */
+        --color-info: #0891B2;
         --color-info-content: #FFFFFF;
         
-        /* Green: #2EC662 - Official green for success */
-        --color-success: #2EC662;
+        /* Success: Classic American green, refined */
+        --color-success: #059669;
         --color-success-content: #FFFFFF;
         
-        /* Yellow: #F9CC2C - Official yellow for warning */
-        --color-warning: #F9CC2C;
-        --color-warning-content: #222222;
+        /* Warning: Golden amber that harmonizes with red-blue */
+        --color-warning: #D97706;
+        --color-warning-content: #FFFFFF;
         
-        /* Red: #E93434 - Official red for error */
-        --color-error: #E93434;
+        /* Error: Enhanced version of accent red for consistency */
+        --color-error: #DC2626;
         --color-error-content: #FFFFFF;
 
-        /* === BACKGROUND COLORS === */
-        /* Main background - White slightly tinted with IVAO blue */
-        --color-base-100: #F8F8F8;  /* Background from your original IVAO CSS */
-        --color-base-200: #F2F2F2;
-        --color-base-300: #D7D7DC;  /* Official IVAO grey */
-        /* Main text - Official IVAO color */
-        --color-base-content: #222222; /* Color from your original IVAO CSS */
+        /* === BACKGROUND COLORS (Clean American Aesthetic) === */
+        /* Main background - Pure patriotic white */
+        --color-base-100: #FFFFFF;
+        /* Secondary background - Subtle warm grey */
+        --color-base-200: #F9FAFB;
+        /* Tertiary background - Light neutral for depth */
+        --color-base-300: #F3F4F6;
+        /* Main text - Strong readable dark */
+        --color-base-content: #111827;
 
-        /* border radius */
-        --radius-selector: 0.5rem;
-        --radius-field: 0.25rem;
-        --radius-box: 0.5rem;
+        /* === REFINED MODERN STYLING === */
+        /* Button outline */
+        --btn-color: #FFFFFF;
 
-        /* base sizes */
+        /* Border radius - Contemporary premium feel */
+        --radius-selector: 0.5rem;   /* 12px - modern sophistication */
+        --radius-field: 0.25rem;       /* 8px - refined elegance */
+        --radius-box: 0.5rem;           /* 16px - premium rounded corners */
+
+        /* Base sizes - Enhanced for modern touch targets */
         --size-selector: 0.25rem;
         --size-field: 0.25rem;
 
-        /* border size */
+        /* Border size */
         --border: 1px;
 
-        /* effects */
-        --depth: 1;
+        /* Effects - Enhanced depth for premium feel */
+        --depth: 0;
         --noise: 0;
 }
 
-/** daisyUI Themes: IVAO - Dark; no guideline provided at https://brand.ivao.aero/ */
+/** daisyUI Themes: IVAO US - Dark Refined; Premium dark elegance */
 @plugin "daisyui/theme" {
     name: "ivao-dark";
     default: false;         /* Set as default */
-    prefersdark: false;     /* Force theme if user has set dark-mode on his system */
+    prefersdark: false;      /* Force theme if user has set dark-mode on his system */
     color-scheme: dark;     /* Designator of browser-provided UI */
 
-        /* === IVAO PRIMARY COLORS (Enhanced for dark mode) === */
-        /* Primary Blue: Enhanced #0D2C99 - Brighter for dark contrast */
-        --color-primary: #4A6BD6;
+        /* === IVAO US AMERICAN COLORS (Dark Mode Red-White-Blue) === */
+        /* Primary Blue: Enhanced luminosity while keeping American spirit */
+        --color-primary: #60A5FA;
         --color-primary-content: #FFFFFF;
         
-        /* Light Blue: Enhanced #3C55AC - Brighter secondary blue for dark */
-        --color-secondary: #6B7ED6;
+        /* Secondary Blue: Bright American blue for dark contrast */
+        --color-secondary: #0152B9;
         --color-secondary-content: #FFFFFF;
         
-        /* Purple: #A855F7 - Brighter refined violet for dark elegance */
-        --color-accent: #A855F7;
+        /* Accent Red: Enhanced #E63946 for dark mode visibility */
+        --color-accent: #F87171;
         --color-accent-content: #FFFFFF;
         
-        /* Grey: Dark mode neutral - Dark grey with blue tint */
-        --color-neutral: #3A3A42;
-        --color-neutral-content: #E5E5E7;
+        /* Neutral: Sophisticated dark grey */
+        --color-neutral: #374151;
+        --color-neutral-content: #D1D5DB;
 
-        /* === IVAO SEMANTIC COLORS (Subtle for dark mode harmony) === */
-        /* Info Blue: Subtle #7EA2D6 - Muted info blue for dark elegance */
-        --color-info: #6B8DC7;
-        --color-info-content: #FFFFFF;
+        /* === SEMANTIC COLORS (Dark American Palette) === */
+        /* Info: Enhanced cyan that maintains harmony with blues */
+        --color-info: #22D3EE;
+        --color-info-content: #0F172A;
         
-        /* Green: Subtle #2EC662 - Muted success green for dark elegance */
-        --color-success: #2FB357;
-        --color-success-content: #FFFFFF;
+        /* Success: Enhanced American green for dark mode */
+        --color-success: #34D399;
+        --color-success-content: #064E3B;
         
-        /* Yellow: Subtle #F9CC2C - Muted warning yellow for dark elegance */
-        --color-warning: #D4A017;
-        --color-warning-content: #1A1A1A;
+        /* Warning: Enhanced amber maintaining red-blue harmony */
+        --color-warning: #FBBF24;
+        --color-warning-content: #1F2937;
         
-        /* Red: Subtle #E93434 - Muted error red for dark elegance */
-        --color-error: #CC2E2E;
+        /* Error: Enhanced red consistent with accent */
+        --color-error: #EF4444;
         --color-error-content: #FFFFFF;
 
-        /* === BACKGROUND COLORS (Dark theme optimized) === */
-        /* Main background - Very dark with subtle IVAO blue tint */
-        --color-base-100: #1A1B23;
-        /* Secondary background - Slightly lighter with blue tint */
-        --color-base-200: #22232B;
-        /* Tertiary background - Medium dark with blue tint */
-        --color-base-300: #2D2E36;
-        /* Main text - Light grey with excellent contrast */
-        --color-base-content: #E5E5E7;
+        /* === BACKGROUND COLORS (Dark American Sophistication) === */
+        /* Main background - Deep patriotic dark */
+        --color-base-100: #0F172A;
+        /* Secondary background - American dark blue-grey */
+        --color-base-200: #1E293B;
+        /* Tertiary background - Elevated American dark */
+        --color-base-300: #334155;
+        /* Main text - Clear patriotic white */
+        --color-base-content: #F1F5F9;
 
-        /* border radius */
-        --radius-selector: 0.5rem;
-        --radius-field: 0.25rem;
-        --radius-box: 0.5rem;
+        /* === REFINED MODERN STYLING (Matching Light Theme) === */
+        /* Button outline */
+        --btn-color: #FFFFFF;
 
-        /* base sizes */
+        /* Border radius - Contemporary premium feel */
+        --radius-selector: 0.5rem;   /* 12px - modern sophistication */
+        --radius-field: 0.25rem;       /* 8px - refined elegance */
+        --radius-box: 0.5rem;           /* 16px - premium rounded corners */
+
+        /* Base sizes - Enhanced for modern touch targets */
         --size-selector: 0.25rem;
         --size-field: 0.25rem;
 
-        /* border size */
+        /* Border size */
         --border: 1px;
 
-        /* effects */
-        --depth: 1;
+        /* Effects - Enhanced depth for premium dark experience */
+        --depth: 0;
         --noise: 0;
 }
     /** Theme toggle: remember to edit "Theme Toggle" Livewire Component if theme names are changed below */
@@ -223,18 +233,22 @@
     h5, .h5 { font-size: 1.25rem; } /* 20px */
     h6, .h6 { font-size: 1.00rem; } /* 16px */
 
-    /* IVAO Customisation: to maintain correct size of headers */
+    /* IVAO Customisation: navbar font-size */
     span:not(.h1):not(.h2):not(.h3):not(.h4):not(.h5):not(.h6) {
-        font-size: 1rem; /* text-base = 16px */
+        font-size: 1rem;
+    }
+    @media (min-width: 1280px) { /* @screen xl */
+        span:not(.h1):not(.h2):not(.h3):not(.h4):not(.h5):not(.h6) {
+            font-size: 1.125rem;
+        }
     }
         .h1 span, .h2 span, .h3 span, .h4 span, .h5 span, .h6 span {
             font-size: inherit !important;
-        }
+        } 
 
     /* MaryUI: remove the default padding with drawer */
     .drawer-content {   
-        padding-top: 0 !important;
-        padding-bottom: 0 !important;
+        padding: 0 !important;
     }
 }
 
@@ -299,6 +313,107 @@
     .flex.items-center.text-xl.font-extrabold > span {
         font-size: 1.25rem !important;
         @apply text-primary;
+    }
+
+
+
+    /** IVAO US Specific Styling */
+
+    /* Target the actual menu item links/buttons */
+    .menu-horizontal li > *,
+    .menu-horizontal .menu-item {
+        @apply px-6 py-3 text-base font-medium;
+        border: 2px solid transparent !important;
+        border-radius: 0.5rem !important;
+        transition: all 0.2s ease-in-out !important;
+        min-height: 3rem !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        background-color: transparent !important;
+        color: white !important; /* Default white text on blue navbar */
+    }
+    @media (min-width: 1280px) { /* @screen xl */
+        .menu-horizontal li > *,
+        .menu-horizontal .menu-item {
+            @apply mx-4;
+        }
+    }
+        /* Hover state: white border */
+        .menu-horizontal li > *:hover,
+        .menu-horizontal .menu-item:hover {
+            border-color: white !important;
+            background-color: transparent !important;
+            color: white !important;
+        }
+
+        /* Active state: secondary background with white border - TARGET MARYUI ACTIVE CLASS */
+        .menu-horizontal li > *.active,
+        .menu-horizontal li > *[aria-current="page"],
+        .menu-horizontal li > *.mary-active-menu,
+        .menu-horizontal .menu-item.active,
+        .menu-horizontal .menu-item[aria-current="page"],
+        .menu-horizontal .menu-item.mary-active-menu {
+            background-color: var(--color-secondary) !important;
+            border-color: white !important;
+            color: white !important;
+        }
+    
+    /* Ensure text color remains white for active items */
+    .menu-horizontal li > *.active *,
+    .menu-horizontal li > *[aria-current="page"] *,
+    .menu-horizontal li > *.mary-active-menu *,
+    .menu-horizontal .menu-item.active *,
+    .menu-horizontal .menu-item[aria-current="page"] *,
+    .menu-horizontal .menu-item.mary-active-menu * {
+        color: white !important;
+    }
+    
+    /* Remove default outline styles from MaryUI buttons */
+    .menu-horizontal .btn-outline {
+        border-color: transparent !important;
+        color: white !important;
+    }
+    
+    .menu-horizontal .btn-outline:hover {
+        border-color: white !important;
+        background-color: transparent !important;
+        color: white !important;
+    }
+    
+    /* Override any potential dark text from MaryUI/DaisyUI */
+    .menu-horizontal .btn-outline.mary-active-menu {
+        background-color: var(--color-secondary) !important;
+        border-color: white !important;
+        color: white !important;
+    }
+    
+
+    /* Mobile menu items styling */
+    .menu-vertical li > *,
+    .menu-vertical .menu-item {
+        @apply text-base;
+        border: 1px solid transparent !important;
+        border-radius: 0.5rem !important;
+        transition: all 0.2s ease-in-out !important;
+        min-height: 2rem !important;
+        margin: 0.25rem 0 !important;
+        background-color: transparent !important;
+        color: white !important;
+    }
+
+    details > ul.mary-hideable > li > a {
+        padding-left: calc(var(--spacing) * 2) !important;
+    }
+    
+
+    /* Separators */
+    hr {
+        border-color: white !important;
+    }
+
+    .menu :where(li ul):before {
+        visibility: hidden;
     }
 }
 
