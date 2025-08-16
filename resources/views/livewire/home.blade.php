@@ -46,11 +46,6 @@ class extends Component {
     {{-- Hero Section with Video Background --}}
     <livewire:homepage_components-hero-video />
     
-    {{-- Event Schedule Section --}}
-    <section class="mx-auto px-5 md:px-15 py-10 bg-base-200">
-        <livewire:homepage_components-division-highlights />
-    </section>
-    
     {{-- What We Offer Section --}}
     <section class="py-16 bg-base-100">
         <div class="container mx-auto px-4">
@@ -92,19 +87,24 @@ class extends Component {
         </div>
     </section>
     
+    {{-- Division Highlights Section --}}
+    <section class="mx-auto px-5 md:px-15 py-20 bg-base-200">
+        <livewire:homepage_components-division-highlights />
+    </section>
+    
+    {{-- Tours & VAs Section --}}
+    <section class="py-16 bg-base-300">
+        <div class="container mx-auto px-4">
+            <h2 class="text-4xl font-bold text-center mb-12 text-white">Event Schedule</h2>
+            <livewire:homepage_components-bento-grid />
+        </div>
+    </section>
+    
     {{-- Free Education Section --}}
     <section class="py-16 bg-base-100">
         <div class="container mx-auto px-4">
             <h2 class="text-4xl font-bold text-center mb-12">Free Education</h2>
             <livewire:homepage_components-offer-card />
-        </div>
-    </section>
-    
-    {{-- Tours & VAs Section --}}
-    <section class="py-16 bg-base-200">
-        <div class="container mx-auto px-4">
-            <h2 class="text-4xl font-bold text-center mb-12 text-white">Event Schedule</h2>
-            <livewire:homepage_components-bento-grid />
         </div>
     </section>
 </div>

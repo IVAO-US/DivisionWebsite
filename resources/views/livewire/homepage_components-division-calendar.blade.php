@@ -18,15 +18,15 @@ new class extends Component {
     // Event type colors - scalable system
     public array $eventTypeColors = [
         'event' => [
-            'badge' => 'bg-primary text-primary-content',
-            'card' => 'bg-primary text-primary-content',
-            'dot' => 'bg-primary',
-            'icon' => 'phosphor.calendar-check'
+            'badge' => 'bg-success text-success-content',
+            'card' => 'bg-success text-success-content',
+            'dot' => 'bg-success',
+            'icon' => 'phosphor.star'
         ],
         'exam' => [
-            'badge' => 'bg-warning text-warning-content',
-            'card' => 'bg-warning text-warning-content',
-            'dot' => 'bg-warning',
+            'badge' => 'bg-error text-error-content',
+            'card' => 'bg-error text-error-content',
+            'dot' => 'bg-error',
             'icon' => 'phosphor.graduation-cap'
         ],
         'training' => [
@@ -52,6 +52,20 @@ new class extends Component {
         // Sample events - in a real application, this would come from a database
         $this->events = [
             '2025-08-15' => [
+                [
+                    'title' => 'Morning Briefing',
+                    'time' => '08:00 UTC',
+                    'location' => 'Main Hall',
+                    'type' => 'training',
+                    'description' => 'Daily operational briefing for all controllers'
+                ],
+                [
+                    'title' => 'Equipment Check',
+                    'time' => '10:30 UTC',
+                    'location' => 'Control Tower',
+                    'type' => 'event',
+                    'description' => 'Monthly equipment maintenance and verification'
+                ],
                 [
                     'title' => 'Morning Briefing',
                     'time' => '08:00 UTC',
@@ -238,7 +252,7 @@ new class extends Component {
             <div class="grid grid-cols-7 gap-1 flex-1 grid-rows-6">
                 @foreach($this->getCalendarDays() as $week)
                     @foreach($week as $day)
-                        <div class="relative min-h-18 h-fit border border-base-200 rounded-md p-2 transition-all duration-200 cursor-pointer
+                        <div class="relative min-h-18 h-full border border-base-200 rounded-md p-2 transition-all duration-200 cursor-pointer
                             {{ $day['isSelected'] ? 'bg-accent/30 ring-2 ring-accent' : 'hover:bg-base-200' }}"
                             @if($day['number']) wire:click="selectDate({{ $day['number'] }})" @endif>
                             
@@ -274,7 +288,7 @@ new class extends Component {
         
         {{-- Selected Day Events Details --}}
         <div class="mt-6 mb-4">
-            <h5 class="text-md font-semibold mb-3 text-base-content">
+            <h5 class="w-full text-md font-semibold mb-3 text-base-content text-center lg:text-left">
                 Events for {{ \Carbon\Carbon::parse($selectedDate)->format('F j, Y') }}
             </h5>
             
@@ -284,7 +298,7 @@ new class extends Component {
                         <x-card class="p-4 {{ $this->getEventTypeClass($event['type']) }}">
                             <div class="flex items-center gap-2 mb-2">
                                 <x-icon name="{{ $this->eventTypeColors[$event['type']]['icon'] ?? 'phosphor.calendar' }}" class="w-4 h-4" />
-                                <h6 class="font-semibold text-sm">{{ $event['title'] }}</h6>
+                                <h6 class="!text-white font-semibold text-sm">{{ $event['title'] }}</h6>
                             </div>
                             
                             <div class="space-y-1 text-xs opacity-90">
