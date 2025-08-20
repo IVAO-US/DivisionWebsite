@@ -73,13 +73,6 @@ new class extends Component {
                     'type' => 'training',
                     'description' => 'Daily operational briefing for all controllers'
                 ],
-                [
-                    'title' => 'Equipment Check',
-                    'time' => '10:30 UTC',
-                    'location' => 'Control Tower',
-                    'type' => 'event',
-                    'description' => 'Monthly equipment maintenance and verification'
-                ]
             ],
             '2025-08-24' => [
                 [

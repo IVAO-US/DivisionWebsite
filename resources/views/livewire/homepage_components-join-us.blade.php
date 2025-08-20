@@ -34,7 +34,7 @@ new class extends Component {
                         <div class="flex justify-center items-center mb-4">
                             <x-icon name="phosphor.radio" class="w-12 h-12 text-accent" />
                         </div>
-                        <h3 class="w-full text-center text-2xl font-bold text-base-content mb-2">Air Traffic Controllers</h3>
+                        <h3 class="w-full text-center text-2xl font-bold text-primary mb-2">Air Traffic Controllers</h3>
                         <p class="text-base-content font-medium">Why joining as ATC?</p>
                     </div>
                     
@@ -71,7 +71,7 @@ new class extends Component {
                         <div class="flex justify-center items-center mb-4">
                             <x-icon name="phosphor.paper-plane-tilt" class="w-12 h-12 text-accent" />
                         </div>
-                        <h3 class="w-full text-center text-2xl font-bold text-base-content mb-2">Pilots</h3>
+                        <h3 class="w-full text-center text-2xl font-bold text-primary mb-2">Pilots</h3>
                         <p class="text-base-content font-medium">What makes it so nice to fly on IVAO?</p>
                     </div>
                     
