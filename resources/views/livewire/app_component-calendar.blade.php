@@ -8,6 +8,7 @@ new class extends Component {
     public bool $compact = false;
     public bool $showLegend = true;
     public bool $showEventDetails = true;
+    public bool $useTodayBtn = false;
     
     // Internal state
     public array $currentDate;
@@ -189,6 +190,18 @@ new class extends Component {
     {
         return $this->eventTypeColors[$type]['icon'] ?? $this->defaultEventTypeColors['default']['icon'];
     }
+
+    private function todayButton(): string 
+    {
+        return '<x-button 
+                    wire:click="goToToday" 
+                    icon="phosphor.calendar-check"
+                    class="btn-xs btn-outline"
+                    title="Go to Today"
+                >
+                    Today
+                </x-button>';
+    }
 }; ?>
 
 <x-card class="w-full h-full flex flex-col {{ $compact ? 'max-h-96' : '' }}">
@@ -204,14 +217,10 @@ new class extends Component {
         <div class="flex items-center gap-3">
             <h4 class="text-lg font-bold text-center">{{ $this->getCurrentMonthName() }}</h4>
             
-            <x-button 
-                wire:click="goToToday" 
-                icon="phosphor.calendar-check"
-                class="btn-xs btn-outline"
-                title="Go to Today"
-            >
-                Today
-            </x-button>
+
+            @if ($useTodayBtn)
+                {{ todayButton() }}
+            @endif
         </div>
         
         <x-button 
