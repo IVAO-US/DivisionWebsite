@@ -43,7 +43,7 @@ new class extends Component {
             <h3 class="!text-center font-bold text-primary !mb-5">Division Highlights</h3>
             <x-tabs wire:model="activeTab" label-div-class="bg-white rounded-lg w-fit p-2 mx-auto" class="w-full">
                 <x-tab name="calendar" label="Calendar" icon="phosphor.calendar">
-                    <livewire:homepage_components-division-calendar :compact="true" wire:key="mobile-calendar" />
+                    <livewire:homepage_components-division-calendar :display-weekly="true" use-today-btn="false" wire:key="mobile-calendar" />
                 </x-tab>
 
                 <x-tab name="events" label="Events" icon="phosphor.calendar-star">
@@ -72,7 +72,7 @@ new class extends Component {
             <div class="lg:col-span-2">
                 <x-card title="Division Calendar" subtitle="Scheduled Events & Training Sessions" class="h-full shadow-lg">                    
                     <div class="flex-1">
-                        <livewire:homepage_components-division-calendar :compact="false" wire:key="desktop-calendar" />
+                        <livewire:homepage_components-division-calendar :display-weekly="false" use-today-btn="false" wire:key="desktop-calendar" />
                     </div>
                 </x-card>
             </div>

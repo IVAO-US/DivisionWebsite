@@ -3,15 +3,15 @@ use Livewire\Volt\Component;
 
 new class extends Component {
     // Configuration props
-    public bool $compact = false;
+    public bool $displayWeekly = false;
     
     // Data initialization
     public array $events;
     public array $eventTypeColors;
     
-    public function mount(bool $compact = false): void
+    public function mount(bool $displayWeekly = false): void
     {
-        $this->compact = $compact;
+        $this->displayWeekly = $displayWeekly;
         
         // Initialize division-specific event type colors
         $this->eventTypeColors = [
@@ -151,9 +151,8 @@ new class extends Component {
     <livewire:app_component-calendar 
         :events="$events"
         :event-type-colors="$eventTypeColors"
-        :compact="$compact"
+        :display-weekly="$displayWeekly"
         :show-legend="true"
-        :show-event-details="!$compact"
         wire:on.date-selected="handleDateSelected"
         wire:on.month-changed="handleMonthChanged"
     />
