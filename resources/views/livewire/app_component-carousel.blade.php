@@ -130,11 +130,11 @@ new class extends Component {
             
             {{-- Image --}}
             @if(isset($item[$imageKey]))
-                <div class="flex-shrink-0">
+                <div class="flex-shrink-0 mx-auto lg:mx-0">
                     <img src="{{ $item[$imageKey] }}" 
                          alt="{{ $item[$titleKey] ?? 'Carousel item' }}"
                          style="{{ $this->getImageStyles() }}"
-                         class="object-cover transition-transform duration-700 ease-out w-full rounded-lg" />
+                         class="object-cover transition-transform duration-700 ease-out rounded-lg !w-full lg:w-auto" />
                 </div>
             @endif
             

@@ -101,27 +101,27 @@ new class extends Component {
 <div class="w-full">
     {{-- Mobile Tabs (below lg) --}}
     <div class="lg:hidden">
-        <h3 class="!text-center font-bold text-secondary mb-10">Flight Operations</h3>
-        <x-tabs wire:model="activeTab" class="w-full">
-            <x-tab name="tours" label="Tours" icon="phosphor.airplane-takeoff">
-                <x-card title="Tours" subtitle="Discover Amazing Flight Routes" shadow separator class="flex flex-col h-full">
-                    <div class="flex-1">
-                        {{-- Bento Grid for Tours --}}
-                        <livewire:app_component-bento-grid :images="$this->getToursData()" wire:key="mobile-tours" />
-                    </div>
+        <x-card class="shadow-lg">
+            <h3 class="!text-center font-bold text-primary !mb-5">Flight Operations</h3>
+            <x-tabs wire:model="activeTab" class="w-full" label-div-class="bg-white rounded-lg w-fit p-2 mx-auto">
+                <x-tab name="tours" label="Tours" icon="phosphor.airplane-takeoff">
+                    <x-card class="flex flex-col h-full">
+                        <div class="flex-1">
+                            {{-- Bento Grid for Tours --}}
+                            <livewire:app_component-bento-grid :images="$this->getToursData()" setup-id="5B9B48E8344A" wire:key="mobile-tours" />
+                        </div>
 
-                    {{-- Call to Action - Pushed to bottom --}}
-                    <div class="text-center mt-auto pt-4">
-                        <x-button class="btn btn-accent btn-lg" link="{{ $toursRepo }}" external>
-                            <x-icon name="phosphor.airplane-takeoff" class="w-5 h-5" />
-                            View All Tours
-                        </x-button>
-                    </div>
-                </x-card>
-            </x-tab>
+                        {{-- Call to Action - Pushed to bottom --}}
+                        <div class="text-center mt-auto pt-10">
+                            <x-button class="btn btn-accent btn-lg" link="{{ $toursRepo }}" external>
+                                <x-icon name="phosphor.airplane-takeoff" class="w-5 h-5" />
+                                View All Tours
+                            </x-button>
+                        </div>
+                    </x-card>
+                </x-tab>
 
-            <x-tab name="virtual-airlines" label="Virtual Airlines" icon="phosphor.buildings">
-                <x-card title="Virtual Airlines" subtitle="Certified Partners" shadow separator>
+                <x-tab name="virtual-airlines" label="VAs" icon="phosphor.buildings">
                     {{-- Virtual Airlines Carousel --}}
                     <livewire:app_component-carousel 
                         :items="$certifiedVAs"
@@ -139,9 +139,9 @@ new class extends Component {
                         image-width="45vw"
                         :shuffle="true"
                     />
-                </x-card>
-            </x-tab>
-        </x-tabs>
+                </x-tab>
+            </x-tabs>
+        </x-card>
     </div>
 
     {{-- Desktop Layout (lg and above) --}}

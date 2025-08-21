@@ -56,7 +56,7 @@ class extends Component {
     
     {{-- Tours & VAs Section --}}
     <section 
-        class="mx-auto px-5 md:px-15 py-20 bg-base-100"
+        class="mx-auto px-5 md:px-15 py-20 bg-base-300"
         style=" background-image: url('/assets/img/flightdeck-777.png');
                 background-size: cover;
                 background-position: center center;
@@ -66,10 +66,10 @@ class extends Component {
     </section>
     
     {{-- Free Education Section --}}
-    <section class="py-16 bg-base-200">
+    <section class="py-16 bg-base-100">
         <div class="container mx-auto px-4">
             <h2 class="text-4xl font-bold text-center mb-12">Free Education</h2>
-            <livewire:homepage_components-offer-card />
+            <livewire:homepage_components-training />
         </div>
     </section>
 </div>

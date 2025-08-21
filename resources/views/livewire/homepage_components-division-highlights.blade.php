@@ -40,11 +40,8 @@ new class extends Component {
     {{-- Mobile Tabs (below lg) --}}
     <div class="lg:hidden">
         <x-card class="shadow-lg">
-            <x-slot:menu>
-                <h3 class="text-center font-bold text-secondary mb-6">Division Highlights</h3>
-            </x-slot:menu>
-            
-            <x-tabs wire:model="activeTab" class="w-full">
+            <h3 class="!text-center font-bold text-primary !mb-5">Division Highlights</h3>
+            <x-tabs wire:model="activeTab" label-div-class="bg-white rounded-lg w-fit p-2 mx-auto" class="w-full">
                 <x-tab name="calendar" label="Calendar" icon="phosphor.calendar">
                     <livewire:homepage_components-division-calendar :compact="true" wire:key="mobile-calendar" />
                 </x-tab>

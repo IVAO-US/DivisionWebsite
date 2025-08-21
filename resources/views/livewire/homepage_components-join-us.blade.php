@@ -23,11 +23,11 @@ new class extends Component {
     <div class="container mx-auto px-4 relative z-10 w-full">
         
         {{-- Cards Grid --}}
-        <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-8 w-full">
+        <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-8 w-full h-fit">
             
             {{-- Air Traffic Controllers Card --}}
             <div class="relative">
-                <div class="bg-base-100 backdrop-blur-sm rounded-lg p-8 border-4 border-dashed border-gray-400 hover:border-primary transition-all duration-300 hover:shadow-2xl transform hover:-translate-y-1">
+                <div class="bg-base-100 backdrop-blur-sm rounded-lg p-8 border-4 border-dashed border-gray-400 hover:border-primary transition-all duration-300 hover:shadow-2xl transform hover:-translate-y-1 h-full">
                     
                     {{-- Card Header --}}
                     <div class="text-center mb-6">
@@ -64,7 +64,7 @@ new class extends Component {
             
             {{-- Pilots Card --}}
             <div class="relative">
-                <div class="bg-base-100 backdrop-blur-sm rounded-lg p-8 border-4 border-dashed border-gray-400 hover:border-primary transition-all duration-300 hover:shadow-2xl transform hover:-translate-y-1">
+                <div class="bg-base-100 backdrop-blur-sm rounded-lg p-8 border-4 border-dashed border-gray-400 hover:border-primary transition-all duration-300 hover:shadow-2xl transform hover:-translate-y-1 h-full">
                     
                     {{-- Card Header --}}
                     <div class="text-center mb-6">
