@@ -14,9 +14,9 @@ new class extends Component {
     public int $autoAdvanceInterval = 4; // seconds
     public int $interactionDelay = 6; // seconds before auto-advance resumes
     
-    // New image dimension properties
-    public string $imageHeight = '30vh';
-    public string $imageWidth = '45vw';
+    // New banner configuration - aspect ratio based
+    public string $bannerAspectRatio = 'aspect-[16/9]'; // Banner format, can be: aspect-[16/9], aspect-[21/9], aspect-[3/1]
+    public string $bannerHeight = 'h-30 md:h-48 lg:h-26 xl:h-40'; // Responsive height as fallback
     
     // New shuffle property
     public bool $shuffle = false;
@@ -110,11 +110,11 @@ new class extends Component {
     }
     
     /**
-     * Get dynamic image styles based on configured dimensions
+     * Get banner container classes for consistent responsive display
      */
-    public function getImageStyles(): string
+    public function getBannerClasses(): string
     {
-        return "width: {$this->imageWidth}; height: {$this->imageHeight};";
+        return "w-full {$this->bannerAspectRatio} {$this->bannerHeight} relative overflow-hidden rounded-lg";
     }
 }; ?>
 
@@ -128,48 +128,53 @@ new class extends Component {
         @if(!empty($items) && isset($items[$currentIndex]))
             @php $item = $items[$currentIndex]; @endphp
             
-            {{-- Image --}}
+            {{-- Banner Image Container --}}
             @if(isset($item[$imageKey]))
-                <div class="flex-shrink-0 mx-auto lg:mx-0">
-                    <img src="{{ $item[$imageKey] }}" 
-                         alt="{{ $item[$titleKey] ?? 'Carousel item' }}"
-                         style="{{ $this->getImageStyles() }}"
-                         class="object-cover transition-transform duration-700 ease-out rounded-lg !w-full lg:w-auto" />
+                <div class="flex-shrink-0 w-full">
+                    <div class="{{ $this->getBannerClasses() }}">
+                        <img src="{{ $item[$imageKey] }}" 
+                             alt="{{ $item[$titleKey] ?? 'Carousel item' }}"
+                             class="absolute inset-0 w-full h-full object-cover transition-all duration-700 ease-out transform hover:scale-105" 
+                             loading="lazy" />
+                        
+                        {{-- Optional overlay gradient for better text readability if needed --}}
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
+                    </div>
                 </div>
             @endif
             
-            {{-- Content --}}
-            <div class="flex-1 w-full py-4 relative bg-base-100 flex flex-col">
-                <div class="transition-all duration-500 delay-200 transform flex-1">
+            {{-- Content Section --}}
+            <div class="flex-1 w-full py-6 px-4 relative bg-base-100 flex flex-col">
+                <div class="transition-all duration-500 delay-200 transform flex-1 max-w-4xl mx-auto w-full">
                     {{-- Title --}}
                     @if(isset($item[$titleKey]))
-                        <h4 class="text-xl font-bold mb-3 text-primary transition-all duration-300">
+                        <h4 class="text-xl md:text-2xl lg:text-3xl font-bold mb-3 text-primary transition-all duration-300 text-center lg:text-left">
                             {{ $item[$titleKey] }}
                         </h4>
                     @endif
                     
                     {{-- Subtitle --}}
                     @if(isset($item[$subtitleKey]))
-                        <p class="text-base text-accent font-medium mb-4 transition-all duration-300 delay-100">
+                        <p class="text-base md:text-lg text-accent font-medium mb-4 transition-all duration-300 delay-100 text-center lg:text-left">
                             {{ $item[$subtitleKey] }}
                         </p>
                     @endif
                     
                     {{-- Description --}}
                     @if(isset($item[$descriptionKey]))
-                        <p class="text-sm text-base-content/80 mb-6 line-clamp-3 leading-relaxed transition-all duration-300 delay-150">
+                        <p class="text-sm md:text-base text-base-content/80 mb-6 leading-relaxed transition-all duration-300 delay-150 text-center lg:text-left max-w-2xl mx-auto lg:mx-0">
                             {{ $item[$descriptionKey] }}
                         </p>
                     @endif
                     
                     {{-- Link Button - pushed to bottom of content --}}
                     @if(isset($item[$linkKey]))
-                        <div class="mt-auto text-center">
+                        <div class="mt-auto pt-4 text-center">
                             <x-button 
                                 label="{{ $linkLabel }}" 
                                 link="{{ $item[$linkKey] }}"
                                 icon="{{ $linkIcon }}"
-                                class="btn-primary btn-sm transition-all duration-300 hover:scale-105 hover:-translate-y-0.5 hover:shadow-lg"
+                                class="btn-primary btn-sm md:btn-md transition-all duration-300"
                                 external
                             />
                         </div>
@@ -181,28 +186,29 @@ new class extends Component {
 
     {{-- Navigation Controls - Always at bottom --}}
     @if(count($items) > 1)
-        <div class="w-full flex-shrink-0">
-            <div class="w-full flex justify-between items-center py-4 bg-base-100">
+        <div class="w-full flex-shrink-0 bg-base-100 border-t border-base-100">
+            <div class="w-full flex justify-between items-center py-4 px-4 max-w-4xl mx-auto">
                 {{-- Previous Button --}}
                 <div class="flex justify-center w-12">
                     <x-button 
                         wire:click="previous"
                         icon="phosphor.caret-left"
-                        class="btn-circle btn-sm btn-secondary shadow-lg pb-1 transition-all duration-300 hover:scale-110 hover:-translate-y-0.5 hover:shadow-xl"
-                        title="Previous"
+                        class="btn-circle btn-sm btn-secondary shadow-lg transition-all duration-300"
+                        title="Previous item"
                     />
                 </div>
                 
                 {{-- Indicators --}}
-                <div class="flex justify-center gap-2 flex-1">
+                <div class="flex justify-center gap-2 flex-1 px-4">
                     @foreach($items as $index => $item)
                         <button 
                             wire:click="setIndex({{ $index }})"
-                            class="h-2.5 rounded-full transition-all duration-500 ease-out transform hover:scale-125 
+                            class="h-2.5 rounded-full transition-all duration-500 ease-out transform
                                 {{ $index === $currentIndex 
                                     ? 'bg-secondary w-8 shadow-lg shadow-secondary/30' 
                                     : 'bg-secondary/50 hover:bg-secondary/75 w-2.5' }}"
                             title="{{ $item[$titleKey] ?? 'Item ' . ($index + 1) }}"
+                            aria-label="Go to item {{ $index + 1 }}"
                         ></button>
                     @endforeach
                 </div>
@@ -212,8 +218,8 @@ new class extends Component {
                     <x-button 
                         wire:click="next"
                         icon="phosphor.caret-right"
-                        class="btn-circle btn-sm btn-secondary shadow-lg pb-1 transition-all duration-300 hover:scale-110 hover:-translate-y-0.5 hover:shadow-xl"
-                        title="Next"
+                        class="btn-circle btn-sm btn-secondary shadow-lg transition-all duration-300"
+                        title="Next item"
                     />
                 </div>
             </div>

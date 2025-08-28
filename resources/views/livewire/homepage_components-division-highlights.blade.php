@@ -59,7 +59,8 @@ new class extends Component {
                         link-icon="phosphor.link"
                         :auto-advance-interval="4"
                         :interaction-delay="6"
-                        wire:key="events-mobile-carousel" />
+                        wire:key="events-mobile-carousel" 
+                        banner-height="h-96 md:h-134" />
                 </x-tab>
             </x-tabs>
         </x-card>
@@ -92,7 +93,8 @@ new class extends Component {
                         link-icon="phosphor.link"
                         :auto-advance-interval="4"
                         :interaction-delay="6"
-                        wire:key="events-desktop-carousel" />
+                        wire:key="events-desktop-carousel"
+                        banner-height="lg:h-52 xl:h-124" />
                 </x-card>
             </div>
         </div>
