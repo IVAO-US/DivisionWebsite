@@ -66,9 +66,9 @@ class extends Component {
     </section>
     
     {{-- Free Education Section --}}
-    <section class="py-16 bg-base-100">
+    <section class="py-16 bg-base-200">
         <div class="container mx-auto px-4">
-            <h2 class="text-4xl font-bold text-center mb-12">Free Education</h2>
+            <h2 class="text-4xl font-bold text-center">Free Education</h2>
             <livewire:homepage_components-training />
         </div>
     </section>
