@@ -78,7 +78,7 @@ new class extends Component {
 		:items="$breadcrumbs"
 		separator="phosphor.minus"
 		separator-class="text-primary mx-1"
-		class="bg-base-300 p-3 rounded-lg mb-4 font-semibold"
+		class="bg-base-100 p-3 rounded-lg mb-4 font-semibold"
 		icon-class="text-primary"
 		link-item-class="text-sm font-normal hover:underline" />
 @endif
