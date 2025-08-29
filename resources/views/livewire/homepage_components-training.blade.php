@@ -95,7 +95,7 @@ new class extends Component {
         </div>
 
         {{-- Additional Info Section --}}
-        <div class="text-center mt-16">
+        <div class="text-center mt-8 lg:mt-16">
             <div class="max-w-7xl mx-auto">
                 <x-card class="bg-base-100 backdrop-blur-sm border-none" shadow="shadow-lg">
                     <h4 class="text-2xl font-bold text-base-content text-center mb-4">
