@@ -86,7 +86,7 @@ class IvaoController extends Controller
                 'redirectTo'    => null
             ]);
             
-            return redirect()->route(env('IVAO_SSO_SUCCESS_ROUTE_NAME', 'hello'));
+            return redirect()->route(env('IVAO_SSO_SUCCESS_ROUTE_NAME', 'home'));
             
         } catch (\Exception $e) {
             Log::error('IVAO OAuth error: ' . $e->getMessage());

@@ -70,9 +70,6 @@ Volt::route('/privacy', 'privacy-policy')->name('privacy');
  */
 
 Route::middleware('auth')->group(function () {
-    /* The default protected page */
-    Volt::route('/hello', 'protected.hello')->name('hello');
-
-    /* Some settings that can be edited */
-    Volt::route('/users/settings',    'protected.users.settings')->name('users.settings');
+    /* User profile */
+    Volt::route('/users/settings', 'protected.users.settings')->name('users.settings');
 });

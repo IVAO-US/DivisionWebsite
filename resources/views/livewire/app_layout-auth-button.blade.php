@@ -26,8 +26,10 @@ new class extends Component
     public function userMenuItems(): string
     {
         $blade = implode("\n", [
-            '<x-menu-item title="Settings" icon="phosphor.wrench" iconClasses="!hidden lg:!block" :link="$settingsUrl" />',
-            '<x-menu-item title="Log out" icon="phosphor.power" iconClasses="!hidden lg:!block" wire:click="logout" />',
+            '<x-menu-item title="IVAO Account"  icon="lucide.building"  link="https://www.ivao.aero/Member.aspx" external />',
+            '<x-menu-item title="My Profile"    icon="lucide.user-cog" :link="$settingsUrl" />',
+            '<x-menu-separator />',
+            '<x-menu-item title="Log out" icon="lucide.power" wire:click="logout" />',
         ]);
 
         return Blade::render($blade, [
@@ -66,7 +68,7 @@ new class extends Component
             "title"         => 'Success!',
             "description"   => "You have been logged out.",
             "position"      => 'toast-top toast-end', 
-            "icon"          => 'phosphor.door-open',
+            "icon"          => 'lucide.door-open',
             "css"           => 'alert-success',
             "timeout"       => 5000,
             "redirectTo"    => route('home')

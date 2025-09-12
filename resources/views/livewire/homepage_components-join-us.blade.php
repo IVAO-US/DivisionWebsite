@@ -54,9 +54,10 @@ new class extends Component {
                     <div class="text-center">
                         <x-button 
                             label="Get Started" 
-                            link="#" 
+                            link="https://ivao.aero/members/person/ADJregister3.asp" 
                             class="btn-primary px-8 py-3 font-semibold hover:scale-105 transition-transform duration-200" 
                             icon="phosphor.link" 
+                            external
                         />
                     </div>
                 </div>
@@ -91,9 +92,10 @@ new class extends Component {
                     <div class="text-center">
                         <x-button 
                             label="Discover More" 
-                            link="#" 
+                            link="https://ivao.aero/members/person/ADJregister3.asp" 
                             class="btn-primary px-8 py-3 font-semibold hover:scale-105 transition-transform duration-200" 
                             icon="phosphor.link" 
+                            external
                         />
                     </div>
                 </div>
