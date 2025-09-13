@@ -1,0 +1,178 @@
+<?php
+
+namespace App\Enums;
+
+enum AdminPermission: string
+{
+    // Super Admin
+    case ALL = '*';
+
+    // Admins - Global
+    case ADMINS = 'admins';
+        // Admins - Granular
+        case ADMINS_EDIT_PERMISSIONS = 'admins_edit_permissions';
+
+    // Stats - Global
+    case STATS = 'stats';
+        // Stats - Granular
+        case STATS_REVIEW = 'stats_review';
+
+    // App - Global
+    case APP = 'app';
+        // App - Granular
+        case APP_GDPR = 'app_gdpr';
+
+
+
+    /**
+     * Get permission category
+     */
+    public function category(): string
+    {
+        return match($this) {
+            self::ALL => 'System-wide',
+
+            // Manage admins
+            self::ADMINS,
+            self::ADMINS_EDIT_PERMISSIONS => 'Admins',
+
+            // Stats
+            self::STATS,
+            self::STATS_REVIEW => 'Statistics',
+
+            // App
+            self::APP,
+            self::APP_GDPR => 'Application',
+        };
+    }
+
+    /**
+     * Get permission description
+     */
+    public function description(): string
+    {
+        return match($this) {
+            self::ALL => 'Super Administrator (All permissions)',
+
+            // Manage admins
+            self::ADMINS => 'Manage administrators',
+            self::ADMINS_EDIT_PERMISSIONS => 'Manage admins',
+
+            // Stats
+            self::STATS => 'Review stats',
+            self::STATS_REVIEW => 'Review app stats',
+
+            // App
+            self::APP => 'Manage application',
+            self::APP_GDPR => 'Handle GDPR compliance',
+        };
+    }
+
+    /**
+     * Get icon for this permission
+     */
+    public function icon(): string
+    {
+        return match($this) {
+            self::ALL => 'lucide.crown',
+            self::ADMINS_EDIT_PERMISSIONS => 'lucide.users',
+            self::STATS_REVIEW => 'lucide.pie-chart',
+            self::APP_GDPR => 'lucide.biohazard',
+            default => 'lucide.check-circle'
+        };
+    }
+
+    /**
+     * Get icon for category
+     */
+    public static function categoryIcon(string $category): string
+    {
+        return match($category) {
+            'Admins' => 'lucide.users',
+            'Statistics' => 'lucide.bar-chart-3',
+            'Application' => 'lucide.wrench',
+            default => 'lucide.circle'
+        };
+    }
+
+    /**
+     * Get color for category
+     */
+    public static function categoryColor(string $category): string
+    {
+        return match($category) {
+            'Admins' => 'accent',
+            'Statistics' => 'info',
+            'Application' => 'warning',
+            default => 'base-300'
+        };
+    }
+
+    /**
+     * Get management route for category
+     */
+    public static function categoryRoute(string $category): ?string
+    {
+        return match($category) {
+            'Admins' => route('admin.manage'),
+            'Statistics' => route('admin.stats.review'),
+            'Application' => route('admin.app.gdpr'),
+            default => null
+        };
+    }
+
+
+    /** Utility functions */
+
+    /**
+     * Get all permissions as array
+     */
+    public static function getAllPermissions(): array
+    {
+        return array_map(fn($case) => $case->value, self::cases());
+    }
+
+    /**
+     * Get permissions by category
+     */
+    public static function getByCategory(string $category): array
+    {
+        return array_filter(
+            self::cases(),
+            fn($permission) => $permission->category() === $category
+        );
+    }
+
+    /**
+     * Check if permission implies another permission
+     */
+    public function implies(AdminPermission $permission): bool
+    {
+        // Super admin has all permissions
+        if ($this === self::ALL) {
+            return true;
+        }
+        
+        // Same permission
+        if ($this === $permission) {
+            return true;
+        }
+        
+        // DRY: using granular permissions
+        // Convention : 'polls' implies 'polls_*', 'admins' implies 'admins_*', etc.
+        if (!str_contains($this->value, '_') && str_starts_with($permission->value, $this->value . '_')) {
+            return true;
+        }
+        
+        return false;
+    }
+
+    /**
+     * Get CSS class with color for category
+     */
+    public static function categoryColorProp(string $category, string $property): string
+    {
+        $color = self::categoryColor($category);
+        return "{$property}-{$color}";
+    }
+}

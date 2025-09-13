@@ -2,6 +2,10 @@
 
 use Livewire\Volt\Component;
 
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Admin;
+
 new class extends Component
 {	
     /* To handle the menu on mobile */
@@ -10,6 +14,17 @@ new class extends Component
     {
         $this->mobileMenuOpen = !$this->mobileMenuOpen;
         $this->dispatch('logMobileMenuState', ['state' => $this->mobileMenuOpen]);
+    }
+
+    /* mount() */
+    public ?User $user = null;
+    public bool $isAdmin = false;
+    public function mount() : void 
+    {
+        $this->user = Auth::user();
+        if(!is_null($this->user)) {
+            $this->isAdmin = Admin::isAdmin($this->user->vid);
+        }
     }
 };
 ?>
@@ -33,9 +48,14 @@ new class extends Component
                 </div>
                 
                 {{-- Right section with actions --}}
-                <div class="flex justify-end items-center">
+                <div class="flex justify-end items-center gap-2">
                     <livewire:app_layout-auth-button />
-                    <x-button icon="phosphor.wrench" class="btn-neutral btn-circle ml-2" tooltipBottom="Admin Panel" spinner />
+
+                        {{-- Admin Access button --}}
+                        @if($this->isAdmin)
+                            <x-button icon="phosphor.wrench" class="btn-neutral btn-circle" tooltipBottom="Admin Panel" spinner />
+                        @endif
+                        
                     <livewire:app_layout-theme-toggle />
                 </div>
             </div>
@@ -50,9 +70,14 @@ new class extends Component
                 {{-- Mobile burger button --}}
                 <div class="justify-end">
                     {{-- Mobile actions --}}
-                    <div class="flex items-center">
-                        <x-button icon="phosphor.list" wire:click="toggleMenu" class="btn btn-accent mx-2" />
-                        <x-button icon="phosphor.wrench" class="btn-neutral btn-circle" tooltipBottom="Admin Panel" spinner />
+                    <div class="flex items-center gap-2">
+                        <x-button icon="phosphor.list" wire:click="toggleMenu" class="btn btn-accent" />
+
+                        {{-- Admin Access button --}}
+                        @if($this->isAdmin)
+                            <x-button icon="phosphor.wrench" class="btn-neutral btn-circle" tooltipBottom="Admin Panel" spinner />
+                        @endif
+
                         <livewire:app_layout-theme-toggle />
                     </div>
                 </div>

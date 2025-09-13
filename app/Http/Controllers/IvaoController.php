@@ -25,8 +25,8 @@ class IvaoController extends Controller
                 'code' => 'required|string',
                 'state' => 'required|string',
             ]);
-        } catch (ValidationException $e) {
-            return $this->redirectWithErrorToast('You need to log in to view this page');
+        } catch (ValidationException $e) { /* Reset the login attempt back to homepage */
+            return $this->redirectWithErrorToast('You have been logged out.');
         }
 
         // Verify state for CSRF protection
@@ -86,7 +86,7 @@ class IvaoController extends Controller
                 'redirectTo'    => null
             ]);
             
-            return redirect()->route(env('IVAO_SSO_SUCCESS_ROUTE_NAME', 'hello'));
+            return redirect()->route(env('IVAO_SSO_SUCCESS_ROUTE_NAME', 'home'));
             
         } catch (\Exception $e) {
             Log::error('IVAO OAuth error: ' . $e->getMessage());
@@ -181,16 +181,15 @@ class IvaoController extends Controller
     private function redirectWithErrorToast(string $message)
     {
         Session::put('session_toast', [
-            'type' => 'error',
-            'title' => 'Authentication Error',
+            'type' => 'success',
+            'title' => 'Success!',
             'description' => $message,
             'position'      => 'toast-top toast-end', 
-            "icon"          => 'phosphor.heart-break',
-            "css"           => 'alert-error',
+            "icon"          => 'phosphor.door-open',
+            "css"           => 'alert-success',
             "timeout"       => 5000,
             'redirectTo'    => null
         ]);
-
         return redirect()->route('home');
     }
 }

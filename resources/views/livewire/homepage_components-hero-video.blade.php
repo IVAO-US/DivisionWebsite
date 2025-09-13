@@ -5,6 +5,7 @@ new class extends Component {
     public string $logoPath = './assets/img/ivao-branding-transparent.svg';
     public string $videoPath = './assets/video/hero-background.mp4';
     public string $fallbackImagePath = './assets/img/fallback-video-bg.png';
+    public string $posterPath = './assets/img/fallback-video-bg.png';
     public string $title = 'United States Division';
     public string $joinUrl = 'https://ivao.aero/members/person/ADJregister3.asp';
 }; ?>
@@ -15,16 +16,21 @@ new class extends Component {
         <div    class="video-wrap absolute inset-0 w-full h-full z-0 bg-cover bg-center bg-no-repeat" 
                 style="background-image: url('{{ $fallbackImagePath }}');">
             <video 
+                id="hero-video"
                 autoplay 
                 loop 
                 muted 
                 playsinline 
                 webkit-playsinline
                 disablepictureinpicture
-                class="custom-video w-full h-full object-cover object-center">
-                <source src="{{ $videoPath }}" type="video/mp4">
-                <source src="{{ str_replace('.mp4', '.webm', $videoPath) }}" type="video/webm">
-                Your browser does not support the video tag.
+                preload="metadata"
+                poster="{{ $posterPath }}"
+                class="custom-video w-full h-full object-cover object-center"
+                x-data="heroVideo()"
+                x-init="initVideo()">
+                    <source src="{{ $videoPath }}#t=0.001" type="video/mp4">
+                    <source src="{{ str_replace('.mp4', '.webm', $videoPath) }}#t=0.001" type="video/webm">
+                    Your browser does not support the video tag.
             </video>
         </div>
         
@@ -65,4 +71,90 @@ new class extends Component {
             </div>
         </div>
     </section>
+
+    {{-- JavaScript for iOS Safari video handling --}}
+    <script>
+        function heroVideo() {
+            return {
+                video: null,
+                playPromise: null,
+                
+                initVideo() {
+                    this.video = document.getElementById('hero-video');
+                    
+                    if (!this.video) {
+                        console.error('❌ Video element not found');
+                        return;
+                    }
+                    
+                    console.log('🚀 Initializing video for iOS Safari compatibility');
+                    
+                    // iOS Safari compatibility setup
+                    this.video.muted = true;
+                    this.video.playsInline = true;
+                    
+                    // Event listeners for video states
+                    this.video.addEventListener('loadedmetadata', () => {
+                        console.log('✅ Video metadata loaded');
+                        this.attemptAutoplay();
+                    });
+                    
+                    this.video.addEventListener('canplay', () => {
+                        console.log('✅ Video can play - showing video');
+                        // Show video with fade-in effect
+                        this.video.classList.remove('opacity-0');
+                        this.video.classList.add('opacity-100');
+                    });
+                    
+                    this.video.addEventListener('play', () => {
+                        console.log('▶️ Video started playing successfully');
+                    });
+                    
+                    this.video.addEventListener('error', (e) => {
+                        console.error('❌ Video error:', e);
+                        this.fallbackToImage();
+                    });
+                    
+                    // Initial autoplay attempt
+                    this.attemptAutoplay();
+                },
+                
+                attemptAutoplay() {
+                    console.log('🎬 Attempting autoplay...');
+                    
+                    // iOS Safari autoplay with promise handling
+                    this.playPromise = this.video.play();
+                    
+                    if (this.playPromise !== undefined) {
+                        this.playPromise
+                            .then(() => {
+                                console.log('✅ Autoplay successful!');
+                            })
+                            .catch(error => {
+                                console.log('⚠️ Autoplay failed:', error.name);
+                                this.fallbackToImage();
+                            });
+                    }
+                },
+                
+                fallbackToImage() {
+                    console.log('🔄 Falling back to background image');
+                    // Hide video and keep the background image
+                    this.video.style.display = 'none';
+                    // Background image is already set on parent div
+                }
+            }
+        }
+        
+        // iOS Safari detection and logging
+        const isIOSSafari = /iPad|iPhone|iPod/.test(navigator.userAgent) && 
+                           /Safari/.test(navigator.userAgent) && 
+                           !/CriOS|FxiOS|OPiOS|mercury/.test(navigator.userAgent);
+        
+        if (isIOSSafari) {
+            console.log('📱 iOS Safari detected - applying specific optimizations');
+        } else {
+            console.log('🖥️ Desktop/other browser detected');
+        }
+    </script>
 </div>

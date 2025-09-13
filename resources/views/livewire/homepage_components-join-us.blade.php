@@ -17,13 +17,13 @@ new class extends Component {
     ];
 }; ?>
 
-<section class="mx-auto px-5 md:px-15 py-20 relative bg-cover bg-center min-h-[60vh] flex items-center"
+<section class="mx-auto px-5 md:px-15 py-20 relative bg-cover bg-center min-h-[60vh] flex items-center w-full"
          style="background-image: url('/assets/img/american-flag.jpg');">
         
-    <div class="container mx-auto px-4 relative z-10 w-full">
+    <div class="mx-auto relative z-10 w-full">
         
         {{-- Cards Grid --}}
-        <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-8 w-full h-fit">
+        <div class="max-w-6xl mx-auto grid gap-8 lg:grid-cols-2 lg:gap-12 xl:gap-16 w-full h-fit">
             
             {{-- Air Traffic Controllers Card --}}
             <div class="relative">
@@ -54,9 +54,10 @@ new class extends Component {
                     <div class="text-center">
                         <x-button 
                             label="Get Started" 
-                            link="#" 
+                            link="https://ivao.aero/members/person/ADJregister3.asp" 
                             class="btn-primary px-8 py-3 font-semibold hover:scale-105 transition-transform duration-200" 
                             icon="phosphor.link" 
+                            external
                         />
                     </div>
                 </div>
@@ -91,9 +92,10 @@ new class extends Component {
                     <div class="text-center">
                         <x-button 
                             label="Discover More" 
-                            link="#" 
+                            link="https://ivao.aero/members/person/ADJregister3.asp" 
                             class="btn-primary px-8 py-3 font-semibold hover:scale-105 transition-transform duration-200" 
                             icon="phosphor.link" 
+                            external
                         />
                     </div>
                 </div>

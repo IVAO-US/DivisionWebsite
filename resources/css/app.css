@@ -408,10 +408,6 @@
     
 
     /* Separators */
-    hr {
-        border-color: white !important;
-    }
-
     .menu :where(li ul):before {
         visibility: hidden;
     }

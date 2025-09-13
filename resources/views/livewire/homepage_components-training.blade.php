@@ -20,7 +20,7 @@ new class extends Component {
 <section class="relative flex items-center justify-center py-10 bg-base-200">
     
     {{-- Content Container --}}
-    <div class="container mx-auto px-4 relative z-10">
+    <div class="w-full mx-auto relative z-10">
         
         {{-- Cards Grid --}}
         <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-8">
@@ -51,9 +51,10 @@ new class extends Component {
                 <div class="text-center">
                     <x-button 
                         label="Get Started" 
-                        icon="phosphor.airplane-takeoff"
+                        icon="phosphor.microphone-stage"
                         class="btn-accent btn-lg text-white font-semibold px-8 py-3 transform transition-all duration-300 hover:scale-105"
                         link="https://wiki.us.ivao.aero/en/atc/training"
+                        external
                     />
                 </div>
             </x-card>
@@ -85,9 +86,10 @@ new class extends Component {
                 <div class="text-center">
                     <x-button 
                         label="Discover More" 
-                        icon="phosphor.compass"
+                        icon="phosphor.airplane-takeoff"
                         class="btn-primary btn-lg text-white font-semibold px-8 py-3 transform transition-all duration-300 hover:scale-105"
                         link="https://wiki.us.ivao.aero/en/pilots/training"
+                        external
                     />
                 </div>
             </x-card>
@@ -107,15 +109,17 @@ new class extends Component {
                     <div class="flex flex-col sm:flex-row gap-10 justify-center">
                         <x-button 
                             label="Request Training" 
-                            icon="phosphor.users"
+                            icon="phosphor.chalkboard-teacher"
                             class="btn-accent btn-lg font-semibold px-8"
                             link="https://us.ivao.aero/training-request/"
+                            external
                         />
                         <x-button 
                             label="Visit our Wiki" 
                             icon="phosphor.book-open"
                             class="btn-primary btn-lg font-semibold px-8"
                             link="https://wiki.us.ivao.aero/"
+                            external
                         />
                     </div>
                 </x-card>
