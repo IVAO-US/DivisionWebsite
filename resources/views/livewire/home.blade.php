@@ -47,7 +47,10 @@ class extends Component {
     <livewire:homepage_components-hero-video />
     
     {{-- What We Offer Section with American Flag Background --}}
-    <livewire:homepage_components-join-us />
+    {{-- Only displayed when not logged in --}}
+    @guest
+        <livewire:homepage_components-join-us />
+    @endguest
     
     {{-- Division Highlights Section --}}
     <section class="mx-auto px-5 md:px-15 py-20 bg-base-200">
@@ -66,10 +69,8 @@ class extends Component {
     </section>
     
     {{-- Free Education Section --}}
-    <section class="py-16 bg-base-200">
-        <div class="container mx-auto px-4">
-            <h2 class="text-4xl font-bold text-center">Free Education</h2>
-            <livewire:homepage_components-training />
-        </div>
+    <section class="mx-auto px-5 md:px-15 py-20 bg-base-200">
+        <h2 class="text-4xl font-bold text-center">Free Education</h2>
+        <livewire:homepage_components-training />
     </section>
 </div>

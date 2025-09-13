@@ -48,7 +48,7 @@ new class extends Component
                 </div>
                 
                 {{-- Right section with actions --}}
-                <div class="flex justify-end items-center">
+                <div class="flex justify-end items-center gap-2">
                     <livewire:app_layout-auth-button />
 
                         {{-- Admin Access button --}}
@@ -70,8 +70,8 @@ new class extends Component
                 {{-- Mobile burger button --}}
                 <div class="justify-end">
                     {{-- Mobile actions --}}
-                    <div class="flex items-center">
-                        <x-button icon="phosphor.list" wire:click="toggleMenu" class="btn btn-accent mx-2" />
+                    <div class="flex items-center gap-2">
+                        <x-button icon="phosphor.list" wire:click="toggleMenu" class="btn btn-accent" />
 
                         {{-- Admin Access button --}}
                         @if($this->isAdmin)

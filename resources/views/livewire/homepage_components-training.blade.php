@@ -20,7 +20,7 @@ new class extends Component {
 <section class="relative flex items-center justify-center py-10 bg-base-200">
     
     {{-- Content Container --}}
-    <div class="container mx-auto px-4 relative z-10">
+    <div class="w-full mx-auto relative z-10">
         
         {{-- Cards Grid --}}
         <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-8">

@@ -122,7 +122,7 @@ class extends Component {
     <x-tabs wire:model="defaultTab">
         <x-tab name="ivaoData-tab" label="Personal Information" icon="phosphor.user" active>
             <x-card title="Your personal information" subtitle="Retrieved from your IVAO account" shadow separator>
-                <div class="w-full md:w-125 mx-auto px-6 py-4">
+                <div class="w-full md:w-125 mx-auto">
                     <x-form no-separator>
                         <x-input    label="VID"         icon="phosphor.hash"      wire:model="vid"   readonly class="font-semibold"/>
                         <x-input    label="Name"        icon="phosphor.user"    wire:model="name"  readonly />
@@ -139,7 +139,7 @@ class extends Component {
         </x-tab>
         <x-tab name="atcData-tab" label="ATC Data" icon="phosphor.radio" active>
             <x-card title="ATC Career" subtitle="Sync'ed from your IVAO profile" shadow separator>
-                <div class="w-full md:w-125 mx-auto px-6 py-4">
+                <div class="w-full md:w-125 mx-auto">
                     <x-form no-separator>
                         <x-input label="ATC Rating" class="!hidden">
                             <x-slot:append>
@@ -158,7 +158,7 @@ class extends Component {
         </x-tab>
         <x-tab name="pilotData-tab" label="Pilot Data" icon="phosphor.paper-plane-tilt" active>
             <x-card title="Pilot Career" subtitle="Sync'ed from your IVAO profile" shadow separator>
-                <div class="w-full md:w-125 mx-auto px-6 py-4">
+                <div class="w-full md:w-125 mx-auto">
                     <x-form no-separator>
                         <x-input label="Pilot Rating" class="!hidden">
                             <x-slot:append>
@@ -176,7 +176,7 @@ class extends Component {
         </x-tab>
         <x-tab name="settings-tab" label="Settings" icon="phosphor.user-circle-gear" active>
             <x-card title="Edit your settings" subtitle="Customize your experience" shadow separator progress-indicator="updateSettings">
-                <div class="w-full md:w-125 mx-auto px-6 py-4">
+                <div class="w-full md:w-125 mx-auto">
                     <x-form wire:submit="updateSettings" no-separator>
                         <p> The following settings can be edited by yourself.<br>
                             We may use these information to reach out.<br>
