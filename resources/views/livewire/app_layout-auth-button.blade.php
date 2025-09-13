@@ -68,10 +68,9 @@ new class extends Component
             "title"         => 'Success!',
             "description"   => "You have been logged out.",
             "position"      => 'toast-top toast-end', 
-            "icon"          => 'lucide.door-open',
+            "icon"          => 'phosphor.door-open',
             "css"           => 'alert-success',
             "timeout"       => 5000,
-            "redirectTo"    => route('home')
         ];
         $this->success(...$toast_success);
     }
