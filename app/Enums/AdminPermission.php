@@ -2,6 +2,72 @@
 
 namespace App\Enums;
 
+/**
+ * AdminPermission Enum
+ * 
+ * This enum defines the permission system for administrators in the application.
+ * It follows a hierarchical structure with global and granular permissions.
+ * 
+ * PERMISSION HIERARCHY:
+ * - Super Admin (*): Has all permissions
+ * - Global permissions (e.g., 'polls'): Grants all related granular permissions
+ * - Granular permissions (e.g., 'polls_create'): Specific actions within a category
+ * 
+ * NAMING CONVENTION:
+ * - Global permissions: lowercase category name (e.g., 'polls', 'admins')
+ * - Granular permissions: category_action format (e.g., 'polls_create', 'admins_edit_permissions')
+ * - Super admin: '*' (asterisk)
+ * 
+ * PERMISSION LOGIC:
+ * - Super admin (*) implies ALL permissions
+ * - Global permission (e.g., 'polls') implies ALL granular permissions in that category
+ * - Granular permissions are standalone and don't imply other permissions
+ * 
+ * USAGE EXAMPLES:
+ * 
+ * / Check if admin has specific permission
+ * $admin->hasPermission(AdminPermission::POLLS_CREATE);
+ * 
+ * / Check using string method (recommended for UI)
+ * $admin->canString('polls_create');
+ * 
+ * / Get all permissions for a category
+ * $pollsPermissions = AdminPermission::getByCategory('Polls');
+ * 
+ * / Check if permission implies another
+ * AdminPermission::POLLS->implies(AdminPermission::POLLS_CREATE); // true
+ * AdminPermission::POLLS_CREATE->implies(AdminPermission::POLLS_UPDATE); // false
+ * 
+ * / Get permission metadata
+ * $permission = AdminPermission::POLLS_CREATE;
+ * $category = $permission->category();     // 'Polls'
+ * $description = $permission->description(); // 'Create polls'
+ * $icon = $permission->icon();             // 'lucide.plus-circle'
+ * 
+ * / Get category styling
+ * $color = AdminPermission::categoryColor('Polls');           // 'primary'
+ * $iconName = AdminPermission::categoryIcon('Polls');         // 'lucide.vote'
+ * $cssClass = AdminPermission::categoryColorProp('Polls', 'text'); // 'text-primary'
+ * 
+ * UI INTEGRATION:
+ * - Use permission->description() for human-readable labels
+ * - Use categoryIcon() and categoryColor() for consistent UI theming
+ * - Filter granular permissions with str_contains($permission->value, '_') in modals
+ * - Global permissions should not be shown alongside granular ones in detailed views
+ * 
+ * SECURITY CONSIDERATIONS:
+ * - Always use the implies() method to check permission inheritance
+ * - Super admin (*) should be handled with special care in UI
+ * - Global permissions are convenience shortcuts for multiple granular permissions
+ * - Store permissions as arrays of string values in the database
+ * 
+ * DATABASE STORAGE:
+ * - Store as JSON array: ["polls_create", "polls_update", "admins_edit_permissions"]
+ * - Or store global permission: ["polls", "admins"] (implies all granular)
+ * - Super admin: ["*"] (implies everything)
+ */
+
+
 enum AdminPermission: string
 {
     // Super Admin
@@ -11,11 +77,6 @@ enum AdminPermission: string
     case ADMINS = 'admins';
         // Admins - Granular
         case ADMINS_EDIT_PERMISSIONS = 'admins_edit_permissions';
-
-    // Stats - Global
-    case STATS = 'stats';
-        // Stats - Granular
-        case STATS_REVIEW = 'stats_review';
 
     // App - Global
     case APP = 'app';
@@ -36,10 +97,6 @@ enum AdminPermission: string
             self::ADMINS,
             self::ADMINS_EDIT_PERMISSIONS => 'Admins',
 
-            // Stats
-            self::STATS,
-            self::STATS_REVIEW => 'Statistics',
-
             // App
             self::APP,
             self::APP_GDPR => 'Application',
@@ -58,10 +115,6 @@ enum AdminPermission: string
             self::ADMINS => 'Manage administrators',
             self::ADMINS_EDIT_PERMISSIONS => 'Manage admins',
 
-            // Stats
-            self::STATS => 'Review stats',
-            self::STATS_REVIEW => 'Review app stats',
-
             // App
             self::APP => 'Manage application',
             self::APP_GDPR => 'Handle GDPR compliance',
@@ -74,11 +127,10 @@ enum AdminPermission: string
     public function icon(): string
     {
         return match($this) {
-            self::ALL => 'lucide.crown',
-            self::ADMINS_EDIT_PERMISSIONS => 'lucide.users',
-            self::STATS_REVIEW => 'lucide.pie-chart',
-            self::APP_GDPR => 'lucide.biohazard',
-            default => 'lucide.check-circle'
+            self::ALL => 'phosphor.crown',
+            self::ADMINS_EDIT_PERMISSIONS => 'phosphor.users',
+            self::APP_GDPR => 'phosphor.biohazard',
+            default => 'phosphor.check-circle'
         };
     }
 
@@ -88,10 +140,9 @@ enum AdminPermission: string
     public static function categoryIcon(string $category): string
     {
         return match($category) {
-            'Admins' => 'lucide.users',
-            'Statistics' => 'lucide.bar-chart-3',
-            'Application' => 'lucide.wrench',
-            default => 'lucide.circle'
+            'Admins' => 'phosphor.users',
+            'Application' => 'phosphor.wrench',
+            default => 'phosphor.circle'
         };
     }
 
@@ -102,8 +153,7 @@ enum AdminPermission: string
     {
         return match($category) {
             'Admins' => 'accent',
-            'Statistics' => 'info',
-            'Application' => 'warning',
+            'Application' => 'secondary',
             default => 'base-300'
         };
     }
@@ -115,7 +165,6 @@ enum AdminPermission: string
     {
         return match($category) {
             'Admins' => route('admin.manage'),
-            'Statistics' => route('admin.stats.review'),
             'Application' => route('admin.app.gdpr'),
             default => null
         };
