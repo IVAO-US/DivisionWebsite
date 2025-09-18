@@ -332,10 +332,10 @@ class extends Component {
                     title="Critical Operation" 
                     description="GDPR deletion is irreversible and will permanently remove/anonymize user data while preserving application integrity." 
                     icon="phosphor.warning" 
-                    class="alert-error border-error/50 bg-error/10 mb-6"
+                    class="alert-error border-error bg-error mb-6"
                 >
                     <x-slot:actions>
-                        <div class="flex items-center gap-2 text-warning-content/80">
+                        <div class="flex items-center gap-2 text-error-content">
                             <x-icon name="phosphor.lock" class="w-4 h-4" />
                             <span class="text-sm font-medium">Irreversible<br>Permanent</span>
                         </div>
