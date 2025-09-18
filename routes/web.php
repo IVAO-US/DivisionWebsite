@@ -50,7 +50,9 @@ Route::get('/auth/ivao/callback', [IvaoController::class, 'handleCallback'])->na
  *  Breadcrumbs
  *  Named routes for categories without index page
  */
-Route::redirect('/users', '/users/settings')->name('users');
+Route::redirect('/users',       '/users/settings')->name('users');
+Route::redirect('/admin',       '/admin/dashboard')->name('admin');
+Route::redirect('/admin/app',   '/admin/dashboard')->name('admin.app');
 
 
 /**
@@ -67,9 +69,32 @@ Volt::route('/privacy', 'privacy-policy')->name('privacy');
 
 /**
  *  Protected routes
+ *  Logged-in auth user status required
  */
 
 Route::middleware('auth')->group(function () {
+
     /* User profile */
     Volt::route('/users/settings', 'protected.users.settings')->name('users.settings');
+
+
+    /**
+     *  Protected routes
+     *  Admin status required
+     */
+    Route::middleware('admin')->group(function () {
+
+        /* Dashboard: no specific permission required */ 
+        Volt::route('/admin/dashboard', 'protected.admin.index')->name('admin.index');
+
+        /* Manage admin */
+        Route::middleware('admin.permissions:admins_edit_permissions')->group(function () {
+            Volt::route('/admin/manage', 'protected.admin.manage')->name('admin.manage');
+        });
+
+        /* Review gdpr */
+        Route::middleware('admin.permissions:app_gdpr')->group(function () {
+            Volt::route('/admin/app/gdpr', 'protected.admin.app.gdpr')->name('admin.app.gdpr');
+        });
+    });
 });

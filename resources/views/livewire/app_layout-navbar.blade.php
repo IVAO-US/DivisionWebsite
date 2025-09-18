@@ -53,7 +53,7 @@ new class extends Component
 
                         {{-- Admin Access button --}}
                         @if($this->isAdmin)
-                            <x-button icon="phosphor.wrench" class="btn-neutral btn-circle" tooltipBottom="Admin Panel" spinner />
+                            <x-button icon="phosphor.wrench" class="btn-neutral btn-circle" tooltipBottom="Admin Panel" link="{{ route('admin.index') }}" spinner />
                         @endif
                         
                     <livewire:app_layout-theme-toggle />
@@ -75,7 +75,7 @@ new class extends Component
 
                         {{-- Admin Access button --}}
                         @if($this->isAdmin)
-                            <x-button icon="phosphor.wrench" class="btn-neutral btn-circle" tooltipBottom="Admin Panel" spinner />
+                            <x-button icon="phosphor.wrench" class="btn-neutral btn-circle" tooltipBottom="Admin Panel" link="{{ route('admin.index') }}" spinner />
                         @endif
 
                         <livewire:app_layout-theme-toggle />

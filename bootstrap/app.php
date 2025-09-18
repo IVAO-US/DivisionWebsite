@@ -11,7 +11,10 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/laravel-health',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        //
+        $middleware->alias([
+            'admin'             => \App\Http\Middleware\CheckAdmin::class,
+            'admin.permissions' => \App\Http\Middleware\CheckAdminPermission::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

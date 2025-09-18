@@ -6,6 +6,19 @@
 @source '../**/*.js';
 @source '../views';
 
+
+
+/** Safelisting classes */
+@source inline('bg-primary bg-secondary bg-accent bg-neutral bg-info bg-success bg-warning bg-error');
+@source inline('border-primary border-accent');
+@source inline('border-l-primary border-l-secondary border-l-accent border-l-neutral border-l-info border-l-success border-l-warning border-l-error border-l-base-100 border-l-base-200 border-l-base-300');
+@source inline('btn-primary btn-secondary btn-accent btn-neutral btn-info btn-success btn-warning btn-error');
+@source inline('checkbox-primary checkbox-secondary checkbox-accent checkbox-neutral checkbox-info checkbox-success checkbox-warning checkbox-error');
+@source inline('badge-primary badge-secondary badge-accent badge-neutral badge-info badge-success badge-warning badge-error');
+@source inline('text-accent');
+
+
+
 @theme {
     /* Necessary directive for theme use */
     --font-sans: 'Poppins', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
@@ -55,8 +68,8 @@
         --color-success-content: #FFFFFF;
         
         /* Warning: Golden amber that harmonizes with red-blue */
-        --color-warning: #D97706;
-        --color-warning-content: #FFFFFF;
+        --color-warning: oklch(0.95 0.08 103.08);
+        --color-warning-content: oklch(0.52 0.09 101.78);
         
         /* Error: Enhanced version of accent red for consistency */
         --color-error: #DC2626;
@@ -146,7 +159,7 @@
 
         /* === REFINED MODERN STYLING (Matching Light Theme) === */
         /* Button outline */
-        --btn-color: #FFFFFF;
+        --btn-color: #767676;
 
         /* Border radius - Contemporary premium feel */
         --radius-selector: 0.5rem;   /* 12px - modern sophistication */

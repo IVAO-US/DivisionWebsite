@@ -26,10 +26,10 @@ new class extends Component
     public function userMenuItems(): string
     {
         $blade = implode("\n", [
-            '<x-menu-item title="IVAO Account"  icon="lucide.building"  link="https://www.ivao.aero/Member.aspx" external />',
-            '<x-menu-item title="My Profile"    icon="lucide.user-cog" :link="$settingsUrl" />',
+            '<x-menu-item title="IVAO Account"  icon="phosphor.identification-badge"  link="https://www.ivao.aero/Member.aspx" external />',
+            '<x-menu-item title="My Profile"    icon="phosphor.user-circle-gear" :link="$settingsUrl" />',
             '<x-menu-separator />',
-            '<x-menu-item title="Log out" icon="lucide.power" wire:click="logout" />',
+            '<x-menu-item title="Log out" icon="phosphor.power" wire:click="logout" />',
         ]);
 
         return Blade::render($blade, [
