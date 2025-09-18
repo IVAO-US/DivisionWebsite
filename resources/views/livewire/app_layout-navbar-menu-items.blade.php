@@ -1,4 +1,50 @@
 <?php
+
+/**
+ * Navbar Menu Items Component
+ * 
+ * A responsive navigation menu component with support for nested submenus,
+ * external link detection, and touch device optimization.
+ * 
+ * Features:
+ * - Automatic external link detection and styling
+ * - Touch-friendly submenu interactions
+ * - Responsive design (desktop hover, mobile expand)
+ * - Security attributes for external links (target="_blank", rel="noopener noreferrer")
+ * - Optional external link icons
+ * 
+ * Usage:
+ * <livewire:app_layout-navbar-menu-items :className="menu-class" :showLinkIcons="true" />
+ * 
+ * Menu Structure:
+ * - Use 'route' => 'route.name' for internal Laravel routes
+ * - Use 'link' => 'https://...' for external links
+ * 
+ * Example menu item structure:
+ * [
+ *     'title' => 'Home',
+ *     'route' => 'home',           // Internal route
+ *     'exact' => true              // Optional: exact route matching
+ * ],
+ * [
+ *     'title' => 'External',
+ *     'link' => 'https://example.com'  // External link
+ * ],
+ * [
+ *     'title' => 'Services',
+ *     'submenus' => [
+ *         ['title' => 'Internal Service', 'route' => 'services.internal'],
+ *         ['title' => 'External Service', 'link' => 'https://external.com']
+ *     ]
+ * ]
+ * 
+ * @property string $className - CSS classes to apply to the root container
+ * @property bool $showLinkIcons - Whether to show external link icons
+ * @property array $menuItems - Menu structure array
+ * @property bool $isTouchDevice - Touch device detection state
+ * @property array $openSubmenus - Currently open submenus for touch devices
+ */
+
 use Livewire\Volt\Component;
 use Illuminate\Support\Facades\Auth;
 
@@ -7,7 +53,10 @@ new class extends Component
     /* Because of the way Blade handles component, we need to report the x-menu classes onto the root <div> */
     public string $className = ''; /* :className */
     
-    /* Menu structure with submenus - simplified version */
+    /* Whether to show external link icons */
+    public bool $showLinkIcons = true; /* :showLinkIcons */
+    
+    /* Menu structure with submenus */
     public array $menuItems = [];
     
     /* Touch device detection and submenu state management */
@@ -24,60 +73,95 @@ new class extends Component
             ],
             [
                 'title' => 'Division',
-                'route' => null,
                 'submenus' => [
-                    ['title' => 'Our History', 'link' => '#'],
-                    ['title' => 'Staff', 'link' => '#'],
-                    ['title' => 'LiveTrack', 'link' => '#'],
-                    ['title' => 'Division Transfer', 'link' => '#'],
-                    ['title' => 'Rating Transfer', 'link' => '#'],
+                    ['title' => 'Our History', 'route' => 'division.our-history'],
+                    ['title' => 'Staff', 'link' => 'https://www.ivao.aero/staff/division.asp?Id=US'],
+                    ['title' => 'LiveTrack', 'link' => 'https://livetrack.us.ivao.aero/'],
+                    ['title' => 'Division Transfer', 'route' => 'division.transfer'],
+                    ['title' => 'Rating Transfer', 'link' => 'https://wiki.ivao.aero/en/home/training/main/training_procedures/rating_transfer'],
                 ]
             ],
             [
-                'title' => 'Training',
-                'route' => null,
+                'title' => 'Members',
                 'submenus' => [
-                    ['title' => 'Moodle', 'link' => '#'],
-                    ['title' => 'Training Request', 'link' => '#'],
-                    ['title' => 'Exam', 'link' => '#'],
-                    ['title' => 'Wiki', 'link' => '#'],
-                    ['title' => 'Guest Controller Approval', 'link' => '#'],
+                    ['title' => 'Webeye', 'link' => 'https://webeye.ivao.aero/'],
+                    ['title' => 'Awards', 'link' => 'https://awards.us.ivao.aero/'],
+                    ['title' => 'Support', 'route' => 'members.support'],
+                    ['title' => 'Discord', 'link' => 'https://discord.us.ivao.aero/'],
+                    ['title' => 'Forum', 'link' => 'https://us.forum.ivao.aero/'],
                 ]
             ],
             [
                 'title' => 'ATCs',
-                'route' => null,
                 'submenus' => [
-                    ['title' => 'Become an ATC', 'link' => '#'],
-                    ['title' => 'Software', 'link' => '#'],
-                    ['title' => 'Scheduling', 'link' => '#'],
-                    ['title' => 'Facility SOPs', 'link' => '#'],
-                    ['title' => 'Facility Ratings', 'link' => '#'],
+                    ['title' => 'Become an ATC', 'route' => 'atcs.become-atc'],
+                    ['title' => 'Software', 'link' => 'https://ivao.aero/softdev/software/aurora.asp'],
+                    ['title' => 'Facility SOPs', 'link' => 'https://wiki.us.ivao.aero/en/atc/sop'],
+                    ['title' => 'Scheduling', 'link' => 'https://atc.ivao.aero/schedule'],
+                    ['title' => 'Facility Ratings', 'link' => 'https://atc.ivao.aero/fras?division=US'],
                 ]
             ],
             [
                 'title' => 'Pilots',
-                'route' => null,
                 'submenus' => [
-                    ['title' => 'Become a Pilot', 'link' => '#'],
-                    ['title' => 'Software', 'link' => '#'],
-                    ['title' => 'Tracker', 'link' => '#'],
-                    ['title' => 'Tours', 'link' => '#'],
-                    ['title' => 'Virtual Airlines', 'link' => '#'],
+                    ['title' => 'Become a Pilot', 'link' => 'https://wiki.us.ivao.aero/en/pilots/training'],
+                    ['title' => 'Software', 'link' => 'https://ivao.aero/softdev/software/altitude.asp'],
+                    ['title' => 'Tracker', 'link' => 'https://tracker.ivao.aero/'],
+                    ['title' => 'Tours', 'link' => 'https://tours.th.ivao.aero/index.php?div=US'],
+                    ['title' => 'Virtual Airlines', 'route' => 'pilots.virtual-airlines'],
                 ]
             ],
             [
-                'title' => 'Community',
-                'route' => null,
+                'title' => 'Training',
                 'submenus' => [
-                    ['title' => 'Webeye', 'link' => '#'],
-                    ['title' => 'Awards', 'link' => '#'],
-                    ['title' => 'Support', 'link' => '#'],
-                    ['title' => 'Discord', 'link' => '#'],
-                    ['title' => 'Forum', 'link' => '#'],
+                    ['title' => 'Moodle', 'link' => 'https://moodle.us.ivao.aero/'],
+                    ['title' => 'Knowledge Wiki', 'link' => 'https://wiki.us.ivao.aero/'],
+                    ['title' => 'Training Request', 'route' => 'training.request'],
+                    ['title' => 'Exams', 'route' => 'training.exams'],
+                    ['title' => 'Guest Controller Approval', 'route' => 'training.gca'],
                 ]
-            ]
+            ],
         ];
+    }
+    
+    /**
+     * Get the URL for a menu item (internal route or external link)
+     */
+    public function getMenuItemUrl(array $item): string
+    {
+        if (isset($item['route'])) {
+            return route($item['route']);
+        }
+        
+        if (isset($item['link'])) {
+            return $item['link'];
+        }
+        
+        return '#';
+    }
+    
+    /**
+     * Check if a menu item is external
+     */
+    public function isExternalMenuItem(array $item): bool
+    {
+        return isset($item['link']);
+    }
+    
+    /**
+     * Get target attribute for menu item
+     */
+    public function getMenuItemTarget(array $item): string
+    {
+        return $this->isExternalMenuItem($item) ? '_blank' : '';
+    }
+    
+    /**
+     * Get rel attribute for menu item
+     */
+    public function getMenuItemRel(array $item): string
+    {
+        return $this->isExternalMenuItem($item) ? 'noopener noreferrer' : '';
     }
     
     /**
@@ -145,46 +229,61 @@ new class extends Component
             @if($item['exact'] ?? false)
                 <x-menu-item 
                     title="{{ $item['title'] }}" 
-                    link="{{ $item['route'] ? route($item['route']) : '#' }}" 
+                    link="{{ $this->getMenuItemUrl($item) }}" 
                     class="btn-outline navbar-item-custom"
                     exact
-                />
+                    target="{{ $this->getMenuItemTarget($item) }}"
+                    rel="{{ $this->getMenuItemRel($item) }}"
+                >
+                    @if($this->isExternalMenuItem($item) && $this->showLinkIcons)
+                        <x-slot:actions>
+                            <x-icon name="phosphor.arrow-square-out" class="w-4 h-4 ml-1 opacity-70" />
+                        </x-slot:actions>
+                    @endif
+                </x-menu-item>
             @else
                 <x-menu-item 
                     title="{{ $item['title'] }}" 
-                    link="{{ $item['route'] ? route($item['route']) : '#' }}" 
+                    link="{{ $this->getMenuItemUrl($item) }}" 
                     class="btn-outline navbar-item-custom"
-                />
+                    target="{{ $this->getMenuItemTarget($item) }}"
+                    rel="{{ $this->getMenuItemRel($item) }}"
+                >
+                    @if($this->isExternalMenuItem($item) && $this->showLinkIcons)
+                        <x-slot:actions>
+                            <x-icon name="phosphor.arrow-square-out" class="w-4 h-4 ml-1 opacity-70" />
+                        </x-slot:actions>
+                    @endif
+                </x-menu-item>
             @endif
         @else
             {{-- Desktop: Menu item with hover/click submenu --}}
             <div class="relative hidden lg:block {{ !$this->isTouchDevice ? 'group' : '' }}">
                 
                 {{-- Menu item wrapper for touch handling --}}
-                @if($this->isTouchDevice && !$item['route'])
-                    {{-- Touch device without route: Use non-link element --}}
+                @if($this->isTouchDevice && !isset($item['route']) && !isset($item['link']))
+                    {{-- Touch device without route/link: Use non-link element --}}
                     <div wire:click="handleMenuClick({{ $index }})" class="cursor-pointer">
-                        @if($item['exact'] ?? false)
-                            <div class="btn btn-outline navbar-item-custom flex items-center justify-between">
-                                <span>{{ $item['title'] }}</span>
-                            </div>
-                        @else
-                            <div class="btn btn-outline navbar-item-custom flex items-center justify-between">
-                                <span>{{ $item['title'] }}</span>
-                            </div>
-                        @endif
+                        <div class="btn btn-outline navbar-item-custom flex items-center justify-between">
+                            <span>{{ $item['title'] }}</span>
+                        </div>
                     </div>
                 @else
                     {{-- Normal menu item with link --}}
-                    <div @if($this->isTouchDevice && $item['route']) wire:click="handleMenuClick({{ $index }})" @endif>
+                    <div @if($this->isTouchDevice && (isset($item['route']) || isset($item['link']))) wire:click="handleMenuClick({{ $index }})" @endif>
                         @if($item['exact'] ?? false)
                             <x-menu-item 
                                 title="{{ $item['title'] }}" 
-                                link="{{ $item['route'] ? route($item['route']) : '#' }}" 
+                                link="{{ $this->getMenuItemUrl($item) }}" 
                                 class="btn-outline navbar-item-custom {{ !$this->isTouchDevice ? 'group-hover:bg-primary/10' : '' }}"
-                                exact="{{ $item['route'] ? 'true' : 'false' }}"
+                                exact="true"
+                                target="{{ $this->getMenuItemTarget($item) }}"
+                                rel="{{ $this->getMenuItemRel($item) }}"
                             >
                                 <x-slot:actions>
+                                    @if($this->isExternalMenuItem($item) && $this->showLinkIcons)
+                                        <x-icon name="phosphor.arrow-square-out" class="w-4 h-4 ml-1 opacity-70" />
+                                    @endif
                                     <x-icon name="phosphor.caret-down" 
                                             class="w-4 h-4 transition-transform duration-200 {{ $this->isSubmenuOpen($index) ? 'rotate-180' : '' }} {{ !$this->isTouchDevice ? 'group-hover:rotate-180' : '' }}" />
                                 </x-slot:actions>
@@ -192,10 +291,15 @@ new class extends Component
                         @else
                             <x-menu-item 
                                 title="{{ $item['title'] }}" 
-                                link="{{ $item['route'] ? route($item['route']) : '#' }}" 
+                                link="{{ $this->getMenuItemUrl($item) }}" 
                                 class="btn-outline navbar-item-custom {{ !$this->isTouchDevice ? 'group-hover:bg-primary/10' : '' }}"
+                                target="{{ $this->getMenuItemTarget($item) }}"
+                                rel="{{ $this->getMenuItemRel($item) }}"
                             >
                                 <x-slot:actions>
+                                    @if($this->isExternalMenuItem($item) && $this->showLinkIcons)
+                                        <x-icon name="phosphor.arrow-square-out" class="w-4 h-4 ml-1 opacity-70" />
+                                    @endif
                                     <x-icon name="phosphor.caret-down" 
                                             class="w-4 h-4 transition-transform duration-200 {{ $this->isSubmenuOpen($index) ? 'rotate-180' : '' }} {{ !$this->isTouchDevice ? 'group-hover:rotate-180' : '' }}" />
                                 </x-slot:actions>
@@ -211,10 +315,15 @@ new class extends Component
                                before:content-[''] before:absolute before:-top-2 before:left-0 before:right-0 before:h-2">
                         <div class="mt-[10px] py-2">
                             @foreach($item['submenus'] as $submenu)
-                                <a href="{{ $submenu['link'] }}" 
-                                   class="block px-4 py-2 text-base xl:text-lg text-primary-content hover:bg-secondary transition-colors duration-150"
-                                   wire:click="closeAllSubmenus()">
-                                    {{ $submenu['title'] }}
+                                <a href="{{ $this->getMenuItemUrl($submenu) }}" 
+                                   class="block px-4 py-2 text-base xl:text-lg text-primary-content hover:bg-secondary transition-colors duration-150 {{ $this->isExternalMenuItem($submenu) ? 'flex items-center justify-between' : '' }}"
+                                   wire:click="closeAllSubmenus()"
+                                   target="{{ $this->getMenuItemTarget($submenu) }}"
+                                   rel="{{ $this->getMenuItemRel($submenu) }}">
+                                    <span>{{ $submenu['title'] }}</span>
+                                    @if($this->isExternalMenuItem($submenu) && $this->showLinkIcons)
+                                        <x-icon name="phosphor.arrow-square-out" class="w-4 h-4 opacity-70 ml-2" />
+                                    @endif
                                 </a>
                             @endforeach
                         </div>
@@ -229,9 +338,14 @@ new class extends Component
                                before:content-[''] before:absolute before:-top-2 before:left-0 before:right-0 before:h-2">
                         <div class="mt-[10px] py-2">
                             @foreach($item['submenus'] as $submenu)
-                                <a href="{{ $submenu['link'] }}" 
-                                   class="block px-4 py-2 text-base xl:text-lg text-primary-content hover:bg-secondary transition-colors duration-150">
-                                    {{ $submenu['title'] }}
+                                <a href="{{ $this->getMenuItemUrl($submenu) }}" 
+                                   class="block px-4 py-2 text-base xl:text-lg text-primary-content hover:bg-secondary transition-colors duration-150 {{ $this->isExternalMenuItem($submenu) ? 'flex items-center justify-between' : '' }}"
+                                   target="{{ $this->getMenuItemTarget($submenu) }}"
+                                   rel="{{ $this->getMenuItemRel($submenu) }}">
+                                    <span>{{ $submenu['title'] }}</span>
+                                    @if($this->isExternalMenuItem($submenu) && $this->showLinkIcons)
+                                        <x-icon name="phosphor.arrow-square-out" class="w-4 h-4 opacity-70 ml-2" />
+                                    @endif
                                 </a>
                             @endforeach
                         </div>
@@ -245,9 +359,17 @@ new class extends Component
                     @foreach($item['submenus'] as $submenu)
                         <x-menu-item 
                             title="{{ $submenu['title'] }}" 
-                            link="{{ $submenu['link'] }}" 
+                            link="{{ $this->getMenuItemUrl($submenu) }}" 
                             class="text-lg pl-6"
-                        />
+                            target="{{ $this->getMenuItemTarget($submenu) }}"
+                            rel="{{ $this->getMenuItemRel($submenu) }}"
+                        >
+                            @if($this->isExternalMenuItem($submenu) && $this->showLinkIcons)
+                                <x-slot:actions>
+                                    <x-icon name="phosphor.arrow-square-out" class="w-4 h-4 ml-1 opacity-70" />
+                                </x-slot:actions>
+                            @endif
+                        </x-menu-item>
                     @endforeach
                 </x-menu-sub>
             </div>

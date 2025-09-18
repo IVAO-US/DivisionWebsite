@@ -87,7 +87,7 @@ new class extends Component {
                         return;
                     }
                     
-                    console.log('🚀 Initializing video for iOS Safari compatibility');
+                    //console.log('🚀 Initializing video for iOS Safari compatibility');
                     
                     // iOS Safari compatibility setup
                     this.video.muted = true;
@@ -95,19 +95,19 @@ new class extends Component {
                     
                     // Event listeners for video states
                     this.video.addEventListener('loadedmetadata', () => {
-                        console.log('✅ Video metadata loaded');
+                        //console.log('✅ Video metadata loaded');
                         this.attemptAutoplay();
                     });
                     
                     this.video.addEventListener('canplay', () => {
-                        console.log('✅ Video can play - showing video');
+                        //console.log('✅ Video can play - showing video');
                         // Show video with fade-in effect
                         this.video.classList.remove('opacity-0');
                         this.video.classList.add('opacity-100');
                     });
                     
                     this.video.addEventListener('play', () => {
-                        console.log('▶️ Video started playing successfully');
+                        //console.log('▶️ Video started playing successfully');
                     });
                     
                     this.video.addEventListener('error', (e) => {
@@ -120,7 +120,7 @@ new class extends Component {
                 },
                 
                 attemptAutoplay() {
-                    console.log('🎬 Attempting autoplay...');
+                    //console.log('🎬 Attempting autoplay...');
                     
                     // iOS Safari autoplay with promise handling
                     this.playPromise = this.video.play();
@@ -128,7 +128,7 @@ new class extends Component {
                     if (this.playPromise !== undefined) {
                         this.playPromise
                             .then(() => {
-                                console.log('✅ Autoplay successful!');
+                                //console.log('✅ Autoplay successful!');
                             })
                             .catch(error => {
                                 console.log('⚠️ Autoplay failed:', error.name);
@@ -138,7 +138,7 @@ new class extends Component {
                 },
                 
                 fallbackToImage() {
-                    console.log('🔄 Falling back to background image');
+                    //console.log('🔄 Falling back to background image');
                     // Hide video and keep the background image
                     this.video.style.display = 'none';
                     // Background image is already set on parent div
@@ -147,14 +147,16 @@ new class extends Component {
         }
         
         // iOS Safari detection and logging
-        const isIOSSafari = /iPad|iPhone|iPod/.test(navigator.userAgent) && 
-                           /Safari/.test(navigator.userAgent) && 
-                           !/CriOS|FxiOS|OPiOS|mercury/.test(navigator.userAgent);
-        
-        if (isIOSSafari) {
-            console.log('📱 iOS Safari detected - applying specific optimizations');
-        } else {
-            console.log('🖥️ Desktop/other browser detected');
-        }
+        (function() {
+            const isIOSSafari = /iPad|iPhone|iPod/.test(navigator.userAgent) && 
+                               /Safari/.test(navigator.userAgent) && 
+                               !/CriOS|FxiOS|OPiOS|mercury/.test(navigator.userAgent);
+            
+            if (isIOSSafari) {
+                //console.log('📱 iOS Safari detected - applying specific optimizations');
+            } else {
+                //console.log('🖥️ Desktop/other browser detected');
+            }
+        })();
     </script>
 </div>

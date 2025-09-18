@@ -53,6 +53,11 @@ Route::get('/auth/ivao/callback', [IvaoController::class, 'handleCallback'])->na
 Route::redirect('/users',       '/users/settings')->name('users');
 Route::redirect('/admin',       '/admin/dashboard')->name('admin');
 Route::redirect('/admin/app',   '/admin/dashboard')->name('admin.app');
+Route::redirect('/division',    '/')->name('division');
+Route::redirect('/members',     '/')->name('members');
+Route::redirect('/atcs',        '/')->name('atcs');
+Route::redirect('/pilots',      '/')->name('pilots');
+Route::redirect('/training',    '/')->name('training');
 
 
 /**
@@ -61,6 +66,24 @@ Route::redirect('/admin/app',   '/admin/dashboard')->name('admin.app');
 
 /* Home */
 Volt::route('/', 'home')->name('home');
+
+/* Division */
+Volt::route('/division/our-history',    'division.our-history')->name('division.our-history');
+Volt::route('/division/transfer',       'division.transfer')->name('division.transfer');
+
+/* Community */
+Volt::route('/members/support',         'members.support')->name('members.support');
+
+/* ATCs */
+Volt::route('/atcs/become-atc',         'atcs.become-atc')->name('atcs.become-atc');
+
+/* Pilots */
+Volt::route('/pilots/virtual-airlines', 'pilots.virtual-airlines')->name('pilots.virtual-airlines');
+
+/* Training */
+Volt::route('/training/request',    'training.request')->name('training.request');
+Volt::route('/training/exams',      'training.exams')->name('training.exams');
+Volt::route('/training/gca',        'training.gca')->name('training.gca');
 
 /* Privacy Policy + Terms of Service */
 Volt::route('/tos',     'tos')           ->name('tos');

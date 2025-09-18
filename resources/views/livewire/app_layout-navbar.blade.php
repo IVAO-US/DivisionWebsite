@@ -43,7 +43,7 @@ new class extends Component
                 {{-- Center section with menu --}}
                 <div class="flex justify-center">
                     <x-menu activate-by-route class="menu-horizontal justify-center items-center">
-                        <livewire:app_layout-navbar-menu-items :className="'menu-horizontal justify-center items-center gap-1'" />
+                        <livewire:app_layout-navbar-menu-items :className="'menu-horizontal justify-center items-center gap-1'" :showLinkIcons="true" />
                     </x-menu>
                 </div>
                 
@@ -89,7 +89,7 @@ new class extends Component
     @if ($this->mobileMenuOpen)
         <div class="lg:hidden absolute left-0 right-0 w-full bg-secondary shadow-md z-50 top-full">
             <x-menu activate-by-route class="menu-vertical w-full">
-                <livewire:app_layout-navbar-menu-items :className="'menu-vertical w-full px-6'" />
+                <livewire:app_layout-navbar-menu-items :className="'menu-vertical w-full px-6'" :showLinkIcons="true" />
             </x-menu>
         </div>
     @endif
