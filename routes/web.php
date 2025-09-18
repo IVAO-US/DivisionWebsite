@@ -50,8 +50,9 @@ Route::get('/auth/ivao/callback', [IvaoController::class, 'handleCallback'])->na
  *  Breadcrumbs
  *  Named routes for categories without index page
  */
-Route::redirect('/users', '/users/settings')->name('users');
-Route::redirect('/admin', '/admin/dashboard')->name('admin');
+Route::redirect('/users',       '/users/settings')->name('users');
+Route::redirect('/admin',       '/admin/dashboard')->name('admin');
+Route::redirect('/admin/app',   '/admin/dashboard')->name('admin.app');
 
 
 /**
