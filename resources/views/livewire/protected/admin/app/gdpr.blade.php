@@ -390,7 +390,7 @@ class extends Component {
                         </div>
                         
                         @if($selectedUser)
-                            <div class="bg-success/20 border border-success/50 rounded-lg p-4">
+                            <div class="bg-neutral border border-neutral rounded-lg p-4">
                                 <h4 class="font-semibold text-success mb-2">✓ User Selected</h4>
                                 <p><strong>{{ $selectedUser->full_name }}</strong> - VID: <a href="https://www.ivao.aero/Member.aspx?Id={{ $selectedUser->vid }}" target="_blank" class="font-semibold text-primary">{{ $selectedUser->vid }}</a></p>
                                 <p class="text-sm">{{ $selectedUser->email }}</p>
