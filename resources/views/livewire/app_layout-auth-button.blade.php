@@ -29,7 +29,7 @@ new class extends Component
             '<x-menu-item title="IVAO Account"  icon="phosphor.identification-badge"  link="https://www.ivao.aero/Member.aspx" external />',
             '<x-menu-item title="My Profile"    icon="phosphor.user-circle-gear" :link="$settingsUrl" />',
             '<x-menu-separator />',
-            '<x-menu-item title="Log out" class="underline decoration-dashed" icon="phosphor.power" wire:click="logout" />',
+            '<x-menu-item title="Log out" class="underline decoration-dashed underline-offset-3" icon="phosphor.power" wire:click="logout" />',
         ]);
 
         return Blade::render($blade, [

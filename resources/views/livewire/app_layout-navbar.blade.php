@@ -87,7 +87,7 @@ new class extends Component
 
     {{-- Mobile menu --}}
     @if ($this->mobileMenuOpen)
-        <div class="lg:hidden absolute left-0 right-0 w-full bg-secondary shadow-md z-50 top-full">
+        <div class="lg:hidden absolute left-0 right-0 w-full bg-secondary shadow-md z-50 top-full pb-4">
             <x-menu activate-by-route class="menu-vertical w-full">
                 <livewire:app_layout-navbar-menu-items :className="'menu-vertical w-full px-6'" :showLinkIcons="true" />
             </x-menu>
