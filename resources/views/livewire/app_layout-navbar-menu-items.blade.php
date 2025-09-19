@@ -95,8 +95,8 @@ new class extends Component
                 'title' => 'ATCs',
                 'submenus' => [
                     ['title' => 'Become an ATC', 'route' => 'atcs.become-atc'],
-                    ['title' => 'Software', 'link' => 'https://ivao.aero/softdev/software/aurora.asp'],
                     ['title' => 'Facility SOPs', 'link' => 'https://wiki.us.ivao.aero/en/atc/sop'],
+                    ['title' => 'Software', 'link' => 'https://ivao.aero/softdev/software/aurora.asp'],
                     ['title' => 'Scheduling', 'link' => 'https://atc.ivao.aero/schedule'],
                     ['title' => 'Facility Ratings', 'link' => 'https://atc.ivao.aero/fras?division=US'],
                 ]
@@ -358,17 +358,19 @@ new class extends Component
                 <x-menu-sub title="{{ $item['title'] }}">
                     @foreach($item['submenus'] as $submenu)
                         <x-menu-item 
-                            title="{{ $submenu['title'] }}" 
-                            link="{{ $this->getMenuItemUrl($submenu) }}" 
-                            class="text-lg pl-6"
+                            class="text-lg pl-6 w-full"
                             target="{{ $this->getMenuItemTarget($submenu) }}"
                             rel="{{ $this->getMenuItemRel($submenu) }}"
+                            link="{{ $this->getMenuItemUrl($submenu) }}"
                         >
-                            @if($this->isExternalMenuItem($submenu) && $this->showLinkIcons)
-                                <x-slot:actions>
-                                    <x-icon name="phosphor.arrow-square-out" class="w-4 h-4 ml-1 opacity-70" />
-                                </x-slot:actions>
-                            @endif
+                            <x-slot:title>
+                                <div class="flex items-center justify-between w-full">
+                                    <span>{{ $submenu['title'] }}</span>
+                                    @if($this->isExternalMenuItem($submenu) && $this->showLinkIcons)
+                                        <x-icon name="phosphor.arrow-square-out" class="w-4 h-4 opacity-70 ml-2" />
+                                    @endif
+                                </div>
+                            </x-slot:title>
                         </x-menu-item>
                     @endforeach
                 </x-menu-sub>
