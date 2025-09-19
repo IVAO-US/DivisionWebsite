@@ -56,7 +56,7 @@ new class extends Component
                             <x-button icon="phosphor.wrench" class="btn-neutral btn-circle" tooltipBottom="Admin Panel" link="{{ route('admin.index') }}" spinner />
                         @endif
                         
-                    <livewire:app_layout-theme-toggle />
+                    <livewire:app_layout-theme-toggle instanceId="desktop" />
                 </div>
             </div>
 
@@ -78,7 +78,7 @@ new class extends Component
                             <x-button icon="phosphor.wrench" class="btn-neutral btn-circle" tooltipBottom="Admin Panel" link="{{ route('admin.index') }}" spinner />
                         @endif
 
-                        <livewire:app_layout-theme-toggle />
+                        <livewire:app_layout-theme-toggle instanceId="mobile" />
                     </div>
                 </div>
             </div>

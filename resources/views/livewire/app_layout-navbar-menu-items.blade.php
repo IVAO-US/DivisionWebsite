@@ -95,9 +95,9 @@ new class extends Component
                 'title' => 'ATCs',
                 'submenus' => [
                     ['title' => 'Become an ATC', 'route' => 'atcs.become-atc'],
-                    ['title' => 'Facility SOPs', 'link' => 'https://wiki.us.ivao.aero/en/atc/sop'],
                     ['title' => 'Software', 'link' => 'https://ivao.aero/softdev/software/aurora.asp'],
                     ['title' => 'Scheduling', 'link' => 'https://atc.ivao.aero/schedule'],
+                    ['title' => 'Facility SOPs', 'link' => 'https://wiki.us.ivao.aero/en/atc/sop'],
                     ['title' => 'Facility Ratings', 'link' => 'https://atc.ivao.aero/fras?division=US'],
                 ]
             ],
@@ -115,9 +115,9 @@ new class extends Component
                 'title' => 'Training',
                 'submenus' => [
                     ['title' => 'Moodle', 'link' => 'https://moodle.us.ivao.aero/'],
-                    ['title' => 'Knowledge Wiki', 'link' => 'https://wiki.us.ivao.aero/'],
                     ['title' => 'Training Request', 'route' => 'training.request'],
                     ['title' => 'Exams', 'route' => 'training.exams'],
+                    ['title' => 'Knowledge Wiki', 'link' => 'https://wiki.us.ivao.aero/'],
                     ['title' => 'Guest Controller Approval', 'route' => 'training.gca'],
                 ]
             ],
@@ -146,6 +146,14 @@ new class extends Component
     public function isExternalMenuItem(array $item): bool
     {
         return isset($item['link']);
+    }
+    
+    /**
+     * Get wire:navigate value for menu item (false for external, true for internal)
+     */
+    public function shouldNavigate(array $item): string
+    {
+        return $this->isExternalMenuItem($item) ? 'false' : 'true';
     }
     
     /**
@@ -234,6 +242,7 @@ new class extends Component
                     exact
                     target="{{ $this->getMenuItemTarget($item) }}"
                     rel="{{ $this->getMenuItemRel($item) }}"
+                    wire:navigate="{{ $this->shouldNavigate($item) }}"
                 >
                     @if($this->isExternalMenuItem($item) && $this->showLinkIcons)
                         <x-slot:actions>
@@ -248,6 +257,7 @@ new class extends Component
                     class="btn-outline navbar-item-custom"
                     target="{{ $this->getMenuItemTarget($item) }}"
                     rel="{{ $this->getMenuItemRel($item) }}"
+                    wire:navigate="{{ $this->shouldNavigate($item) }}"
                 >
                     @if($this->isExternalMenuItem($item) && $this->showLinkIcons)
                         <x-slot:actions>
@@ -279,6 +289,7 @@ new class extends Component
                                 exact="true"
                                 target="{{ $this->getMenuItemTarget($item) }}"
                                 rel="{{ $this->getMenuItemRel($item) }}"
+                                wire:navigate="{{ $this->shouldNavigate($item) }}"
                             >
                                 <x-slot:actions>
                                     @if($this->isExternalMenuItem($item) && $this->showLinkIcons)
@@ -295,6 +306,7 @@ new class extends Component
                                 class="btn-outline navbar-item-custom {{ !$this->isTouchDevice ? 'group-hover:bg-primary/10' : '' }}"
                                 target="{{ $this->getMenuItemTarget($item) }}"
                                 rel="{{ $this->getMenuItemRel($item) }}"
+                                wire:navigate="{{ $this->shouldNavigate($item) }}"
                             >
                                 <x-slot:actions>
                                     @if($this->isExternalMenuItem($item) && $this->showLinkIcons)
@@ -357,21 +369,16 @@ new class extends Component
             <div class="lg:hidden">              
                 <x-menu-sub title="{{ $item['title'] }}">
                     @foreach($item['submenus'] as $submenu)
-                        <x-menu-item 
-                            class="text-lg pl-6 w-full"
-                            target="{{ $this->getMenuItemTarget($submenu) }}"
-                            rel="{{ $this->getMenuItemRel($submenu) }}"
-                            link="{{ $this->getMenuItemUrl($submenu) }}"
-                        >
-                            <x-slot:title>
-                                <div class="flex items-center justify-between w-full">
-                                    <span>{{ $submenu['title'] }}</span>
-                                    @if($this->isExternalMenuItem($submenu) && $this->showLinkIcons)
-                                        <x-icon name="phosphor.arrow-square-out" class="w-4 h-4 opacity-70 ml-2" />
-                                    @endif
-                                </div>
-                            </x-slot:title>
-                        </x-menu-item>
+                        <a href="{{ $this->getMenuItemUrl($submenu) }}"
+                           class="my-0.5 py-1.5 px-4 hover:text-inherit whitespace-nowrap text-lg pl-2 flex items-center w-full"
+                           target="{{ $this->getMenuItemTarget($submenu) }}"
+                           rel="{{ $this->getMenuItemRel($submenu) }}"
+                           @if(!$this->isExternalMenuItem($submenu)) wire:navigate @endif>
+                            <span>{{ $submenu['title'] }}</span>
+                            @if($this->isExternalMenuItem($submenu) && $this->showLinkIcons)
+                                <x-icon name="phosphor.arrow-square-out" class="w-4 h-4 opacity-70 ml-1" />
+                            @endif
+                        </a>
                     @endforeach
                 </x-menu-sub>
             </div>
