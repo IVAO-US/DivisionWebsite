@@ -90,8 +90,8 @@ new class extends Component
         </div>
 
         {{-- Mobile --}}
-        <div class="lg:hidden">
-            <x-menu-sub title="{{ $user->first_name }}" icon="phosphor.headset" icon-classes="font-semibold text-accent rounded-xl">
+        <div class="lg:hidden bg-base-content/30">
+            <x-menu-sub title="{{ $user->first_name }}" icon="phosphor.headset" icon-classes="font-semibold text-accent rounded-xl" class="!py-0">
                 @php echo $this->userMenuItems(); @endphp
             </x-menu-sub>
         </div>
@@ -109,11 +109,11 @@ new class extends Component
         </div>
 
         {{-- Mobile --}}
-        <div class="lg:hidden">
-            <x-menu-item 
-                title="Log in" 
+        <div class="lg:hidden px-4">
+            <x-button 
+                label="Log in" 
                 icon="phosphor.key" 
-                icon-classes="text-accent"
+                class="btn-accent" 
                 wire:click="login" 
                 spinner />
         </div>
