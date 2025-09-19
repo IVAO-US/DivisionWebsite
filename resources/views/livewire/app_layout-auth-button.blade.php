@@ -29,7 +29,7 @@ new class extends Component
             '<x-menu-item title="IVAO Account"  icon="phosphor.identification-badge"  link="https://www.ivao.aero/Member.aspx" external />',
             '<x-menu-item title="My Profile"    icon="phosphor.user-circle-gear" :link="$settingsUrl" />',
             '<x-menu-separator />',
-            '<x-menu-item title="Log out" icon="phosphor.power" wire:click="logout" />',
+            '<x-menu-item title="Log out" class="underline decoration-dashed" icon="phosphor.power" wire:click="logout" />',
         ]);
 
         return Blade::render($blade, [
@@ -71,6 +71,7 @@ new class extends Component
             "icon"          => 'phosphor.door-open',
             "css"           => 'alert-success',
             "timeout"       => 5000,
+            "redirectTo"    => route('home')
         ];
         $this->success(...$toast_success);
     }
@@ -90,7 +91,7 @@ new class extends Component
         </div>
 
         {{-- Mobile --}}
-        <div class="lg:hidden bg-base-content/30">
+        <div class="lg:hidden bg-base-content/30 rounded-md">
             <x-menu-sub title="{{ $user->first_name }}" icon="phosphor.headset" icon-classes="font-semibold text-accent rounded-xl" class="!py-0">
                 @php echo $this->userMenuItems(); @endphp
             </x-menu-sub>
