@@ -31,7 +31,7 @@
     {{-- MAIN LAYOUT CONTAINER --}}
     <div class="bg-base-200 flex flex-1">
         {{-- MAIN CONTENT AREA --}}
-        <div class="max-w-7xl mx-auto flex-1 px-5 lg:px-0">
+        <div class="max-w-7xl mx-auto flex-1 px-10">
             <x-main with-nav full-width>
                 <x-slot:content class="mt-8 mb-20 px-0 lg:px-10">
                     
