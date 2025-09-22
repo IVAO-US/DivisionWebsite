@@ -1,18 +1,29 @@
 <?php
+
+/**
+ * Simplified Navbar Menu Items Component
+ * 
+ * A clean, responsive navigation menu component using pure MaryUI components.
+ * No JavaScript complexity, just clean PHP/Livewire logic.
+ * 
+ * Features:
+ * - Pure MaryUI components for consistency
+ * - Simple external link detection
+ * - Clean desktop hover (CSS only) and mobile expand
+ * - Security attributes for external links
+ * 
+ * @property string $className - CSS classes to apply to the root container
+ * @property bool $showLinkIcons - Whether to show external link icons
+ * @property array $menuItems - Menu structure array
+ */
+
 use Livewire\Volt\Component;
-use Illuminate\Support\Facades\Auth;
 
 new class extends Component
 {
-    /* Because of the way Blade handles component, we need to report the x-menu classes onto the root <div> */
-    public string $className = ''; /* :className */
-    
-    /* Menu structure with submenus - simplified version */
+    public string $className = '';
+    public bool $showLinkIcons = true;
     public array $menuItems = [];
-    
-    /* Touch device detection and submenu state management */
-    public bool $isTouchDevice = false;
-    public array $openSubmenus = [];
     
     public function mount(): void
     {
@@ -24,230 +35,202 @@ new class extends Component
             ],
             [
                 'title' => 'Division',
-                'route' => null,
                 'submenus' => [
-                    ['title' => 'Our History', 'link' => '#'],
-                    ['title' => 'Staff', 'link' => '#'],
-                    ['title' => 'LiveTrack', 'link' => '#'],
-                    ['title' => 'Division Transfer', 'link' => '#'],
-                    ['title' => 'Rating Transfer', 'link' => '#'],
+                    ['title' => 'Our History', 'route' => 'division.our-history'],
+                    ['title' => 'Staff', 'link' => 'https://www.ivao.aero/staff/division.asp?Id=US'],
+                    ['title' => 'LiveTrack', 'link' => 'https://livetrack.us.ivao.aero/'],
+                    ['title' => 'Division Transfer', 'route' => 'division.transfer'],
+                    ['title' => 'Rating Transfer', 'link' => 'https://wiki.ivao.aero/en/home/training/main/training_procedures/rating_transfer'],
                 ]
             ],
             [
-                'title' => 'Training',
-                'route' => null,
+                'title' => 'Members',
                 'submenus' => [
-                    ['title' => 'Moodle', 'link' => '#'],
-                    ['title' => 'Training Request', 'link' => '#'],
-                    ['title' => 'Exam', 'link' => '#'],
-                    ['title' => 'Wiki', 'link' => '#'],
-                    ['title' => 'Guest Controller Approval', 'link' => '#'],
+                    ['title' => 'Webeye', 'link' => 'https://webeye.ivao.aero/'],
+                    ['title' => 'Awards', 'link' => 'https://awards.us.ivao.aero/'],
+                    ['title' => 'Support', 'route' => 'members.support'],
+                    ['title' => 'Discord', 'link' => 'https://discord.us.ivao.aero/'],
+                    ['title' => 'Forum', 'link' => 'https://us.forum.ivao.aero/'],
                 ]
             ],
             [
                 'title' => 'ATCs',
-                'route' => null,
                 'submenus' => [
-                    ['title' => 'Become an ATC', 'link' => '#'],
-                    ['title' => 'Software', 'link' => '#'],
-                    ['title' => 'Scheduling', 'link' => '#'],
-                    ['title' => 'Facility SOPs', 'link' => '#'],
-                    ['title' => 'Facility Ratings', 'link' => '#'],
+                    ['title' => 'Become an ATC', 'route' => 'atcs.become-atc'],
+                    ['title' => 'Facility SOPs', 'link' => 'https://wiki.us.ivao.aero/en/atc/sop'],
+                    ['title' => 'Software', 'link' => 'https://ivao.aero/softdev/software/aurora.asp'],
+                    ['title' => 'Facility Ratings', 'link' => 'https://atc.ivao.aero/fras?division=US'],
+                    ['title' => 'Scheduling', 'link' => 'https://atc.ivao.aero/schedule'],
                 ]
             ],
             [
                 'title' => 'Pilots',
-                'route' => null,
                 'submenus' => [
-                    ['title' => 'Become a Pilot', 'link' => '#'],
-                    ['title' => 'Software', 'link' => '#'],
-                    ['title' => 'Tracker', 'link' => '#'],
-                    ['title' => 'Tours', 'link' => '#'],
-                    ['title' => 'Virtual Airlines', 'link' => '#'],
+                    ['title' => 'Become a Pilot', 'link' => 'https://wiki.us.ivao.aero/en/pilots/training'],
+                    ['title' => 'Software', 'link' => 'https://ivao.aero/softdev/software/altitude.asp'],
+                    ['title' => 'Tracker', 'link' => 'https://tracker.ivao.aero/'],
+                    ['title' => 'Tours', 'link' => 'https://tours.th.ivao.aero/index.php?div=US'],
+                    ['title' => 'Virtual Airlines', 'route' => 'pilots.virtual-airlines'],
                 ]
             ],
             [
-                'title' => 'Community',
-                'route' => null,
+                'title' => 'Training',
                 'submenus' => [
-                    ['title' => 'Webeye', 'link' => '#'],
-                    ['title' => 'Awards', 'link' => '#'],
-                    ['title' => 'Support', 'link' => '#'],
-                    ['title' => 'Discord', 'link' => '#'],
-                    ['title' => 'Forum', 'link' => '#'],
+                    ['title' => 'Moodle', 'link' => 'https://moodle.us.ivao.aero/'],
+                    ['title' => 'Knowledge Wiki', 'link' => 'https://wiki.us.ivao.aero/'],
+                    ['title' => 'Training Request', 'route' => 'training.request'],
+                    ['title' => 'Exams', 'route' => 'training.exams'],
+                    ['title' => 'Guest Controller Approval', 'route' => 'training.gca'],
                 ]
-            ]
+            ],
         ];
     }
     
     /**
-     * Toggle submenu visibility for touch devices
+     * Get the URL for a menu item
      */
-    public function toggleSubmenu(int $menuIndex): void
+    public function getUrl(array $item): string
     {
-        if (in_array($menuIndex, $this->openSubmenus)) {
-            $this->openSubmenus = array_filter($this->openSubmenus, fn($index) => $index !== $menuIndex);
-        } else {
-            // Close other submenus and open the clicked one
-            $this->openSubmenus = [$menuIndex];
+        if (isset($item['route'])) {
+            return route($item['route']);
         }
+        
+        return $item['link'] ?? '#';
     }
     
     /**
-     * Close all submenus
+     * Check if a menu item is external
      */
-    public function closeAllSubmenus(): void
+    public function isExternal(array $item): bool
     {
-        $this->openSubmenus = [];
+        return isset($item['link']);
     }
     
     /**
-     * Check if a submenu is open
+     * Get target attribute for external links
      */
-    public function isSubmenuOpen(int $menuIndex): bool
+    public function getTarget(array $item): string
     {
-        return in_array($menuIndex, $this->openSubmenus);
+        return $this->isExternal($item) ? '_blank' : '';
     }
     
     /**
-     * Handle touch device detection from JavaScript
+     * Get rel attribute for external links
      */
-    public function setTouchDevice(bool $isTouchDevice): void
+    public function getRel(array $item): string
     {
-        $this->isTouchDevice = $isTouchDevice;
+        return $this->isExternal($item) ? 'noopener noreferrer' : '';
     }
     
     /**
-     * Handle menu item click for touch devices
+     * Should use wire:navigate for internal links
      */
-    public function handleMenuClick(int $menuIndex): void
+    public function shouldNavigate(array $item): bool
     {
-        // For touch devices, always toggle submenu
-        if ($this->isTouchDevice) {
-            $this->toggleSubmenu($menuIndex);
+        return !$this->isExternal($item);
+    }
+
+    /**
+    * Get the active dropdown based on current route
+    */
+    public function getActiveDropdown(): ?string 
+    {
+        $currentRoute = request()->route()?->getName();
+        
+        if (!$currentRoute) {
+            return null;
         }
+        
+        foreach ($this->menuItems as $item) {
+            if (!empty($item['submenus'])) {
+                foreach ($item['submenus'] as $submenu) {
+                    if (isset($submenu['route']) && $submenu['route'] === $currentRoute) {
+                        return $item['title'];
+                    }
+                }
+            }
+        }
+        
+        return null;
     }
 };
 ?>
 
-<div class="{{ $this->className }}" 
-     x-data="{ 
-        init() {
-            const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-            $wire.setTouchDevice(isTouchDevice);
-        }
-     }"
-     @click.away="$wire.closeAllSubmenus()">
-     
-    @foreach($this->menuItems as $index => $item)
+<div class="{{ $this->className }}">
+    @foreach($this->menuItems as $item)
         @if(empty($item['submenus']))
             {{-- Simple menu item without submenu --}}
-            @if($item['exact'] ?? false)
+            @if(isset($item['exact']) && $item['exact'])
+                {{-- Home item with exact matching --}}
                 <x-menu-item 
                     title="{{ $item['title'] }}" 
-                    link="{{ $item['route'] ? route($item['route']) : '#' }}" 
-                    class="btn-outline navbar-item-custom"
-                    exact
-                />
+                    link="{{ $this->getUrl($item) }}" 
+                    class="navbar-item-custom"
+                    exact="true"
+                    target="{{ $this->getTarget($item) }}"
+                    rel="{{ $this->getRel($item) }}"
+                >
+                    @if($this->isExternal($item) && $this->showLinkIcons)
+                        <x-slot:actions>
+                            <x-icon name="phosphor.arrow-square-out" class="w-4 h-4 ml-1 opacity-70" />
+                        </x-slot:actions>
+                    @endif
+                </x-menu-item>
             @else
+                {{-- Regular menu item --}}
                 <x-menu-item 
                     title="{{ $item['title'] }}" 
-                    link="{{ $item['route'] ? route($item['route']) : '#' }}" 
-                    class="btn-outline navbar-item-custom"
-                />
+                    link="{{ $this->getUrl($item) }}" 
+                    class="navbar-item-custom"
+                    target="{{ $this->getTarget($item) }}"
+                    rel="{{ $this->getRel($item) }}"
+                >
+                    @if($this->isExternal($item) && $this->showLinkIcons)
+                        <x-slot:actions>
+                            <x-icon name="phosphor.arrow-square-out" class="w-4 h-4 ml-1 opacity-70" />
+                        </x-slot:actions>
+                    @endif
+                </x-menu-item>
             @endif
         @else
-            {{-- Desktop: Menu item with hover/click submenu --}}
-            <div class="relative hidden lg:block {{ !$this->isTouchDevice ? 'group' : '' }}">
+            {{-- Desktop: Simple dropdown using CSS hover --}}
+            <div class="dropdown dropdown-hover hidden lg:block">
+                <div tabindex="0" role="button" class="btn btn-outline navbar-item-custom {{ $this->getActiveDropdown() === $item['title'] ? 'active' : '' }}">
+                    {{ $item['title'] }}
+                </div>
                 
-                {{-- Menu item wrapper for touch handling --}}
-                @if($this->isTouchDevice && !$item['route'])
-                    {{-- Touch device without route: Use non-link element --}}
-                    <div wire:click="handleMenuClick({{ $index }})" class="cursor-pointer">
-                        @if($item['exact'] ?? false)
-                            <div class="btn btn-outline navbar-item-custom flex items-center justify-between">
-                                <span>{{ $item['title'] }}</span>
-                            </div>
-                        @else
-                            <div class="btn btn-outline navbar-item-custom flex items-center justify-between">
-                                <span>{{ $item['title'] }}</span>
-                            </div>
-                        @endif
-                    </div>
-                @else
-                    {{-- Normal menu item with link --}}
-                    <div @if($this->isTouchDevice && $item['route']) wire:click="handleMenuClick({{ $index }})" @endif>
-                        @if($item['exact'] ?? false)
-                            <x-menu-item 
-                                title="{{ $item['title'] }}" 
-                                link="{{ $item['route'] ? route($item['route']) : '#' }}" 
-                                class="btn-outline navbar-item-custom {{ !$this->isTouchDevice ? 'group-hover:bg-primary/10' : '' }}"
-                                exact="{{ $item['route'] ? 'true' : 'false' }}"
+                <ul tabindex="0" class="dropdown-content menu bg-primary shadow-xl rounded-box w-64 p-2">
+                    @foreach($item['submenus'] as $submenu)
+                        <li>
+                            <a href="{{ $this->getUrl($submenu) }}"
+                               class="text-primary-content hover:bg-secondary transition-colors"
+                               target="{{ $this->getTarget($submenu) }}"
+                               rel="{{ $this->getRel($submenu) }}"
                             >
-                                <x-slot:actions>
-                                    <x-icon name="phosphor.caret-down" 
-                                            class="w-4 h-4 transition-transform duration-200 {{ $this->isSubmenuOpen($index) ? 'rotate-180' : '' }} {{ !$this->isTouchDevice ? 'group-hover:rotate-180' : '' }}" />
-                                </x-slot:actions>
-                            </x-menu-item>
-                        @else
-                            <x-menu-item 
-                                title="{{ $item['title'] }}" 
-                                link="{{ $item['route'] ? route($item['route']) : '#' }}" 
-                                class="btn-outline navbar-item-custom {{ !$this->isTouchDevice ? 'group-hover:bg-primary/10' : '' }}"
-                            >
-                                <x-slot:actions>
-                                    <x-icon name="phosphor.caret-down" 
-                                            class="w-4 h-4 transition-transform duration-200 {{ $this->isSubmenuOpen($index) ? 'rotate-180' : '' }} {{ !$this->isTouchDevice ? 'group-hover:rotate-180' : '' }}" />
-                                </x-slot:actions>
-                            </x-menu-item>
-                        @endif
-                    </div>
-                @endif
-                
-                {{-- Submenu dropdown for touch devices --}}
-                @if($this->isTouchDevice && $this->isSubmenuOpen($index))
-                    <div class="absolute top-full left-0 w-64 bg-primary shadow-xl rounded-lg z-50
-                               opacity-100 visible translate-y-0 transition-all duration-200 transform
-                               before:content-[''] before:absolute before:-top-2 before:left-0 before:right-0 before:h-2">
-                        <div class="mt-[10px] py-2">
-                            @foreach($item['submenus'] as $submenu)
-                                <a href="{{ $submenu['link'] }}" 
-                                   class="block px-4 py-2 text-base xl:text-lg text-primary-content hover:bg-secondary transition-colors duration-150"
-                                   wire:click="closeAllSubmenus()">
-                                    {{ $submenu['title'] }}
-                                </a>
-                            @endforeach
-                        </div>
-                    </div>
-                @endif
-                
-                {{-- Submenu dropdown for non-touch devices (hover) --}}
-                @if(!$this->isTouchDevice)
-                    <div class="absolute top-full left-0 w-64 bg-primary shadow-xl rounded-lg 
-                               opacity-0 invisible group-hover:opacity-100 group-hover:visible 
-                               transition-all duration-200 transform translate-y-2 group-hover:translate-y-0 z-50
-                               before:content-[''] before:absolute before:-top-2 before:left-0 before:right-0 before:h-2">
-                        <div class="mt-[10px] py-2">
-                            @foreach($item['submenus'] as $submenu)
-                                <a href="{{ $submenu['link'] }}" 
-                                   class="block px-4 py-2 text-base xl:text-lg text-primary-content hover:bg-secondary transition-colors duration-150">
-                                    {{ $submenu['title'] }}
-                                </a>
-                            @endforeach
-                        </div>
-                    </div>
-                @endif
+                                <span>{{ $submenu['title'] }}</span>
+                                @if($this->isExternal($submenu) && $this->showLinkIcons)
+                                    <x-icon name="phosphor.arrow-square-out" class="w-4 h-4 opacity-70" />
+                                @endif
+                            </a>
+                        </li>
+                    @endforeach
+                </ul>
             </div>
             
-            {{-- Mobile: Expandable menu section --}}
+            {{-- Mobile: Expandable menu --}}
             <div class="lg:hidden">              
                 <x-menu-sub title="{{ $item['title'] }}">
                     @foreach($item['submenus'] as $submenu)
-                        <x-menu-item 
-                            title="{{ $submenu['title'] }}" 
-                            link="{{ $submenu['link'] }}" 
-                            class="text-lg pl-6"
-                        />
+                        <a href="{{ $this->getUrl($submenu) }}"
+                           class="my-0.5 py-1.5 px-4 hover:text-inherit whitespace-nowrap text-lg pl-2 flex items-center w-full"
+                           target="{{ $this->getTarget($submenu) }}"
+                           rel="{{ $this->getRel($submenu) }}"
+                        >
+                            <span>{{ $submenu['title'] }}</span>
+                            @if($this->isExternal($submenu) && $this->showLinkIcons)
+                                <x-icon name="phosphor.arrow-square-out" class="w-4 h-4 opacity-70 ml-1" />
+                            @endif
+                        </a>
                     @endforeach
                 </x-menu-sub>
             </div>

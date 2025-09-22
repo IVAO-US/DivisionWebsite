@@ -29,7 +29,7 @@ new class extends Component
             '<x-menu-item title="IVAO Account"  icon="phosphor.identification-badge"  link="https://www.ivao.aero/Member.aspx" external />',
             '<x-menu-item title="My Profile"    icon="phosphor.user-circle-gear" :link="$settingsUrl" />',
             '<x-menu-separator />',
-            '<x-menu-item title="Log out" icon="phosphor.power" wire:click="logout" />',
+            '<x-menu-item title="Log out" class="underline decoration-dashed underline-offset-3" icon="phosphor.power" wire:click="logout" />',
         ]);
 
         return Blade::render($blade, [
@@ -71,6 +71,7 @@ new class extends Component
             "icon"          => 'phosphor.door-open',
             "css"           => 'alert-success',
             "timeout"       => 5000,
+            "redirectTo"    => route('home')
         ];
         $this->success(...$toast_success);
     }
@@ -82,7 +83,10 @@ new class extends Component
         <div class="hidden lg:block">
             <x-dropdown>
                 <x-slot:trigger>
-                    <x-button icon="phosphor.headset" label="{{ $user->first_name }}" class="rounded-lg bg-accent text-accent-content border-accent" />
+                    <a class="btn rounded-lg bg-accent text-accent-content border-accent flex items-center gap-2 cursor-pointer">
+                        <x-phosphor-headset class="w-5 h-5" />
+                        {{ $user->first_name }}
+                    </a>
                 </x-slot:trigger>
 
                 @php echo $this->userMenuItems(); @endphp
@@ -90,8 +94,8 @@ new class extends Component
         </div>
 
         {{-- Mobile --}}
-        <div class="lg:hidden">
-            <x-menu-sub title="{{ $user->first_name }}" icon="phosphor.headset" icon-classes="font-semibold text-accent rounded-xl">
+        <div class="lg:hidden bg-base-content/30 rounded-md">
+            <x-menu-sub title="{{ $user->first_name }}" icon="phosphor.headset" icon-classes="font-semibold text-accent rounded-xl" class="!py-0">
                 @php echo $this->userMenuItems(); @endphp
             </x-menu-sub>
         </div>
@@ -109,11 +113,11 @@ new class extends Component
         </div>
 
         {{-- Mobile --}}
-        <div class="lg:hidden">
-            <x-menu-item 
-                title="Log in" 
+        <div class="lg:hidden px-4">
+            <x-button 
+                label="Log in" 
                 icon="phosphor.key" 
-                icon-classes="text-accent"
+                class="btn-accent" 
                 wire:click="login" 
                 spinner />
         </div>

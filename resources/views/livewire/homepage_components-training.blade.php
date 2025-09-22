@@ -111,7 +111,7 @@ new class extends Component {
                             label="Request Training" 
                             icon="phosphor.chalkboard-teacher"
                             class="btn-accent btn-lg font-semibold px-8"
-                            link="https://us.ivao.aero/training-request/"
+                            link="{{ route('training.request') }}"
                             external
                         />
                         <x-button 

@@ -11,9 +11,11 @@ new class extends Component
 
     /* Class property */
     public $isDarkMode = false;
+    public $instanceId = '';
     
-    public function mount(): void
+    public function mount(string $instanceId = ''): void
     {
+        $this->instanceId = $instanceId ?: uniqid();
         $this->isDarkMode = session('theme', self::LIGHT_THEME) === self::DARK_THEME;
     }
     
@@ -46,5 +48,5 @@ new class extends Component
 
 <div>
     <x-button :icon="$this->themeIcon" wire:click="toggleTheme" wire:loading.class="opacity-50" class="btn-secondary btn-circle" tooltipBottom="Theme" spinner />
-    <x-theme-toggle lightTheme="{{ $this->lightThemeName }}" darkTheme="{{ $this->darkThemeName }}" class="hidden" />
+    <x-theme-toggle lightTheme="{{ $this->lightThemeName }}" darkTheme="{{ $this->darkThemeName }}" class="hidden" id="theme-toggle-{{ $this->instanceId }}" />
 </div>
