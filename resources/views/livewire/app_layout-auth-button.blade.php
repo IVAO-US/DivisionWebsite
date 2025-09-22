@@ -83,7 +83,10 @@ new class extends Component
         <div class="hidden lg:block">
             <x-dropdown>
                 <x-slot:trigger>
-                    <x-button icon="phosphor.headset" label="{{ $user->first_name }}" class="rounded-lg bg-accent text-accent-content border-accent" />
+                    <a class="btn rounded-lg bg-accent text-accent-content border-accent flex items-center gap-2 cursor-pointer">
+                        <x-phosphor-headset class="w-5 h-5" />
+                        {{ $user->first_name }}
+                    </a>
                 </x-slot:trigger>
 
                 @php echo $this->userMenuItems(); @endphp
