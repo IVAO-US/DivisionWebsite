@@ -494,17 +494,6 @@
         padding-left: calc(var(--spacing) * 2) !important;
     }
 
-    /* === CLEANUP: NEUTRALIZE CONFLICTING MARYUI STYLES === */
-    /* Remove problematic MaryUI hover effects */
-    @supports (color:color-mix(in lab,red,red)) {
-        .menu :where(li:not(.menu-title,.disabled)>:not(ul,details,.menu-title):not(.menu-active,:active,.btn):hover,li:not(.menu-title,.disabled)>details>summary:not(.menu-title):not(.menu-active,:active,.btn):hover) {
-            background-color: inherit !important;
-        }
-    }
-
-    .menu :where(li:not(.menu-title,.disabled)>:not(ul,details,.menu-title):not(.menu-active,:active,.btn):hover,li:not(.menu-title,.disabled)>details>summary:not(.menu-title):not(.menu-active,:active,.btn):hover) {
-        background-color: inherit !important;
-    }
 
     /* Separators */
     .menu :where(li ul):before {
