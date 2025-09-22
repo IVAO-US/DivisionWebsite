@@ -6,8 +6,6 @@
 @source '../**/*.js';
 @source '../views';
 
-
-
 /** Safelisting classes */
 @source inline('bg-primary bg-secondary bg-accent bg-neutral bg-info bg-success bg-warning bg-error');
 @source inline('border-primary border-accent');
@@ -17,14 +15,11 @@
 @source inline('badge-primary badge-secondary badge-accent badge-neutral badge-info badge-success badge-warning badge-error');
 @source inline('text-accent');
 
-
-
 @theme {
     /* Necessary directive for theme use */
     --font-sans: 'Poppins', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
-
 
 /**
     The lines above are intact.
@@ -177,13 +172,12 @@
         --depth: 0;
         --noise: 0;
 }
-    /** Theme toggle: remember to edit "Theme Toggle" Livewire Component if theme names are changed below */
-    @custom-variant dark (&:where([data-theme=ivao-dark], [data-theme=ivao-dark] *));
 
+/** Theme toggle: remember to edit "Theme Toggle" Livewire Component if theme names are changed below */
+@custom-variant dark (&:where([data-theme=ivao-dark], [data-theme=ivao-dark] *));
 
 /** maryUI */
 @source "../../vendor/robsontenorio/mary/src/View/Components/**/*.php";
-
 
 /** Tailwind Scrollbar */
 @plugin 'tailwind-scrollbar' {
@@ -191,12 +185,10 @@
     preferredStrategy: 'pseudoelements';
 }
 
-
 /**
 * Paginator - Traditional style
 * Because Laravel defaults does not match well the design of daisyUI.
 */
-
 .mary-table-pagination span[aria-current="page"] > span {
     @apply bg-primary text-base-100
 }
@@ -204,7 +196,6 @@
 .mary-table-pagination button {
     @apply cursor-pointer
 }
-
 
 /**
 * Theme customization
@@ -310,7 +301,6 @@
         font-size: 1.00rem !important; /* 16px for better readability */
     }
 	
-
     /* IVAO Customisation: MaryUI Card Titles */
     div.text-xl.font-bold {
         font-size: 1.50rem !important;
@@ -328,86 +318,172 @@
         @apply text-primary;
     }
 
-
-
-    /** IVAO US Specific Styling */
-
-    /* Target the actual menu item links/buttons */
-    .menu-horizontal li > *,
-    .menu-horizontal .menu-item {
-        @apply px-6 py-3 text-base font-medium;
+    /* === NAVBAR STYLES - CONSOLIDATED AND PRIORITY === */
+    
+    /* === NAVBAR ITEM BASE STYLES === */
+    /* Ultra-specific selectors to override all potential conflicts */
+    .navbar-item-custom,
+    .menu-horizontal .navbar-item-custom,
+    .menu-horizontal li > .navbar-item-custom,
+    .menu-horizontal .btn.navbar-item-custom,
+    .menu .navbar-item-custom {
+        /* Layout & Spacing */
+        /* padding: 0.75rem 1.5rem !important; */ /* py-3 px-6 */
+        /* margin: 0 0.25rem !important; */ /* mx-1 */
+        min-height: 3rem !important;
+        
+        /* Typography */
+        font-size: 1rem !important;
+        font-weight: 500 !important;
+        
+        /* Appearance */
         border: 2px solid transparent !important;
         border-radius: 0.5rem !important;
+        background-color: transparent !important;
+        color: white !important;
+        
+        /* Transitions */
         transition: all 0.2s ease-in-out !important;
-        min-height: 3rem !important;
+        
+        /* Flexbox */
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
-        background-color: transparent !important;
-        color: white !important; /* Default white text on blue navbar */
     }
-    @media (min-width: 1280px) { /* @screen xl */
-        .menu-horizontal li > *,
-        .menu-horizontal .menu-item {
-            @apply mx-4;
+    
+    @media (min-width: 1280px) { /* xl: */
+        .navbar-item-custom,
+        .menu-horizontal .navbar-item-custom,
+        .menu-horizontal li > .navbar-item-custom,
+        .menu-horizontal .btn.navbar-item-custom,
+        .menu .navbar-item-custom {
+            margin: 0 1.5rem !important; /* mx-2 */
+            font-size: 1.125rem !important; /* text-lg */
         }
     }
-        /* Hover state: white border */
-        .menu-horizontal li > *:hover,
-        .menu-horizontal .menu-item:hover {
-            border-color: white !important;
-            background-color: transparent !important;
-            color: white !important;
-        }
 
-        /* Active state: secondary background with white border - TARGET MARYUI ACTIVE CLASS */
-        .menu-horizontal li > *.active,
-        .menu-horizontal li > *[aria-current="page"],
-        .menu-horizontal li > *.mary-active-menu,
-        .menu-horizontal .menu-item.active,
-        .menu-horizontal .menu-item[aria-current="page"],
-        .menu-horizontal .menu-item.mary-active-menu {
-            background-color: var(--color-secondary) !important;
-            border-color: white !important;
-            color: white !important;
-        }
-    
-    /* Ensure text color remains white for active items */
-    .menu-horizontal li > *.active *,
-    .menu-horizontal li > *[aria-current="page"] *,
-    .menu-horizontal li > *.mary-active-menu *,
-    .menu-horizontal .menu-item.active *,
-    .menu-horizontal .menu-item[aria-current="page"] *,
-    .menu-horizontal .menu-item.mary-active-menu * {
-        color: white !important;
-    }
-    
-    /* Remove default outline styles from MaryUI buttons */
-    .menu-horizontal .btn-outline {
-        border-color: transparent !important;
-        color: white !important;
-    }
-    
-    .menu-horizontal .btn-outline:hover {
+    /* === HOVER STATES === */
+    .navbar-item-custom:hover,
+    .menu-horizontal .navbar-item-custom:hover,
+    .menu-horizontal li > .navbar-item-custom:hover,
+    .menu-horizontal .btn.navbar-item-custom:hover,
+    .menu .navbar-item-custom:hover {
         border-color: white !important;
         background-color: transparent !important;
         color: white !important;
     }
-    
-    /* Override any potential dark text from MaryUI/DaisyUI */
-    .menu-horizontal .btn-outline.mary-active-menu {
+
+    /* === ACTIVE STATES === */
+    /* Ultra-comprehensive selectors for active states */
+    .navbar-item-custom.active,
+    .navbar-item-custom[aria-current="page"],
+    .navbar-item-custom.mary-active-menu,
+    .menu-horizontal .navbar-item-custom.active,
+    .menu-horizontal .navbar-item-custom[aria-current="page"],
+    .menu-horizontal .navbar-item-custom.mary-active-menu,
+    .menu-horizontal li > .navbar-item-custom.active,
+    .menu-horizontal li > .navbar-item-custom[aria-current="page"],
+    .menu-horizontal li > .navbar-item-custom.mary-active-menu,
+    .menu-horizontal .btn.navbar-item-custom.active,
+    .menu-horizontal .btn.navbar-item-custom[aria-current="page"],
+    .menu-horizontal .btn.navbar-item-custom.mary-active-menu,
+    .menu .navbar-item-custom.active,
+    .menu .navbar-item-custom[aria-current="page"],
+    .menu .navbar-item-custom.mary-active-menu {
         background-color: var(--color-secondary) !important;
         border-color: white !important;
         color: white !important;
     }
-    
 
-    /* Mobile menu items styling */
+    /* === FORCE WHITE TEXT === */
+    /* Ensure white text in all states and nested elements */
+    .navbar-item-custom,
+    .navbar-item-custom *,
+    .navbar-item-custom:hover,
+    .navbar-item-custom:hover *,
+    .navbar-item-custom.active,
+    .navbar-item-custom.active *,
+    .navbar-item-custom[aria-current="page"],
+    .navbar-item-custom[aria-current="page"] *,
+    .navbar-item-custom.mary-active-menu,
+    .navbar-item-custom.mary-active-menu *,
+    .menu-horizontal .navbar-item-custom,
+    .menu-horizontal .navbar-item-custom *,
+    .menu-horizontal .navbar-item-custom:hover,
+    .menu-horizontal .navbar-item-custom:hover *,
+    .menu-horizontal .navbar-item-custom.active,
+    .menu-horizontal .navbar-item-custom.active *,
+    .menu-horizontal .navbar-item-custom[aria-current="page"],
+    .menu-horizontal .navbar-item-custom[aria-current="page"] *,
+    .menu-horizontal .navbar-item-custom.mary-active-menu,
+    .menu-horizontal .navbar-item-custom.mary-active-menu *,
+    .menu .navbar-item-custom,
+    .menu .navbar-item-custom *,
+    .menu .navbar-item-custom:hover,
+    .menu .navbar-item-custom:hover *,
+    .menu .navbar-item-custom.active,
+    .menu .navbar-item-custom.active *,
+    .menu .navbar-item-custom[aria-current="page"],
+    .menu .navbar-item-custom[aria-current="page"] *,
+    .menu .navbar-item-custom.mary-active-menu,
+    .menu .navbar-item-custom.mary-active-menu * {
+        color: white !important;
+    }
+
+    /* === DROPDOWN STYLES === */
+    .dropdown.dropdown-hover .btn.navbar-item-custom {
+        position: relative;
+        margin-left: 0px !important;
+    }
+
+    .dropdown-content.menu {
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        margin-top: 0px !important;
+        padding-top: 20px !important;
+        padding-inline: 0px !important;
+    }
+
+    .dropdown-content.menu li > a {
+        /* border-radius: 0.5rem !important; */
+        margin-bottom: 0.25rem !important;
+        transition: all 0.15s ease-in-out !important;
+        padding-inline: 18px !important;
+    }
+
+    .dropdown-content.menu li > a:hover {
+        background-color: var(--color-secondary) !important;
+        color: white !important;
+        border-radius: 0px !important;
+        /* transform: translateX(4px) !important; */
+    }
+
+    .dropdown-hover:hover .btn.navbar-item-custom,
+    .dropdown.dropdown-open .btn.navbar-item-custom,
+    .dropdown:focus-within .btn.navbar-item-custom {
+        border-color: white !important;
+        background-color: transparent !important;
+        color: white !important;
+    }
+
+    .dropdown-hover:hover .btn.navbar-item-custom *,
+    .dropdown.dropdown-open .btn.navbar-item-custom *,
+    .dropdown:focus-within .btn.navbar-item-custom * {
+        color: white !important;
+    }
+
+
+    /* External link icons in dropdowns */
+    .dropdown-content.menu li > a .w-4.h-4.opacity-70 {
+        margin-left: auto !important;
+    }
+
+    /* === MOBILE STYLES === */
     .menu-vertical li > *,
     .menu-vertical .menu-item {
-        @apply text-base;
+        font-size: 1rem !important;
         border: 1px solid transparent !important;
-        border-radius: 0.5rem !important;
+        border-radius: 0px !important;
         transition: all 0.2s ease-in-out !important;
         min-height: 2rem !important;
         margin: 0.25rem 0 !important;
@@ -419,6 +495,8 @@
         padding-left: calc(var(--spacing) * 2) !important;
     }
 
+    /* === CLEANUP: NEUTRALIZE CONFLICTING MARYUI STYLES === */
+    /* Remove problematic MaryUI hover effects */
     @supports (color:color-mix(in lab,red,red)) {
         .menu :where(li:not(.menu-title,.disabled)>:not(ul,details,.menu-title):not(.menu-active,:active,.btn):hover,li:not(.menu-title,.disabled)>details>summary:not(.menu-title):not(.menu-active,:active,.btn):hover) {
             background-color: inherit !important;
@@ -428,15 +506,24 @@
     .menu :where(li:not(.menu-title,.disabled)>:not(ul,details,.menu-title):not(.menu-active,:active,.btn):hover,li:not(.menu-title,.disabled)>details>summary:not(.menu-title):not(.menu-active,:active,.btn):hover) {
         background-color: inherit !important;
     }
-        
 
     /* Separators */
     .menu :where(li ul):before {
         visibility: hidden;
     }
+
+    /* Force transparent backgrounds for btn-outline in menu context */
+    .menu-horizontal .btn-outline {
+        border-color: transparent !important;
+        background-color: transparent !important;
+    }
+    
+    .menu-horizontal .btn-outline:hover {
+        background-color: transparent !important;
+    }
 }
 
-/* Scrollbar requires @plugin 'tailwind-scrollbar': https://adoxography.github.io/tailwind-scrollbar/ */
+/* Root variables and utilities */
 :root {
     /* Scrollbar */
     scrollbar-color: var(--color-base-content) var(--color-base-300) !important;
@@ -447,20 +534,15 @@
     --livewire-progress-bar-color: var(--color-primary) !important;
 }
 
-
 /**
 * Custom utilities
-*
 */
-
 main {
     display: flex;
     flex-direction: column;
     flex-grow: 1;
 }
 
-
 /**
 * Custom CSS
-*
 */
