@@ -27,7 +27,9 @@
 */
 
 /** daisyUI */
-@plugin "daisyui";
+@plugin "daisyui" {
+    themes: false; /* Disable default themes */
+}
 
 /** daisyUI Themes: IVAO US - Light Refined; Enhanced modern elegance */
 @plugin "daisyui/theme" {
