@@ -174,7 +174,7 @@ class extends Component {
                 </div>
             </x-card>
         </x-tab>
-        <x-tab name="settings-tab" label="Settings" icon="phosphor.user-circle-gear" active>
+        <x-tab name="settings-tab" label="Settings" icon="phosphor.gear" active>
             <x-card title="Edit your settings" subtitle="Customize your experience" shadow separator progress-indicator="updateSettings">
                 <div class="w-full md:w-125 mx-auto">
                     <x-form wire:submit="updateSettings" no-separator>
