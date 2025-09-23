@@ -227,7 +227,7 @@ class extends Component {
                     />
                 </div>
                 @if($isManualEntry)
-                    <x-alert title="User not found in database" description="A minimal user record will be created. All user data will be automatically updated when they first log in via SSO." icon="phosphor.warning"  class="alert-warning" />
+                    <x-alert title="User not found in database" description="A minimal user record will be created. All user data will be automatically updated when they first log in via SSO." icon="phosphor.warning"  class="alert-warning mt-4" />
                 @endif
             </x-card>
         @else
