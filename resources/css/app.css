@@ -237,7 +237,7 @@
     h3, .h3 { font-size: 1.75rem; } /* 28px */
     h4, .h4 { font-size: 1.50rem; } /* 24px */
     h5, .h5 { font-size: 1.25rem; } /* 20px */
-    h6, .h6 { font-size: 1.00rem; } /* 16px */
+    h6, .h6 { font-size: 1.125rem; } /* 16px */
 
     /* IVAO Customisation: navbar font-size */
     span:not(.h1):not(.h2):not(.h3):not(.h4):not(.h5):not(.h6) {
