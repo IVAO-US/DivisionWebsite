@@ -5,11 +5,22 @@ use Livewire\Attributes\Rule;
 
 use Livewire\Volt\Component;
 
+use Illuminate\Support\Facades\Auth;
+use App\Models\User;
+
 new 
 #[Layout('components.layouts.app')]
 #[Title('Division Transfer')]
 class extends Component {
-
+    /* User information */
+    public User $user;
+    public function mount(): void
+    {
+        if(Auth::check()) {
+            $this->user = Auth::user();
+            $this->fill($this->user);
+        }
+    }
 }; ?>
 
 <div>
@@ -66,17 +77,24 @@ class extends Component {
                 <div class="space-y-3">
                     <div class="flex items-center gap-3">
                         <x-icon name="phosphor.mailbox" class="w-6 h-6 text-secondary" />
-                        <span>us-hq@ivao.aero</span>
+                        <span>US-hq@ivao.aero</span>
                     </div>
                     
                     <div class="flex items-center gap-3">
                         <x-icon name="phosphor.mailbox" class="w-6 h-6 text-secondary" />
-                        <div>
-                            <span>XX-hq@ivao.aero</span>
-                            <div class="text-xs mt-1">
-                                >> where <b>XX</b> is the two-letter designator of <b>your current division</b>.
+                        @guest
+                            <div>
+                                <span>XX-hq@ivao.aero</span>
+                                <div class="text-xs mt-1">
+                                    >> where <b>XX</b> is the two-letter designator of <b>your current division</b>.
+                                </div>
                             </div>
-                        </div>
+                        @endguest
+                        @auth
+                            <div>
+                                <span>{{ $user->division }}-hq@ivao.aero</span>
+                            </div>
+                        @endauth
                     </div>
                     
                     <div class="flex items-center gap-3">
@@ -94,12 +112,19 @@ class extends Component {
                 <div class="space-y-3">
                     <div class="flex items-center gap-3">
                         <x-icon name="phosphor.textbox" class="w-6 h-6 text-secondary" />
-                        <div>
-                            <span><b>Subject:</b> Division Transfer ######</span>
-                            <div class="text-xs mt-1">
-                                >> Replace ###### with <b>your own VID</b>.
+                        @guest
+                            <div>
+                                <span><b>Subject:</b> Division Transfer ######</span>
+                                <div class="text-xs mt-1">
+                                    >> Replace ###### with <b>your own VID</b>.
+                                </div>
                             </div>
-                        </div>
+                        @endguest
+                        @auth
+                            <div>
+                                <span><b>Subject:</b> Division Transfer {{ $user->vid }}</span>
+                            </div>
+                        @endauth
                     </div>
 
                     <div class="flex items-center gap-3">
