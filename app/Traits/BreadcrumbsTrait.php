@@ -51,9 +51,18 @@ trait BreadcrumbsTrait
             // Build the current path for route checking
             $currentPath = $currentPath ? "$currentPath.$segment" : $segment;
             
+            // For intermediate segments, try to use route names
+            $label = $this->formatLabel($segment);
+            if (!$isLastSegment) {
+                $routeLabel = $this->getRouteLabelForSegments($processedSegments);
+                if ($routeLabel) {
+                    $label = $routeLabel;
+                }
+            }
+            
             // Add breadcrumb for this segment
             $breadcrumbs[] = [
-                'label' => $this->formatLabel($segment),
+                'label' => $label,
                 'link' => $isLastSegment ? null : $this->getUrlForSegments($processedSegments)
             ];
         }
@@ -67,6 +76,41 @@ trait BreadcrumbsTrait
         }
         
         return $breadcrumbs;
+    }
+    
+    /**
+     * Get route name/label for the given segments (for intermediate breadcrumbs)
+     *
+     * @param array $segments
+     * @return string|null
+     */
+    protected function getRouteLabelForSegments(array $segments): ?string
+    {
+        $path = '/' . implode('/', $segments);
+        $uri = trim($path, '/');
+        
+        // Try to find a route that matches this path
+        $routes = Route::getRoutes();
+        
+        foreach ($routes as $route) {
+            if ($route->uri() === $uri && $route->getName()) {
+                // Ensure first letter is uppercase
+                return ucfirst($route->getName());
+            }
+        }
+        
+        // If we have a single segment, check if it's a route name
+        if (count($segments) === 1) {
+            if (Route::has($segments[0])) {
+                // Get the route and return its name with first letter uppercase
+                $route = Route::getRoutes()->getByName($segments[0]);
+                if ($route) {
+                    return ucfirst($segments[0]);
+                }
+            }
+        }
+        
+        return null;
     }
     
     /**
