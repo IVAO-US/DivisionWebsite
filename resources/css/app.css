@@ -511,6 +511,12 @@
     .menu-horizontal .btn-outline:hover {
         background-color: transparent !important;
     }
+
+
+    /* TABS */
+    .tab-content {
+        padding: 0px !important;
+    }
 }
 
 /* Root variables and utilities */
