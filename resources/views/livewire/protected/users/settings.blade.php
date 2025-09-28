@@ -120,9 +120,10 @@ class extends Component {
     <x-header title="Your Profile" size="h2" subtitle="Edit your account data" class="!mb-5" />
 
     <x-tabs wire:model="defaultTab"
-            label-div-class="bg-base-100 p-3 rounded-lg font-semibold" 
-            active-class="bg-primary p-2 rounded !text-white" 
-            label-class="font-semibold" 
+            class="w-full"
+            label-div-class="bg-base-100 !p-3 !mb-4 rounded-lg font-semibold whitespace-nowrap overflow-x-auto" 
+            active-class="bg-primary p-3 rounded-lg !text-white font-semibold" 
+            label-class="p-3 font-semibold" 
             >
         <x-tab name="ivaoData-tab" label="Personal Information" icon="phosphor.user" active>
             <x-card title="Your personal information" subtitle="Retrieved from your IVAO account" shadow separator>

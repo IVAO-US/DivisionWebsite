@@ -103,7 +103,12 @@ new class extends Component {
     <div class="lg:hidden">
         <x-card class="shadow-lg">
             <h3 class="!text-center font-bold text-primary !mb-5">Flight Operations</h3>
-            <x-tabs wire:model="activeTab" class="w-full" label-div-class="bg-white rounded-lg w-fit p-2 mx-auto">
+            <x-tabs wire:model="activeTab"
+                    class="w-full"
+                    label-div-class="bg-base-100 !p-3 !mb-4 rounded-lg font-semibold whitespace-nowrap overflow-x-auto w-fit mx-auto" 
+                    active-class="bg-primary p-3 rounded-lg !text-white font-semibold" 
+                    label-class="p-3 font-semibold" 
+                    >
                 <x-tab name="tours" label="Tours" icon="phosphor.airplane-takeoff">
                     <x-card class="flex flex-col h-full">
                         <div class="flex-1">

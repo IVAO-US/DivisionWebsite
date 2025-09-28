@@ -51,11 +51,11 @@ class extends Component {
 <div>
     <x-header title="Become ATC" size="h2" subtitle="How to become a great Air Traffic Controller?" class="!mb-5" />
 
-    <x-tabs wire:model="selectedTab" 
-            class="w-full" 
-            label-div-class="bg-base-100 p-3 rounded-lg font-semibold" 
-            active-class="bg-primary p-2 rounded !text-white" 
-            label-class="font-semibold" 
+    <x-tabs wire:model="selectedTab"
+            class="w-full"
+            label-div-class="bg-base-100 !p-3 !mb-4 rounded-lg font-semibold whitespace-nowrap overflow-x-auto" 
+            active-class="bg-primary p-3 rounded-lg !text-white font-semibold" 
+            label-class="p-3 font-semibold" 
             selected="1-tab">
         
         {{-- Step 1: Welcome --}}

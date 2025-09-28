@@ -325,9 +325,10 @@ class extends Component {
     <x-header title="GDPR Management" size="h2" subtitle="Handle 'Right to be Forgotten' requests" class="!mb-5" />
         
     <x-tabs selected="deletion-tab" 
-            label-div-class="bg-base-100 p-3 rounded-lg font-semibold" 
-            active-class="bg-primary p-2 rounded !text-white" 
-            label-class="font-semibold" 
+            class="w-full"
+            label-div-class="bg-base-100 !p-3 !mb-4 rounded-lg font-semibold whitespace-nowrap overflow-x-auto" 
+            active-class="bg-primary p-3 rounded-lg !text-white font-semibold" 
+            label-class="p-3 font-semibold" 
             >
         <x-tab name="deletion-tab" label="User Deletion" icon="phosphor.user-focus">
             <!-- Warning Alert -->
