@@ -492,6 +492,18 @@
         color: white !important;
     }
 
+    .menu-vertical li > *,
+    .menu-vertical .menu-item {
+        font-size: 1rem !important;
+        border: 0px solid transparent !important;
+        border-radius: 0px !important;
+        transition: all 0.2s ease-in-out !important;
+        min-height: 2rem !important;
+        margin: 0rem 0 !important;
+        background-color: transparent !important;
+        color: white !important;
+    }
+
     details > ul.mary-hideable > li > a {
         padding-left: calc(var(--spacing) * 2) !important;
     }
