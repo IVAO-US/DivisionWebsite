@@ -479,19 +479,9 @@
         margin-left: auto !important;
     }
 
-    /* === MOBILE STYLES === */
-    .menu-vertical li > *,
-    .menu-vertical .menu-item {
-        font-size: 1rem !important;
-        border: 1px solid transparent !important;
-        border-radius: 0px !important;
-        transition: all 0.2s ease-in-out !important;
-        min-height: 2rem !important;
-        margin: 0.25rem 0 !important;
-        background-color: transparent !important;
-        color: white !important;
-    }
 
+    /* === MOBILE STYLES === */
+    
     .menu-vertical li > *,
     .menu-vertical .menu-item {
         font-size: 1rem !important;
@@ -508,11 +498,15 @@
         padding-left: calc(var(--spacing) * 2) !important;
     }
 
+    details > summary {
+        margin: 0 !important;
+    }
 
-    /* Separators */
+    /* Menu Separators */
     .menu :where(li ul):before {
         visibility: hidden;
     }
+
 
     /* Force transparent backgrounds for btn-outline in menu context */
     .menu-horizontal .btn-outline {
