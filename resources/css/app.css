@@ -245,7 +245,7 @@
     }
     @media (min-width: 1280px) { /* @screen xl */
         span:not(.h1):not(.h2):not(.h3):not(.h4):not(.h5):not(.h6) {
-            font-size: 1.125rem;
+            font-size: 1rem;
         }
     }
         .h1 span, .h2 span, .h3 span, .h4 span, .h5 span, .h6 span {
@@ -359,7 +359,7 @@
         .menu-horizontal .btn.navbar-item-custom,
         .menu .navbar-item-custom {
             margin: 0 1.5rem !important; /* mx-2 */
-            font-size: 1.125rem !important; /* text-lg */
+            font-size: 1rem !important; /* text-lg */
         }
     }
 
