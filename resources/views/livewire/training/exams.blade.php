@@ -2,23 +2,11 @@
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Volt\Component;
-use Illuminate\Support\Facades\Auth;
-use App\Models\User;
 
 new 
 #[Layout('components.layouts.app')]
 #[Title('Exams')]
 class extends Component {
-    /* User information */
-    public User $user;
-    
-    public function mount(): void
-    {
-        if(Auth::check()) {
-            $this->user = Auth::user();
-            $this->fill($this->user);
-        }
-    }
 }; ?>
 
 <div>
