@@ -237,7 +237,7 @@
     h3, .h3 { font-size: 1.75rem; } /* 28px */
     h4, .h4 { font-size: 1.50rem; } /* 24px */
     h5, .h5 { font-size: 1.25rem; } /* 20px */
-    h6, .h6 { font-size: 1.00rem; } /* 16px */
+    h6, .h6 { font-size: 1.125rem; } /* 16px */
 
     /* IVAO Customisation: navbar font-size */
     span:not(.h1):not(.h2):not(.h3):not(.h4):not(.h5):not(.h6) {
@@ -245,7 +245,7 @@
     }
     @media (min-width: 1280px) { /* @screen xl */
         span:not(.h1):not(.h2):not(.h3):not(.h4):not(.h5):not(.h6) {
-            font-size: 1.125rem;
+            font-size: 1rem;
         }
     }
         .h1 span, .h2 span, .h3 span, .h4 span, .h5 span, .h6 span {
@@ -359,7 +359,7 @@
         .menu-horizontal .btn.navbar-item-custom,
         .menu .navbar-item-custom {
             margin: 0 1.5rem !important; /* mx-2 */
-            font-size: 1.125rem !important; /* text-lg */
+            font-size: 1rem !important; /* text-lg */
         }
     }
 
@@ -479,15 +479,17 @@
         margin-left: auto !important;
     }
 
+
     /* === MOBILE STYLES === */
+    
     .menu-vertical li > *,
     .menu-vertical .menu-item {
         font-size: 1rem !important;
-        border: 1px solid transparent !important;
+        border: 0px solid transparent !important;
         border-radius: 0px !important;
         transition: all 0.2s ease-in-out !important;
         min-height: 2rem !important;
-        margin: 0.25rem 0 !important;
+        margin: 0rem 0 !important;
         background-color: transparent !important;
         color: white !important;
     }
@@ -496,11 +498,15 @@
         padding-left: calc(var(--spacing) * 2) !important;
     }
 
+    details > summary {
+        margin: 0 !important;
+    }
 
-    /* Separators */
+    /* Menu Separators */
     .menu :where(li ul):before {
         visibility: hidden;
     }
+
 
     /* Force transparent backgrounds for btn-outline in menu context */
     .menu-horizontal .btn-outline {
@@ -510,6 +516,27 @@
     
     .menu-horizontal .btn-outline:hover {
         background-color: transparent !important;
+    }
+
+
+    /* TABS */
+    .tab {
+        @apply bg-base-100;
+        @apply !p-3;
+        @apply rounded-lg;
+        @apply font-semibold;
+    }
+
+    .tab-content {
+        padding: 0px !important;
+    }
+}
+
+@layer utilities {
+    @supports (color:color-mix(in lab,red,red)) {
+        .tab:not(:checked,label:has(:checked),:hover,.tab-active,[aria-selected=true],[aria-current=true],[aria-current=page]) {
+            color: color-mix(in oklab, var(--color-base-content) 66%, transparent);
+        }
     }
 }
 

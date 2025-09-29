@@ -324,10 +324,15 @@ class extends Component {
 <div>
     <x-header title="GDPR Management" size="h2" subtitle="Handle 'Right to be Forgotten' requests" class="!mb-5" />
         
-    <x-tabs selected="deletion-tab">
+    <x-tabs selected="deletion-tab" 
+            class="w-full"
+            label-div-class="bg-base-100 !p-3 !mb-4 rounded-lg font-semibold whitespace-nowrap overflow-x-auto" 
+            active-class="bg-primary p-3 rounded-lg !text-white font-semibold" 
+            label-class="p-3 font-semibold" 
+            >
         <x-tab name="deletion-tab" label="User Deletion" icon="phosphor.user-focus">
             <!-- Warning Alert -->
-            <div>
+            <x-card>
                 <x-alert 
                     title="Critical Operation" 
                     description="GDPR deletion is irreversible and will permanently remove/anonymize user data while preserving application integrity." 
@@ -341,105 +346,105 @@ class extends Component {
                         </div>
                     </x-slot:actions>
                 </x-alert>
-            </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <x-card title="1. Select User" subtitle="Search and select user for GDPR deletion" shadow separator>
-                    <div class="space-y-4">
-                        <div class="relative">
-                            <x-input 
-                                label="Search User" 
-                                placeholder="Enter VID, name, or email..."
-                                wire:model.live.debounce.300ms="userSearch"
-                                icon="phosphor.magnifying-glass-light"
-                                hint="Minimum 2 characters"
-                                required
-                            />
-                            
-                            @if(strlen($userSearch) >= 2 && count($searchResults) > 0)
-                                <div class="absolute z-50 w-full mt-1 bg-base-100 border border-base-300 rounded-lg shadow-lg max-h-60 overflow-y-auto">
-                                    @foreach($searchResults as $user)
-                                        <div 
-                                            class="p-3 hover:bg-base-200 cursor-pointer border-b border-base-200 last:border-b-0 transition-colors"
-                                            wire:click="selectUser({{ $user['vid'] }})"
-                                        >
-                                            <div class="flex items-center justify-between">
-                                                <div class="flex-1">
-                                                    <div class="font-medium text-base-content">
-                                                        {{ $user['first_name'] }} {{ $user['last_name'] }}
-                                                    </div>
-                                                    <div class="text-sm text-base-content/70">
-                                                        VID: {{ $user['vid'] }} • {{ $user['email'] }}
-                                                    </div>
-                                                </div>
-                                                <x-icon name="phosphor.caret-right" class="w-4 h-4 text-base-content/50" />
-                                            </div>
-                                        </div>
-                                    @endforeach
-                                </div>
-                            @endif
-                            
-                            @if(strlen($userSearch) >= 2 && count($searchResults) === 0)
-                                <div class="absolute z-50 w-full mt-1 bg-base-100 border border-base-300 rounded-lg shadow-lg p-3">
-                                    <div class="text-center text-base-content/60">
-                                        <x-icon name="phosphor.magnifying-glass-light" class="w-8 h-8 mx-auto mb-2" />
-                                        <p>No users found</p>
-                                    </div>
-                                </div>
-                            @endif
-                        </div>
-                        
-                        @if($selectedUser)
-                            <div class="bg-neutral border border-neutral rounded-lg p-4">
-                                <h4 class="font-semibold text-success mb-2">✓ User Selected</h4>
-                                <p><strong>{{ $selectedUser->full_name }}</strong> - VID: <a href="https://www.ivao.aero/Member.aspx?Id={{ $selectedUser->vid }}" target="_blank" class="font-semibold text-primary">{{ $selectedUser->vid }}</a></p>
-                                <p class="text-sm">{{ $selectedUser->email }}</p>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <x-card title="1. Select User" subtitle="Search and select user for GDPR deletion" shadow separator>
+                        <div class="space-y-4">
+                            <div class="relative">
+                                <x-input 
+                                    label="Search User" 
+                                    placeholder="Enter VID, name, or email..."
+                                    wire:model.live.debounce.300ms="userSearch"
+                                    icon="phosphor.magnifying-glass-light"
+                                    hint="Minimum 2 characters"
+                                    required
+                                />
                                 
-                                @if($selectedUser->admin)
-                                    <div class="mt-2 p-2 bg-error/20 border border-error/50 rounded">
-                                        <p class="text-error text-sm font-medium">⚠️ This user has admin privileges</p>
-                                        <p class="text-error text-xs">Remove admin access first before GDPR deletion</p>
+                                @if(strlen($userSearch) >= 2 && count($searchResults) > 0)
+                                    <div class="absolute z-50 w-full mt-1 bg-base-100 border border-base-300 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                                        @foreach($searchResults as $user)
+                                            <div 
+                                                class="p-3 hover:bg-base-200 cursor-pointer border-b border-base-200 last:border-b-0 transition-colors"
+                                                wire:click="selectUser({{ $user['vid'] }})"
+                                            >
+                                                <div class="flex items-center justify-between">
+                                                    <div class="flex-1">
+                                                        <div class="font-medium text-base-content">
+                                                            {{ $user['first_name'] }} {{ $user['last_name'] }}
+                                                        </div>
+                                                        <div class="text-sm text-base-content/70">
+                                                            VID: {{ $user['vid'] }} • {{ $user['email'] }}
+                                                        </div>
+                                                    </div>
+                                                    <x-icon name="phosphor.caret-right" class="w-4 h-4 text-base-content/50" />
+                                                </div>
+                                            </div>
+                                        @endforeach
                                     </div>
                                 @endif
                                 
-                                <x-button 
-                                    wire:click="clearUser" 
-                                    class="btn-sm btn-outline btn-error mt-4"
-                                >
-                                    Clear Selection
-                                </x-button>
-                            </div>
-                        @endif
-                    </div>
-                </x-card>
-                
-                <!-- User Data Summary -->
-                @if($selectedUser)
-                    <x-card title="User Data Summary" subtitle="Data that will be deleted/anonymized" shadow separator>
-                        <div class="space-y-4">
-                            @foreach($userDataSummary as $category => $data)
-                                <div>
-                                    <h4 class="font-semibold mb-2">{{ $category }}</h4>
-                                    <div class="bg-base-200 rounded p-3">
-                                        @if(is_array($data) && count($data) > 0 && !array_key_exists(0, $data))
-                                            @foreach($data as $key => $value)
-                                                <div class="flex justify-between text-sm">
-                                                    <span>{{ $key }}:</span>
-                                                    <span class="font-medium">{{ $value }}</span>
-                                                </div>
-                                            @endforeach
-                                        @else
-                                            <div class="text-sm text-base-content/70">
-                                                {{ is_array($data) ? implode(', ', $data) : $data }}
-                                            </div>
-                                        @endif
+                                @if(strlen($userSearch) >= 2 && count($searchResults) === 0)
+                                    <div class="absolute z-50 w-full mt-1 bg-base-100 border border-base-300 rounded-lg shadow-lg p-3">
+                                        <div class="text-center text-base-content/60">
+                                            <x-icon name="phosphor.magnifying-glass-light" class="w-8 h-8 mx-auto mb-2" />
+                                            <p>No users found</p>
+                                        </div>
                                     </div>
+                                @endif
+                            </div>
+                            
+                            @if($selectedUser)
+                                <div class="bg-neutral border border-neutral rounded-lg p-4">
+                                    <h4 class="font-semibold text-success mb-2">✓ User Selected</h4>
+                                    <p><strong>{{ $selectedUser->full_name }}</strong> - VID: <a href="https://www.ivao.aero/Member.aspx?Id={{ $selectedUser->vid }}" target="_blank" class="font-semibold text-primary">{{ $selectedUser->vid }}</a></p>
+                                    <p class="text-sm">{{ $selectedUser->email }}</p>
+                                    
+                                    @if($selectedUser->admin)
+                                        <div class="mt-2 p-2 bg-error/20 border border-error/50 rounded">
+                                            <p class="text-error text-sm font-medium">⚠️ This user has admin privileges</p>
+                                            <p class="text-error text-xs">Remove admin access first before GDPR deletion</p>
+                                        </div>
+                                    @endif
+                                    
+                                    <x-button 
+                                        wire:click="clearUser" 
+                                        class="btn-sm btn-outline btn-error mt-4"
+                                    >
+                                        Clear Selection
+                                    </x-button>
                                 </div>
-                            @endforeach
+                            @endif
                         </div>
                     </x-card>
-                @endif
-            </div>
+                    
+                    <!-- User Data Summary -->
+                    @if($selectedUser)
+                        <x-card title="User Data Summary" subtitle="Data that will be deleted/anonymized" shadow separator>
+                            <div class="space-y-4">
+                                @foreach($userDataSummary as $category => $data)
+                                    <div>
+                                        <h4 class="font-semibold mb-2">{{ $category }}</h4>
+                                        <div class="bg-base-200 rounded p-3">
+                                            @if(is_array($data) && count($data) > 0 && !array_key_exists(0, $data))
+                                                @foreach($data as $key => $value)
+                                                    <div class="flex justify-between text-sm">
+                                                        <span>{{ $key }}:</span>
+                                                        <span class="font-medium">{{ $value }}</span>
+                                                    </div>
+                                                @endforeach
+                                            @else
+                                                <div class="text-sm text-base-content/70">
+                                                    {{ is_array($data) ? implode(', ', $data) : $data }}
+                                                </div>
+                                            @endif
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </x-card>
+                    @endif
+                </div>
+            </x-card>
             
             <!-- Control Key and Deletion section if selectedUser exists -->
             @if($selectedUser)

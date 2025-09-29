@@ -47,7 +47,7 @@ new class extends Component
                 'title' => 'Members',
                 'submenus' => [
                     ['title' => 'Webeye', 'link' => 'https://webeye.ivao.aero/'],
-                    ['title' => 'Awards', 'link' => 'https://awards.us.ivao.aero/'],
+                    ['title' => 'Awards System', 'link' => 'https://awards.us.ivao.aero/'],
                     ['title' => 'Support', 'route' => 'members.support'],
                     ['title' => 'Discord', 'link' => 'https://discord.us.ivao.aero/'],
                     ['title' => 'Forum', 'link' => 'https://us.forum.ivao.aero/'],
@@ -68,8 +68,8 @@ new class extends Component
                 'submenus' => [
                     ['title' => 'Become a Pilot', 'link' => 'https://wiki.us.ivao.aero/en/pilots/training'],
                     ['title' => 'Software', 'link' => 'https://ivao.aero/softdev/software/altitude.asp'],
-                    ['title' => 'Tracker', 'link' => 'https://tracker.ivao.aero/'],
-                    ['title' => 'Tours', 'link' => 'https://tours.th.ivao.aero/index.php?div=US'],
+                    ['title' => 'IVAO Tracker', 'link' => 'https://tracker.ivao.aero/'],
+                    ['title' => 'Tours System', 'link' => 'https://tours.th.ivao.aero/index.php?div=US'],
                     ['title' => 'Virtual Airlines', 'route' => 'pilots.virtual-airlines'],
                 ]
             ],

@@ -41,28 +41,35 @@ new class extends Component {
     <div class="lg:hidden">
         <x-card class="shadow-lg">
             <h3 class="!text-center font-bold text-primary !mb-5">Division Highlights</h3>
-            <x-tabs wire:model="activeTab" label-div-class="bg-white rounded-lg w-fit p-2 mx-auto" class="w-full">
-                <x-tab name="calendar" label="Calendar" icon="phosphor.calendar">
-                    <livewire:homepage_components-division-calendar :display-weekly="true" use-today-btn="false" wire:key="mobile-calendar" />
-                </x-tab>
+            <div class="justify-center">
+                <x-tabs wire:model="activeTab"
+                        class="w-full"
+                        label-div-class="bg-base-100 !p-3 !mb-4 rounded-lg font-semibold whitespace-nowrap overflow-x-auto w-fit mx-auto" 
+                        active-class="bg-primary p-3 rounded-lg !text-white font-semibold" 
+                        label-class="p-3 font-semibold" 
+                        >
+                    <x-tab name="calendar" label="Calendar" icon="phosphor.calendar">
+                        <livewire:homepage_components-division-calendar :display-weekly="true" use-today-btn="false" wire:key="mobile-calendar" />
+                    </x-tab>
 
-                <x-tab name="events" label="Events" icon="phosphor.calendar-star">
-                    {{-- Events Carousel Component --}}
-                    <livewire:app_component-carousel 
-                        :items="$upcomingEvents"
-                        image-key="image"
-                        title-key="title"
-                        subtitle-key="date"
-                        description-key="description"
-                        link-key="link"
-                        link-label="More information"
-                        link-icon="phosphor.link"
-                        :auto-advance-interval="4"
-                        :interaction-delay="6"
-                        wire:key="events-mobile-carousel" 
-                        banner-height="h-96 md:h-134" />
-                </x-tab>
-            </x-tabs>
+                    <x-tab name="events" label="Events" icon="phosphor.calendar-star">
+                        {{-- Events Carousel Component --}}
+                        <livewire:app_component-carousel 
+                            :items="$upcomingEvents"
+                            image-key="image"
+                            title-key="title"
+                            subtitle-key="date"
+                            description-key="description"
+                            link-key="link"
+                            link-label="More information"
+                            link-icon="phosphor.link"
+                            :auto-advance-interval="4"
+                            :interaction-delay="6"
+                            wire:key="events-mobile-carousel" 
+                            banner-height="h-96 md:h-134" />
+                    </x-tab>
+                </x-tabs>
+            </div>
         </x-card>
     </div>
 

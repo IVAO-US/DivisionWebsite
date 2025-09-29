@@ -55,7 +55,7 @@ Route::redirect('/admin',       '/admin/dashboard')->name('admin');
 Route::redirect('/admin/app',   '/admin/dashboard')->name('admin.app');
 Route::redirect('/division',    '/')->name('division');
 Route::redirect('/members',     '/')->name('members');
-Route::redirect('/atcs',        '/')->name('atcs');
+Route::redirect('/atcs',        '/')->name('ATCs');
 Route::redirect('/pilots',      '/')->name('pilots');
 Route::redirect('/training',    '/')->name('training');
 
