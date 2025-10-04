@@ -22,6 +22,13 @@ class SyncDivisionSessions extends Command
      */
     protected $description = 'Sync division sessions from awards_db cms_logs table';
 
+
+    /**
+     * The default banner for missing banner
+     */
+    private $default_banner = "https://assets.us.ivao.aero/uploads/OnlineDay4.png";
+
+
     /**
      * Execute the console command.
      */
@@ -190,25 +197,21 @@ class SyncDivisionSessions extends Command
      */
     private function processEvent(array $data, int $logId): string|false
     {
-        // Check if discord notification is enabled
-        $discord = $data['discord'] ?? [];
-        if (!in_array('1', $discord)) {
-            return false;
-        }
-
         // Determine event type
         $type = $this->determineEventType($data);
 
         // Use updateOrCreate to avoid duplicates
         $session = DivisionSession::updateOrCreate(
-            ['last_log_id' => $logId], // Unique identifier
+            ['last_log_id' => $logId],
             [
                 'title' => $data['title'] ?? 'Untitled Event',
                 'date' => $data['date'] ?? now()->toDateString(),
                 'time_start' => $data['timeStart'] ?? '00:00:00',
                 'time_end' => $data['timeEnd'] ?? '23:59:59',
                 'type' => $type,
-                'illustration' => $data['discord_illustration'] ?? null,
+                'illustration' => !empty($data['discord_illustration']) 
+                    ? $data['discord_illustration'] 
+                    : $this->default_banner,
                 'description' => $data['discord_description'] ?? null,
                 'training_details' => null,
             ]
@@ -245,17 +248,21 @@ class SyncDivisionSessions extends Command
         // Determine session type from optionsTrainingType
         $type = $this->determineTrainingSessionType($data);
 
-        DivisionSession::create([
-            'title' => $title,
-            'date' => $data['date'] ?? now()->toDateString(),
-            'time_start' => $data['timeStart'] ?? '00:00:00',
-            'time_end' => $data['timeEnd'] ?? '23:59:59',
-            'type' => $type,
-            'illustration' => $data['discord_illustration'] ?? null,
-            'description' => $data['discord_description'] ?? null,
-            'training_details' => $trainingDetails,
-            'last_log_id' => $logId,
-        ]);
+        $session = DivisionSession::updateOrCreate(
+            ['last_log_id' => $logId],
+            [
+                'title' => $title,
+                'date' => $data['date'] ?? now()->toDateString(),
+                'time_start' => $data['timeStart'] ?? '00:00:00',
+                'time_end' => $data['timeEnd'] ?? '23:59:59',
+                'type' => $type,
+                'illustration' => !empty($data['discord_illustration']) 
+                    ? $data['discord_illustration'] 
+                    : $this->default_banner,
+                'description' => $data['discord_description'] ?? null,
+                'training_details' => $trainingDetails,
+            ]
+        );
 
         return true;
     }
