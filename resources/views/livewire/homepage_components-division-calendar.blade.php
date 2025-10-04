@@ -22,16 +22,28 @@ new class extends Component {
                 'icon' => 'phosphor.star'
             ],
             'exam' => [
-                'badge' => 'bg-error text-error-content',
-                'card' => 'bg-error text-error-content',
-                'dot' => 'bg-error',
+                'badge' => 'bg-accent text-accent-content',
+                'card' => 'bg-accent text-accent-content',
+                'dot' => 'bg-accent',
                 'icon' => 'phosphor.graduation-cap'
             ],
             'training' => [
+                'badge' => 'bg-primary text-primary-content',
+                'card' => 'bg-primary text-primary-content',
+                'dot' => 'bg-primary',
+                'icon' => 'phosphor.chalkboard-teacher'
+            ],
+            'gca' => [
                 'badge' => 'bg-secondary text-secondary-content',
                 'card' => 'bg-secondary text-secondary-content',
                 'dot' => 'bg-secondary',
                 'icon' => 'phosphor.chalkboard-teacher'
+            ],
+            'online_day' => [
+                'badge' => 'bg-warning text-warning-content',
+                'card' => 'bg-warning text-warning-content',
+                'dot' => 'bg-warning',
+                'icon' => 'phosphor.star'
             ],
         ];
         
