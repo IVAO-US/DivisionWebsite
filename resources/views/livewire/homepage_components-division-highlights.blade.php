@@ -27,9 +27,9 @@ new class extends Component {
             return [
                 'title' => $session->title,
                 'date' => $session->date->format('l, F jS'),
-                'description' => $session->description ?? 'Join us for this exciting event!',
-                'image' => $session->illustration ?? 'https://assets.us.ivao.aero/uploads/AtlantaRFE1200by800.png',
-                'link' => '#' // TODO: Add proper event detail page link
+                'description' => $session->description ?? 'Join us for this exciting moment!',
+                'image' => $session->illustration ,
+                'link' => 'https://forum.ivao.aero/forums/events.1457/'
             ];
         })->toArray();
 
