@@ -6,7 +6,11 @@ use Livewire\Attributes\Computed;
 
 new class extends Component {
     public string $activeTab = 'tours';
+    
+    /* Tours details prop */
+    public string $bentoSetupId = "0D7B77046637";
     public string $toursRepo = 'https://tours.th.ivao.aero/index.php?div=US';
+
     
     /**
      * Get certified virtual airlines data formatted for carousel
@@ -166,7 +170,7 @@ new class extends Component {
                     @if($this->hasTours)
                         <div class="flex-1">
                             {{-- Bento Grid for Tours --}}
-                            <livewire:app_component-bento-grid :images="$this->getToursData()" wire:key="desktop-tours" setup-id="A1C2B6E7A15A" />
+                            <livewire:app_component-bento-grid :images="$this->getToursData()" wire:key="desktop-tours" setup-id="{{ $bentoSetupId }}" />
                         </div>
 
                         {{-- Call to Action - Pushed to bottom --}}
