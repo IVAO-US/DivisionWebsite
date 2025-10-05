@@ -13,7 +13,7 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withSchedule(function (Schedule $schedule) {
         // Division Sessions Sync - Every 15 minutes
-        $schedule->command('division_sessions:sync')
+        $schedule->command('division_sessions:sync', ['--forever'])
             ->everyFifteenMinutes()
             ->withoutOverlapping()
             ->onOneServer()
