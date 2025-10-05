@@ -152,7 +152,7 @@ class extends Component {
                         Use this Setup ID in your Bento Component to reproduce this exact layout<br>
                         <br>
                         The webmaster must alter the <b>homepage_components-flight-ops.blade.php</b> file.<br>
-                        He must alter the <b>setup-id</b> property in the call to the <b>&lt;livewire:app_component-bento-grid&gt;</b> component.
+                        He must alter the <b>$bentoSetupId</b> property at the top of the component file.
                     </p>
                 </div>
 
