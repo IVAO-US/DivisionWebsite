@@ -274,10 +274,12 @@ new class extends Component {
 
         @scope('cell_icao_hubs', $va)
             <div class="space-y-1">
-                <div class="badge badge-primary font-mono">{{ $va->icao_code }}</div>
+                <x-badge value="{{ $va->icao_code }}" class="badge-primary font-mono" />
                 @if(!empty($va->hubs) && is_array($va->hubs))
-                    <div class="text-xs text-base-content/60">
-                        {{ implode(', ', $va->hubs) }}
+                    <div class="flex flex-wrap gap-1">
+                        @foreach($va->hubs as $hub)
+                            <x-badge value="{{ $hub }}" class="badge-neutral badge-sm font-mono" />
+                        @endforeach
                     </div>
                 @endif
             </div>
