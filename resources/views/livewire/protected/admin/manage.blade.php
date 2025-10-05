@@ -188,7 +188,7 @@ class extends Component {
     </x-card>
 
     {{-- Add Admin Modal --}}
-    <x-modal wire:model="addAdminModal" title="Add New Admin" separator class="backdrop-blur" box-class="w-4/5 max-w-4xl mx-auto">
+    <x-modal wire:model="addAdminModal" title="Add New Admin" separator class="backdrop-blur" box-class="w-4/5 max-w-4xl max-h-9/10 mx-auto">
 
         <x-card subtitle="Search User" shadow separator>
             {{-- User Selection Table --}}

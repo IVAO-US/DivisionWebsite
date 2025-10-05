@@ -166,7 +166,7 @@ new class extends Component {
                     @if($this->hasTours)
                         <div class="flex-1">
                             {{-- Bento Grid for Tours --}}
-                            <livewire:app_component-bento-grid :images="$this->getToursData()" wire:key="desktop-tours" setup-id="5B9B48E8344A" />
+                            <livewire:app_component-bento-grid :images="$this->getToursData()" wire:key="desktop-tours" setup-id="A1C2B6E7A15A" />
                         </div>
 
                         {{-- Call to Action - Pushed to bottom --}}

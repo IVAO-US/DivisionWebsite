@@ -45,6 +45,7 @@ class extends Component {
     {
         $categories = [
             'Admins' => [],
+            'Flight Operations' => [],
             'Application' =>[],
         ];
         
@@ -89,6 +90,7 @@ class extends Component {
         $globalPermission = match($category) {
             'Admins' => AdminPermission::tryFrom('admins'),
             'Application' => AdminPermission::tryFrom('app'),
+            'Flight Operations' => AdminPermission::tryFrom('fltops'),
             default => null
         };
         
@@ -213,33 +215,33 @@ class extends Component {
                         <x-icon name="{{ AdminPermission::categoryIcon($category) }}" class="w-5 h-5 text-base-content" />
                     </x-slot:menu>
                     
-                    <!-- Content wrapper with flex-grow to push button down -->
-                    <div class="flex flex-col h-full">
-                        <!-- Permissions list -->
-                        <div class="space-y-3 flex-grow">
-                            @foreach($permissions as $permission)
-                                <div class="flex items-center justify-between p-3 bg-base-100 rounded-lg border border-base-200 hover:border-base-300 transition-colors duration-150">
+                    <!-- Permissions list with individual action buttons -->
+                    <div class="space-y-3">
+                        @foreach($permissions as $permission)
+                            @if($permission->route())
+                                <x-button 
+                                    link="{{ $permission->route() }}" 
+                                    class="{{ AdminPermission::categoryColorProp($category, 'btn') }} btn-outline w-full justify-start hover:border-base-300"
+                                    no-wire-navigate
+                                >
+                                    <div class="flex items-center justify-between w-full">
+                                        <div class="flex items-center space-x-3">
+                                            <x-icon name="{{ $permission->icon() }}" class="w-4 h-4" />
+                                            <span class="font-medium text-sm">{{ $permission->description() }}</span>
+                                        </div>
+                                        <x-icon name="phosphor.arrow-right" class="w-4 h-4 opacity-60" />
+                                    </div>
+                                </x-button>
+                            @else
+                                <div class="flex items-center justify-between p-3 bg-base-100 rounded-lg border border-base-200 opacity-50">
                                     <div class="flex items-center space-x-3">
                                         <x-icon name="{{ $permission->icon() }}" class="w-4 h-4 {{ AdminPermission::categoryColorProp($category, 'text') }}" />
-                                        <div>
-                                            <p class="font-medium text-sm">{{ $permission->description() }}</p>
-                                        </div>
+                                        <span class="font-medium text-sm">{{ $permission->description() }}</span>
                                     </div>
+                                    <x-badge value="No route" class="badge-sm badge-ghost" />
                                 </div>
-                            @endforeach
-                        </div>
-                        
-                        <!-- Action button pushed to bottom -->
-                        @if(AdminPermission::categoryRoute($category))
-                            <div class="pt-4 border-t border-base-200 mt-auto">
-                                <x-button 
-                                    label="{{ $this->getCategoryDescription($category) }}" 
-                                    icon="phosphor.link" 
-                                    link="{{ AdminPermission::categoryRoute($category) }}" 
-                                    class="{{ AdminPermission::categoryColorProp($category, 'btn') }} btn-sm btn-outline w-full"
-                                />
-                            </div>
-                        @endif
+                            @endif
+                        @endforeach
                     </div>
                 </x-card>
             @endforeach

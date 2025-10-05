@@ -66,7 +66,7 @@ new class extends Component {
 
 <div>
     @if($users->count() > 0)
-        <x-table :rows="$users" :headers="$headers" :sortBy="$sortBy" striped class="mx-auto mt-4">
+        <x-table :rows="$users" :headers="$headers" :sortBy="$sortBy"  no-hover class="mx-auto mt-4">
             {{-- Table Rows --}}
             @scope('cell_vid', $user)
                 {{ $user->vid }}
