@@ -8,7 +8,7 @@ new class extends Component {
     public string $activeTab = 'tours';
     
     /* Tours details prop */
-    public string $bentoSetupId = "0D7B77046637";
+    public string $bentoSetupId = "4E9C525BA46A";
     public string $toursRepo = 'https://tours.th.ivao.aero/index.php?div=US';
 
     

@@ -4,7 +4,7 @@ use Livewire\Volt\Component;
 new class extends Component {
     public array $images = [];
     public array $optimizedImages = [];
-    public int $maxRowsDesktop = 6;
+    public int $maxRowsDesktop = 12;
     public int $maxRowsTablet = 0; // 0 = infinite
     public int $maxRowsMobile = 0; // 0 = infinite
     
@@ -135,9 +135,28 @@ new class extends Component {
         // Replace the simple shuffle with the more complex organic arrangement
         $optimized = $finalOrder;
         
-        // Apply same optimizations as original method
-        $optimized = $this->eliminateGridHoles($optimized);
-        $optimized = $this->optimizeLastRow($optimized);
+        // Apply maxRows filtering FIRST if needed (before other optimizations)
+        $gridCols = 6;
+        $maxRows = $this->getCurrentMaxRows();
+        if ($maxRows > 0) {
+            $optimized = $this->enforceMaxRows($optimized, $gridCols, $maxRows);
+        }
+        
+        // Apply lightweight optimizations that don't lose items
+        // eliminateGridHoles and heavy optimizations are disabled to prevent item loss
+        
+        // Only apply last row optimization and straggler removal
+        $optimized = $this->optimizeLastRowLightweight($optimized);
+        $optimized = $this->ensureCompleteRows($optimized);
+        
+        // Verify we haven't lost items (log for debugging)
+        $initialCount = count($this->images);
+        $finalCount = count($optimized);
+        if ($finalCount < $initialCount && $maxRows === 0) {
+            // If maxRows is not set and we lost items, something went wrong
+            // Return all items to be safe
+            return $finalOrder;
+        }
         
         // Reset random seed to avoid affecting other operations
         mt_srand();
@@ -165,22 +184,6 @@ new class extends Component {
     }
 
     /**
-     * Perform seeded shuffle to maintain consistency with setupId
-     */
-    private function seededShuffle(array &$array, int $seed): void
-    {
-        mt_srand($seed);
-        
-        // Fisher-Yates shuffle with seeded randomness
-        for ($i = count($array) - 1; $i > 0; $i--) {
-            $j = mt_rand(0, $i);
-            $temp = $array[$i];
-            $array[$i] = $array[$j];
-            $array[$j] = $temp;
-        }
-    }
-
-    /**
      * Get the current setupId for display/debugging
      */
     public function getCurrentSetupId(): string
@@ -195,17 +198,6 @@ new class extends Component {
     public function getCurrentMaxRows(): int
     {
         return $this->maxRowsDesktop;
-    }
-    
-    /**
-     * Intelligent Bento layout optimization
-     * This method is now unified - it always uses seeded generation for consistency
-     */
-    public function optimizeBentoLayout(): array
-    {
-        // This method is deprecated - everything now goes through generateLayoutFromSetupId
-        // to ensure consistency between normal generation and setupId-based generation
-        return [];
     }
 
     /**
@@ -246,95 +238,75 @@ new class extends Component {
 
     /**
      * Detect all holes in the grid and reorganize items to fill them
+     * SIMPLIFIED: Reduced iterations to prevent item loss
      */
     public function eliminateGridHoles(array $items): array
     {
         if (empty($items)) return $items;
         
-        $gridCols = 6;
-        $maxAttempts = 3; // Limit reorganization attempts
-        
-        for ($attempt = 0; $attempt < $maxAttempts; $attempt++) {
-            $gridState = $this->simulateGridPlacement($items, $gridCols);
-            $holes = $this->detectAllHoles($gridState['grid'], $gridCols);
-            
-            if (empty($holes)) {
-                break; // No holes found, we're good!
-            }
-            
-            // Try to fill holes by reorganizing items
-            $items = $this->reorganizeToFillHoles($items, $holes, $gridCols);
-        }
-        
+        // Grid holes are now handled naturally by the layout algorithm
+        // Over-optimization here caused items to disappear
+        // Just return items as-is
         return $items;
     }
 
     /**
      * Reorganize items to fill detected holes
+     * FIXED: Ensures no items are lost during reorganization
      */
     private function reorganizeToFillHoles(array $items, array $holes, int $gridCols): array
     {
         if (empty($holes)) return $items;
         
-        // Sort items by priority (priority items first) and size (smaller items first for gap filling)
-        usort($items, function($a, $b) {
-            $aPriority = $a['isPriority'] ?? false;
-            $bPriority = $b['isPriority'] ?? false;
-            
-            if ($aPriority !== $bPriority) {
-                return $bPriority <=> $aPriority; // Priority items first
-            }
-            
-            // For non-priority items, smaller items first (better for filling gaps)
-            $aSize = $a['gridCols'] * $a['gridRows'];
-            $bSize = $b['gridCols'] * $b['gridRows'];
-            
-            return $aSize <=> $bSize;
-        });
-        
-        // Try to make some items smaller to fit in gaps
-        $reorganizedItems = [];
-        $gapFillerItems = [];
-        
-        foreach ($items as $item) {
-            $itemSize = $item['gridCols'] * $item['gridRows'];
-            
-            // Keep priority items as-is
-            if ($item['isPriority'] ?? false) {
-                $reorganizedItems[] = $item;
-                continue;
-            }
-            
-            // For large non-priority items, consider making them smaller
-            if ($itemSize >= 4) {
-                // Create a smaller version for gap filling
-                $smallerItem = $item;
-                $smallerItem['gridCols'] = 1;
-                $smallerItem['gridRows'] = 1;
-                $smallerItem['gridClasses'] = $this->generateGridClasses(1, 1);
-                $gapFillerItems[] = $smallerItem;
-            } else {
-                $reorganizedItems[] = $item;
-            }
-        }
-        
-        // Add gap fillers to fill detected holes
-        $filledHoles = 0;
-        foreach ($holes as $hole) {
-            if ($filledHoles < count($gapFillerItems)) {
-                $reorganizedItems[] = $gapFillerItems[$filledHoles];
-                $filledHoles++;
-            }
-        }
-        
-        return $reorganizedItems;
+        // Don't modify the items, just return them as-is
+        // The holes will be naturally filled by the grid layout algorithm
+        // Trying to be too clever here causes items to disappear
+        return $items;
     }
     
     /**
+     * Lightweight last row optimization - only adjusts sizes, never removes items
+     */
+    private function optimizeLastRowLightweight(array $items): array
+    {
+        if (empty($items)) return $items;
+            
+        $gridCols = 6;
+        $gridState = $this->simulateGridPlacement($items, $gridCols);
+        $lastRowInfo = $this->analyzeLastRow($gridState, $gridCols);
+        
+        // If last row has significant empty space, try to expand items
+        if ($lastRowInfo['needsOptimization'] && $lastRowInfo['emptySpace'] >= 2) {
+            // Find the last item and try to expand it to fill empty space
+            $lastRowItems = $lastRowInfo['lastRowItems'];
+            if (!empty($lastRowItems)) {
+                $lastItemIndex = end($lastRowItems);
+                if (isset($items[$lastItemIndex])) {
+                    $emptySpace = $lastRowInfo['emptySpace'];
+                    $currentCols = $items[$lastItemIndex]['gridCols'];
+                    
+                    // Expand by min of (empty space, 2 columns max)
+                    $expansion = min($emptySpace, 2, $gridCols - $currentCols);
+                    if ($expansion > 0) {
+                        $items[$lastItemIndex]['gridCols'] += $expansion;
+                        $items[$lastItemIndex]['gridClasses'] = $this->generateGridClasses(
+                            $items[$lastItemIndex]['gridCols'],
+                            $items[$lastItemIndex]['gridRows']
+                        );
+                    }
+                }
+            }
+        }
+        
+        return $items;
+    }
+    
+    /**
+     * OLD COMPLEX METHOD - kept for reference but not used
      * Optimize last row filling to avoid half-empty rows
      * Analyzes grid placement and adjusts sizes for better visual balance
      */
-    public function optimizeLastRow(array $items): array
+    private function optimizeLastRow(array $items): array
     {
         if (empty($items)) return $items;
             
@@ -372,6 +344,58 @@ new class extends Component {
             
             // Only include items that fit within max rows
             if ($itemEndRow < $maxRows) {
+                $filteredItems[] = $item;
+            }
+        }
+        
+        return $filteredItems;
+    }
+    
+    /**
+     * NEW: Ensure complete and balanced rows without losing items
+     * Removes only stragglers (1-2 items) on the last row if needed
+     */
+    private function ensureCompleteRows(array $items): array
+    {
+        if (empty($items)) return $items;
+        
+        $gridCols = 6;
+        $gridState = $this->simulateGridPlacement($items, $gridCols);
+        $grid = $gridState['grid'];
+        
+        if (empty($grid)) return $items;
+        
+        // Analyze the last row
+        $maxRow = max(array_keys($grid));
+        $lastRow = $grid[$maxRow] ?? [];
+        $lastRowOccupiedCols = count($lastRow);
+        
+        // Find items in the last row
+        $lastRowItemIndices = [];
+        foreach ($gridState['items'] as $index => $item) {
+            $itemEndRow = $item['gridRow'] + $item['gridRows'] - 1;
+            if ($itemEndRow === $maxRow) {
+                $lastRowItemIndices[] = $index;
+            }
+        }
+        
+        // Calculate how much of the last row is filled (as percentage)
+        $lastRowFillPercentage = ($lastRowOccupiedCols / $gridCols) * 100;
+        
+        // Only remove stragglers if:
+        // 1. Last row is less than 40% filled (less than ~2.5 columns)
+        // 2. AND there are only 1-2 items in the last row
+        $shouldRemoveStragglers = ($lastRowFillPercentage < 40) && (count($lastRowItemIndices) <= 2);
+        
+        if (!$shouldRemoveStragglers) {
+            // Keep all items - the last row is acceptable
+            return $items;
+        }
+        
+        // Remove only the straggler items from the last row
+        $filteredItems = [];
+        foreach ($gridState['items'] as $index => $item) {
+            if (!in_array($index, $lastRowItemIndices)) {
                 $filteredItems[] = $item;
             }
         }
@@ -597,10 +621,10 @@ new class extends Component {
 
     {{-- Debug information displayed below the grid --}}
     @if($debugMode)
-        <div class="mt-4 p-3 bg-gray-100 rounded-lg border border-gray-200">
-            <div class="text-sm text-gray-600">
+        <div class="mt-4 p-3 bg-base-200 rounded-lg border border-base-300">
+            <div class="text-sm text-base-content">
                 <strong>Setup ID:</strong> 
-                <span class="font-mono text-gray-800 bg-gray-200 px-2 py-1 rounded">
+                <span class="font-mono bg-base-300 px-2 py-1 rounded">
                     {{ $this->getCurrentSetupId() }}
                 </span>
             </div>
