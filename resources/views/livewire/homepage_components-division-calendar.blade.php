@@ -106,7 +106,7 @@ new class extends Component {
             $location = 'TBA';
             if (!is_array($session) && $session->training_details && isset($session->training_details['callsign'])) {
                 $callsign = $session->training_details['callsign'];
-                $location = explode('_', $callsign)[0];
+                $location = strtoupper(explode('_', $callsign)[0]);
             }
             
             // Get description

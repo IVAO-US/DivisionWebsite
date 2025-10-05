@@ -535,7 +535,7 @@ new class extends Component {
                                     @if(isset($event['location']) && $event['location'] !== 'TBA')
                                         <div class="flex items-center gap-2">
                                             <x-icon name="phosphor.map-pin" class="w-3 h-3" />
-                                            <span>{{ $event['location'] }}</span>
+                                            <span>{{ strtoupper($event['location']) }}</span>
                                         </div>
                                     @endif
                                 </div>
