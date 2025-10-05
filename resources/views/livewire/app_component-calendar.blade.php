@@ -10,10 +10,14 @@ new class extends Component {
     public bool $displayWeekly = false;
     public bool $useTodayBtn = false;
     
+    // Navigation limits (months before and after current month)
+    public int $monthsBeforeLimit = 3;
+    public int $monthsAfterLimit = 3;
+    
     // Internal state
     public array $currentDate;
     public string $selectedDate;
-    public bool $weeklyMode = false; // Current display mode
+    public bool $weeklyMode = false;
     
     // Calendar configuration
     public array $monthNames = [
@@ -39,7 +43,9 @@ new class extends Component {
         bool $showEventDetails = true,
         bool $displayWeekly = false,
         bool $useTodayBtn = false,
-        ?string $initialDate = null
+        ?string $initialDate = null,
+        int $monthsBeforeLimit = 3,
+        int $monthsAfterLimit = 3
     ): void {
         $this->events = $events;
         $this->eventTypeColors = array_merge($this->defaultEventTypeColors, $eventTypeColors);
@@ -47,18 +53,62 @@ new class extends Component {
         $this->showEventDetails = $showEventDetails;
         $this->displayWeekly = $displayWeekly;
         $this->useTodayBtn = $useTodayBtn;
-        $this->weeklyMode = $displayWeekly; // Initialize with default preference
+        $this->weeklyMode = $displayWeekly;
+        $this->monthsBeforeLimit = $monthsBeforeLimit;
+        $this->monthsAfterLimit = $monthsAfterLimit;
         
         // Initialize current date
         $startDate = $initialDate ? \Carbon\Carbon::parse($initialDate) : now();
         $this->currentDate = [
             'year' => $startDate->year,
-            'month' => $startDate->month - 1, // 0-indexed for JavaScript compatibility
+            'month' => $startDate->month - 1,
             'day' => $startDate->day
         ];
         
         // Set initial selected date
         $this->selectedDate = $startDate->format('Y-m-d');
+    }
+    
+    /**
+     * Check if we can navigate to previous month
+     */
+    public function canNavigatePrevious(): bool
+    {
+        if ($this->weeklyMode) {
+            return false;
+        }
+        
+        $currentViewDate = \Carbon\Carbon::create(
+            $this->currentDate['year'], 
+            $this->currentDate['month'] + 1, 
+            1
+        );
+        
+        $today = now();
+        $minAllowedDate = $today->copy()->subMonths($this->monthsBeforeLimit)->startOfMonth();
+        
+        return $currentViewDate->greaterThan($minAllowedDate);
+    }
+    
+    /**
+     * Check if we can navigate to next month
+     */
+    public function canNavigateNext(): bool
+    {
+        if ($this->weeklyMode) {
+            return false;
+        }
+        
+        $currentViewDate = \Carbon\Carbon::create(
+            $this->currentDate['year'], 
+            $this->currentDate['month'] + 1, 
+            1
+        );
+        
+        $today = now();
+        $maxAllowedDate = $today->copy()->addMonths($this->monthsAfterLimit)->startOfMonth();
+        
+        return $currentViewDate->lessThan($maxAllowedDate);
     }
     
     public function selectDate(int $day): void
@@ -88,8 +138,8 @@ new class extends Component {
     
     public function previousMonth(): void
     {
-        if ($this->weeklyMode) {
-            return; // No navigation in weekly mode
+        if ($this->weeklyMode || !$this->canNavigatePrevious()) {
+            return;
         }
         
         if ($this->currentDate['month'] == 0) {
@@ -107,8 +157,8 @@ new class extends Component {
 
     public function nextMonth(): void
     {
-        if ($this->weeklyMode) {
-            return; // No navigation in weekly mode
+        if ($this->weeklyMode || !$this->canNavigateNext()) {
+            return;
         }
         
         if ($this->currentDate['month'] == 11) {
@@ -172,7 +222,7 @@ new class extends Component {
                 $isSelected = ($eventKey === $this->selectedDate);
                 
                 $weekDays[] = [
-                    'number' => $dayOffset + 1, // Use offset + 1 for click handling
+                    'number' => $dayOffset + 1,
                     'displayNumber' => $currentDay->day,
                     'hasEvent' => $hasEvent,
                     'events' => $hasEvent ? $this->events[$eventKey] : [],
@@ -195,11 +245,11 @@ new class extends Component {
         }
         
         $year = $this->currentDate['year'];
-        $month = $this->currentDate['month'] + 1; // Convert back to 1-indexed for PHP date functions
+        $month = $this->currentDate['month'] + 1;
         
         // Get first day of month (Monday = 0) and last date
-        $firstDay = date('N', mktime(0, 0, 0, $month, 1, $year)) - 1; // 0=Monday
-        $lastDate = date('t', mktime(0, 0, 0, $month, 1, $year)); // Correct number of days in month
+        $firstDay = date('N', mktime(0, 0, 0, $month, 1, $year)) - 1;
+        $lastDate = date('t', mktime(0, 0, 0, $month, 1, $year));
         
         $days = [];
         $dayCounter = 1;
@@ -277,7 +327,7 @@ new class extends Component {
                 $isSelected = ($eventKey === $this->selectedDate);
                 
                 $weekDays[] = [
-                    'number' => $dayOffset + 1, // Use offset + 1 for click handling
+                    'number' => $dayOffset + 1,
                     'displayNumber' => $currentDay->day,
                     'hasEvent' => $hasEvent,
                     'events' => $hasEvent ? $this->events[$eventKey] : [],
@@ -330,10 +380,10 @@ new class extends Component {
     public function getDayNamesForHeader(): array
     {
         if ($this->weeklyMode) {
-            return array_slice($this->dayNames, 0, 5); // Only Monday to Friday
+            return array_slice($this->dayNames, 0, 5);
         }
         
-        return $this->dayNames; // All 7 days
+        return $this->dayNames;
     }
     
     public function getSelectedDayEvents(): array
@@ -365,8 +415,8 @@ new class extends Component {
 <x-card class="w-full h-full flex flex-col">
     {{-- Calendar Header --}}
     <div class="flex justify-between items-center mb-6">
-        {{-- Navigation buttons (hidden in biweekly mode) --}}
-        @if(!$displayWeekly)
+        {{-- Previous Month Button (conditional display) --}}
+        @if(!$displayWeekly && $this->canNavigatePrevious())
             <x-button 
                 wire:click="previousMonth" 
                 icon="phosphor.caret-left" 
@@ -385,15 +435,15 @@ new class extends Component {
             @endif
         </div>
         
-        {{-- View mode toggle button --}}
+        {{-- Next Month Button or View Toggle (conditional display) --}}
         @if($displayWeekly)
             <x-button 
                 wire:click="toggleViewMode" 
-                icon="{{ $displayWeekly ? 'phosphor.calendar' : 'phosphor.calendar-dots' }}"
-                class="btn-circle btn-sm {{ $displayWeekly ? 'btn-primary' : 'btn-ghost' }}"
-                title="{{ $displayWeekly ? 'Switch to Monthly View' : 'Switch to Biweekly View' }}"
+                icon="{{ $weeklyMode ? 'phosphor.calendar' : 'phosphor.calendar-dots' }}"
+                class="btn-circle btn-sm {{ $weeklyMode ? 'btn-primary' : 'btn-ghost' }}"
+                title="{{ $weeklyMode ? 'Switch to Monthly View' : 'Switch to Weekly View' }}"
             />
-        @elseif(!$displayWeekly)
+        @elseif(!$displayWeekly && $this->canNavigateNext())
             <x-button 
                 wire:click="nextMonth" 
                 icon="phosphor.caret-right" 
@@ -410,8 +460,8 @@ new class extends Component {
         {{-- Calendar Grid --}}
         <div class="w-full flex-1 flex flex-col">
             {{-- Days of Week Header --}}
-            <div class="grid grid-cols-7 gap-1 mb-2">
-                @foreach($dayNames as $dayName)
+            <div class="grid {{ $this->getGridColsClass() }} gap-1 mb-2">
+                @foreach($this->getDayNamesForHeader() as $dayName)
                     <div class="text-center font-bold text-base-content/70 py-1 text-xs">
                         {{ $dayName }}
                     </div>
@@ -430,7 +480,7 @@ new class extends Component {
                                 {{-- Day number with circle for today --}}
                                 <div class="text-sm font-medium mb-1 {{ $day['isToday'] ? 'text-primary font-bold mr-1' : 'text-base-content' }}">
                                     @if($day['isToday'])
-                                        <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-primary text-primary-content text-xs font-bold">
+                                        <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-accent text-accent-content text-xs font-bold">
                                             {{ $day['displayNumber'] }}
                                         </span>
                                     @else
@@ -482,7 +532,7 @@ new class extends Component {
                                         </div>
                                     @endif
                                     
-                                    @if(isset($event['location']))
+                                    @if(isset($event['location']) && $event['location'] !== 'TBA')
                                         <div class="flex items-center gap-2">
                                             <x-icon name="phosphor.map-pin" class="w-3 h-3" />
                                             <span>{{ $event['location'] }}</span>

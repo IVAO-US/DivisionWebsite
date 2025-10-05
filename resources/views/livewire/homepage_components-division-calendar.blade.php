@@ -1,6 +1,7 @@
 <?php
 use Livewire\Volt\Component;
 use App\Models\DivisionSession;
+use App\Services\RecurringEventService;
 
 new class extends Component {
     // Configuration props
@@ -68,11 +69,22 @@ new class extends Component {
             ->orderBy('time_start')
             ->get();
         
+        // Get recurring Online Days for the next 4 months
+        $onlineDays = RecurringEventService::getCalendarOnlineDays(3, 4);
+        
+        // Merge database sessions with recurring events
+        $allSessions = $sessions->concat($onlineDays)->sortBy([
+            ['date', 'asc'],
+            ['time_start', 'asc']
+        ]);
+        
         // Format events for calendar component
         $formattedEvents = [];
         
-        foreach ($sessions as $session) {
-            $dateKey = $session->date->format('Y-m-d');
+        foreach ($allSessions as $session) {
+            // Handle both Eloquent models and arrays (recurring events)
+            $date = is_array($session) ? $session['date'] : $session->date;
+            $dateKey = $date->format('Y-m-d');
             
             // Initialize array for this date if it doesn't exist
             if (!isset($formattedEvents[$dateKey])) {
@@ -80,24 +92,45 @@ new class extends Component {
             }
             
             // Format time display (remove seconds)
-            $timeStart = substr($session->time_start, 0, 5);
-            $timeEnd = substr($session->time_end, 0, 5);
+            $timeStart = is_array($session) 
+                ? substr($session['time_start'], 0, 5) 
+                : substr($session->time_start, 0, 5);
+                
+            $timeEnd = is_array($session) 
+                ? substr($session['time_end'], 0, 5) 
+                : substr($session->time_end, 0, 5);
+                
             $timeDisplay = "{$timeStart} - {$timeEnd} UTC";
             
             // Extract location from training details if available
             $location = 'TBA';
-            if ($session->training_details && isset($session->training_details['callsign'])) {
+            if (!is_array($session) && $session->training_details && isset($session->training_details['callsign'])) {
                 $callsign = $session->training_details['callsign'];
                 $location = explode('_', $callsign)[0];
             }
             
+            // Get description
+            $description = is_array($session)
+                ? $session['description']
+                : ($session->formatted_description ?? 'No description available');
+            
+            // Get type
+            $type = is_array($session)
+                ? $session['type']
+                : $session->type->value;
+            
+            // Get title
+            $title = is_array($session)
+                ? $session['title']
+                : $session->title;
+            
             // Add event to the date
             $formattedEvents[$dateKey][] = [
-                'title' => $session->title,
+                'title' => $title,
                 'time' => $timeDisplay,
                 'location' => $location,
-                'type' => $session->type->value,
-                'description' => $session->formatted_description ?? 'No description available',
+                'type' => $type,
+                'description' => $description,
             ];
         }
         

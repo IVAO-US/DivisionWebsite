@@ -2,6 +2,7 @@
 use Livewire\Volt\Component;
 use App\Models\DivisionSession;
 use App\Enums\SessionType;
+use App\Services\RecurringEventService;
 
 new class extends Component {
     public string $activeTab = 'calendar';
@@ -32,6 +33,20 @@ new class extends Component {
                 'link' => 'https://forum.ivao.aero/forums/events.1457/'
             ];
         })->toArray();
+        
+        // Add the next Online Day to the carousel
+        $nextOnlineDay = RecurringEventService::getNextOnlineDay();
+        
+        if ($nextOnlineDay) {
+            // Insert at the beginning of the array
+            array_unshift($upcomingEvents, [
+                'title' => $nextOnlineDay['title'],
+                'date' => $nextOnlineDay['date']->format('l, F jS'),
+                'description' => $nextOnlineDay['description'],
+                'image' => $nextOnlineDay['illustration'],
+                'link' => 'https://forum.ivao.aero/forums/events.1457/'
+            ]);
+        }
 
         return [
             'upcomingEvents' => $upcomingEvents,
