@@ -163,7 +163,7 @@ new class extends Component {
                     {{-- Description --}}
                     @if(isset($item[$descriptionKey]))
                         <p class="text-sm md:text-base text-base-content/80 mb-6 leading-relaxed transition-all duration-300 delay-150 text-center lg:text-left max-w-2xl mx-auto lg:mx-0">
-                            {{ $item[$descriptionKey] }}
+                            {!! $item[$descriptionKey] !!}
                         </p>
                     @endif
                     

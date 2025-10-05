@@ -18,6 +18,13 @@ services:
             XDEBUG_MODE: '${SAIL_XDEBUG_MODE:-off}'
             XDEBUG_CONFIG: '${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal}'
             IGNITION_LOCAL_SITES_PATH: '${PWD}'
+            # Loading AWARDS_DB .ENV (Laravel Sail)
+            AWARDS_DB_CONNECTION: '${AWARDS_DB_CONNECTION}'
+            AWARDS_DB_HOST: '${AWARDS_DB_HOST}'
+            AWARDS_DB_PORT: '${AWARDS_DB_PORT}'
+            AWARDS_DB_DATABASE: '${AWARDS_DB_DATABASE}'
+            AWARDS_DB_USERNAME: '${AWARDS_DB_USERNAME}'
+            AWARDS_DB_PASSWORD: '${AWARDS_DB_PASSWORD}'
         volumes:
             - '.:/var/www/html'
         networks:
