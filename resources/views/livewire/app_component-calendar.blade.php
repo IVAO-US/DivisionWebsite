@@ -466,7 +466,7 @@ new class extends Component {
                 </h5>
                 
                 @if(count($this->getSelectedDayEvents()) > 0)
-                    <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-3">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-3">
                         @foreach($this->getSelectedDayEvents() as $event)
                             <x-card class="p-4 {{ $this->getEventTypeClass($event['type']) }}">
                                 <div class="flex items-center gap-2 mb-2">
@@ -491,7 +491,7 @@ new class extends Component {
                                 </div>
                                 
                                 @if(isset($event['description']))
-                                    <p class="text-xs mt-2 opacity-80">{{ Str::limit($event['description'], 60) }}</p>
+                                    <p class="text-sm mt-2 opacity-80">{!! $event['description'] !!}</p>
                                 @endif
                             </x-card>
                         @endforeach

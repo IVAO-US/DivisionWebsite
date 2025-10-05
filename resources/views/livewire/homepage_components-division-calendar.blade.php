@@ -1,5 +1,6 @@
 <?php
 use Livewire\Volt\Component;
+use App\Models\DivisionSession;
 
 new class extends Component {
     // Configuration props
@@ -16,116 +17,91 @@ new class extends Component {
         // Initialize division-specific event type colors
         $this->eventTypeColors = [
             'event' => [
-                'badge' => 'bg-success text-success-content',
-                'card' => 'bg-success text-success-content',
-                'dot' => 'bg-success',
+                'badge' => '!bg-success !text-success-content',
+                'card' => '!bg-success !text-success-content',
+                'dot' => '!bg-success',
                 'icon' => 'phosphor.star'
             ],
+            'online_day' => [
+                'badge' => '!bg-info !text-info-content',
+                'card' => '!bg-info !text-info-content',
+                'dot' => '!bg-info',
+                'icon' => 'phosphor.calendar-heart'
+            ],
             'exam' => [
-                'badge' => 'bg-accent text-accent-content',
-                'card' => 'bg-accent text-accent-content',
-                'dot' => 'bg-accent',
+                'badge' => '!bg-accent !text-accent-content',
+                'card' => '!bg-accent !text-accent-content',
+                'dot' => '!bg-accent',
                 'icon' => 'phosphor.graduation-cap'
             ],
             'training' => [
-                'badge' => 'bg-primary text-primary-content',
-                'card' => 'bg-primary text-primary-content',
-                'dot' => 'bg-primary',
+                'badge' => '!bg-primary !text-primary-content',
+                'card' => '!bg-primary !text-primary-content',
+                'dot' => '!bg-primary',
                 'icon' => 'phosphor.chalkboard-teacher'
             ],
             'gca' => [
-                'badge' => 'bg-secondary text-secondary-content',
-                'card' => 'bg-secondary text-secondary-content',
-                'dot' => 'bg-secondary',
-                'icon' => 'phosphor.chalkboard-teacher'
-            ],
-            'online_day' => [
-                'badge' => 'bg-warning text-warning-content',
-                'card' => 'bg-warning text-warning-content',
-                'dot' => 'bg-warning',
-                'icon' => 'phosphor.star'
+                'badge' => '!bg-secondary !text-secondary-content',
+                'card' => '!bg-secondary !text-secondary-content',
+                'dot' => '!bg-secondary',
+                'icon' => 'phosphor.alien'
             ],
         ];
         
         // Initialize division-specific events data
-        // In a real application, this would come from a database/service
         $this->events = $this->loadDivisionEvents();
     }
     
     /**
-     * Load division-specific events
-     * This method can be moved to a service/repository in the future
+     * Load division-specific events from database
+     * Fetches all future events and past events from the last 3 complete months
      */
     private function loadDivisionEvents(): array
     {
-        return [
-            '2025-08-15' => [
-                [
-                    'title' => 'Morning Briefing',
-                    'time' => '08:00 UTC',
-                    'location' => 'Main Hall',
-                    'type' => 'training',
-                    'description' => 'Daily operational briefing for all controllers'
-                ],
-                [
-                    'title' => 'Equipment Check',
-                    'time' => '10:30 UTC',
-                    'location' => 'Control Tower',
-                    'type' => 'event',
-                    'description' => 'Monthly equipment maintenance and verification'
-                ],
-                [
-                    'title' => 'Advanced Training Session',
-                    'time' => '14:00 UTC',
-                    'location' => 'Training Room A',
-                    'type' => 'training',
-                    'description' => 'Advanced procedures for complex airspace management'
-                ],
-            ],
-            '2025-08-24' => [
-                [
-                    'title' => 'SEC Exam',
-                    'time' => '20:00 UTC',
-                    'location' => 'KN90_APP',
-                    'type' => 'exam',
-                    'description' => 'Standard Endorsement Course examination for new controllers'
-                ],
-                [
-                    'title' => 'SEC Exam',
-                    'time' => '21:00 UTC',
-                    'location' => 'KA11_APP',
-                    'type' => 'exam',
-                    'description' => 'Standard Endorsement Course examination for new controllers'
-                ]
-            ],
-            '2025-09-15' => [
-                [
-                    'title' => 'ATC Night',
-                    'time' => '19:00 UTC', 
-                    'location' => 'New York',
-                    'type' => 'event',
-                    'description' => 'Join us for an intensive ATC training session covering New York airspace'
-                ]
-            ],
-            '2025-09-23' => [
-                [
-                    'title' => 'Fly-In Miami',
-                    'time' => '18:00 UTC',
-                    'location' => 'KMIA',
-                    'type' => 'event',
-                    'description' => 'Mass arrival event at Miami International Airport with full ATC coverage'
-                ]
-            ],
-            '2025-08-21' => [
-                [
-                    'title' => 'Today\'s Special Event',
-                    'time' => '15:00 UTC',
-                    'location' => 'Virtual',
-                    'type' => 'training',
-                    'description' => 'Special training session for today'
-                ]
-            ]
-        ];
+        // Calculate the start date: first day of the month 3 months ago
+        // Example: if today is Oct 15, 2025 -> we want from July 1, 2025
+        $startDate = now()->startOfMonth()->subMonths(3)->toDateString();
+        
+        // Fetch sessions from database
+        $sessions = DivisionSession::where('date', '>=', $startDate)
+            ->orderBy('date')
+            ->orderBy('time_start')
+            ->get();
+        
+        // Format events for calendar component
+        $formattedEvents = [];
+        
+        foreach ($sessions as $session) {
+            $dateKey = $session->date->format('Y-m-d');
+            
+            // Initialize array for this date if it doesn't exist
+            if (!isset($formattedEvents[$dateKey])) {
+                $formattedEvents[$dateKey] = [];
+            }
+            
+            // Format time display (remove seconds)
+            $timeStart = substr($session->time_start, 0, 5);
+            $timeEnd = substr($session->time_end, 0, 5);
+            $timeDisplay = "{$timeStart} - {$timeEnd} UTC";
+            
+            // Extract location from training details if available
+            $location = 'TBA';
+            if ($session->training_details && isset($session->training_details['callsign'])) {
+                $callsign = $session->training_details['callsign'];
+                $location = explode('_', $callsign)[0];
+            }
+            
+            // Add event to the date
+            $formattedEvents[$dateKey][] = [
+                'title' => $session->title,
+                'time' => $timeDisplay,
+                'location' => $location,
+                'type' => $session->type->value,
+                'description' => $session->formatted_description ?? 'No description available',
+            ];
+        }
+        
+        return $formattedEvents;
     }
     
     /**

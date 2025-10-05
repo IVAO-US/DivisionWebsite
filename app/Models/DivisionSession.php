@@ -67,6 +67,32 @@ class DivisionSession extends Model
     }
 
     /**
+     * Get formatted description with clickable links and line breaks
+     */
+    protected function formattedDescription(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                if (!$this->description) {
+                    return null;
+                }
+                
+                // Convert line breaks to <br> tags
+                $formatted = nl2br(e($this->description));
+                
+                // Convert URLs to clickable links with external attribute
+                $formatted = preg_replace(
+                    '/(https?:\/\/[^\s<]+)/i',
+                    '<a href="$1" target="_blank" rel="noopener noreferrer external" class="underline">$1</a>',
+                    $formatted
+                );
+                
+                return $formatted;
+            }
+        );
+    }
+
+    /**
      * Check if event is a training session
      */
     public function isTraining(): bool

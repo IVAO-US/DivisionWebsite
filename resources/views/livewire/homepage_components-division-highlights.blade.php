@@ -27,7 +27,7 @@ new class extends Component {
             return [
                 'title' => $session->title,
                 'date' => $session->date->format('l, F jS'),
-                'description' => $session->description ?? 'Join us for this exciting moment!',
+                'description' => $session->formatted_description ?? 'Join us for this exciting moment!',
                 'image' => $session->illustration ,
                 'link' => 'https://forum.ivao.aero/forums/events.1457/'
             ];
