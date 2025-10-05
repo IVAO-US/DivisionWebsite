@@ -377,7 +377,7 @@ new class extends Component {
         :headers="$headers" 
         :rows="$admins" 
         :sortBy="$sortBy" 
-        striped 
+        no-hover
         class="sm:overflow-x-clip mx-auto">
 
         @scope('cell_vid', $admin)
@@ -463,7 +463,7 @@ new class extends Component {
     </x-table>
 
     {{-- Edit Permissions Modal --}}
-    <x-modal wire:model="editModal" title="Edit Administrator Permissions" subtitle="Set appropriate permissions" class="backdrop-blur" box-class="w-4/5 max-w-4xl mx-auto">        @if($editingAdmin)
+    <x-modal wire:model="editModal" title="Edit Administrator Permissions" subtitle="Set appropriate permissions" class="backdrop-blur" box-class="w-4/5 max-w-4xl max-h-9/10 mx-auto">        @if($editingAdmin)
             <div class="space-y-6">
                 {{-- Admin Info --}}
                 <div class="flex items-center gap-4 p-4 bg-base-100 rounded-lg border">
@@ -585,7 +585,7 @@ new class extends Component {
     </x-modal>
 
     {{-- Delete Confirmation Modal --}}
-    <x-modal wire:model="deleteModal" title="Remove Administrator" class="backdrop-blur" box-class="w-4/5 max-w-4xl mx-auto">
+    <x-modal wire:model="deleteModal" title="Remove Administrator" class="backdrop-blur" box-class="w-4/5 max-w-4xl max-h-9/10 mx-auto">
         @if($deletingAdmin)
             <div class="space-y-4">
                 <x-alert title="Are you sure?" description="You are removing admin status for this user" icon="phosphor.warning"  class="alert-warning" />

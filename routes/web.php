@@ -51,13 +51,15 @@ Route::get('/auth/ivao/callback', [IvaoController::class, 'handleCallback'])->na
  *  Named routes for categories without index page
  */
 Route::redirect('/users',       '/users/settings')->name('users');
-Route::redirect('/admin',       '/admin/dashboard')->name('admin');
-Route::redirect('/admin/app',   '/admin/dashboard')->name('admin.app');
 Route::redirect('/division',    '/')->name('division');
 Route::redirect('/members',     '/')->name('members');
 Route::redirect('/atcs',        '/')->name('ATCs');
 Route::redirect('/pilots',      '/')->name('pilots');
 Route::redirect('/training',    '/')->name('training');
+    /* Admin breadcrumbs => make sure to redirect to dashboard */
+    Route::redirect('/admin',               '/admin/dashboard')->name('Admin');
+    Route::redirect('/admin/app',           '/admin/dashboard')->name('Application');
+    Route::redirect('/admin/flight-ops',    '/admin/dashboard')->name('Flight Operations');
 
 
 /**
@@ -119,5 +121,14 @@ Route::middleware('auth')->group(function () {
         Route::middleware('admin.permissions:app_gdpr')->group(function () {
             Volt::route('/admin/app/gdpr', 'protected.admin.app.gdpr')->name('admin.app.gdpr');
         });
+
+        /* Flight Ops : Tours + VAs */
+        Route::middleware('admin.permissions:fltops_tours')->group(function () {
+            Volt::route('/admin/flight-ops/tours', 'protected.admin.flight-ops.tours')->name('admin.flight-ops.tours');
+        });
+        Route::middleware('admin.permissions:fltops_va')->group(function () {
+            Volt::route('/admin/flight-ops/virtual-airlines', 'protected.admin.flight-ops.virtual-airlines')->name('admin.flight-ops.virtual-airlines');
+        });
+
     });
 });

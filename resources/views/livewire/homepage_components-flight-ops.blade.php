@@ -1,89 +1,36 @@
 <?php
 use Livewire\Volt\Component;
+use App\Models\Tour;
+use App\Models\VirtualAirline;
+use Livewire\Attributes\Computed;
 
 new class extends Component {
     public string $activeTab = 'tours';
     public string $toursRepo = 'https://tours.th.ivao.aero/index.php?div=US';
     
-    // Tours source images with simplified priority system
-    public array $toursImages = [
-        [
-            'url' => 'https://assets.us.ivao.aero/uploads/AtlantaRFE1200by800.png',
-            'href' => '#',
-            'title' => 'Atlanta RFE Event',
-            'description' => 'Real Flight Event in Atlanta',
-            'priority' => true // Optionnal
-        ],
-        [
-            'url' => 'https://assets.us.ivao.aero/uploads/ebusca.jpg',
-            'href' => '#',
-            'title' => 'European Tour',
-            'description' => 'Explore European airports'
-        ],
-        [
-            'url' => 'https://assets.us.ivao.aero/uploads/AtlantaRFE1200by800.png',
-            'href' => '#',
-            'title' => 'Major RFE Atlanta',
-            'description' => 'Large scale aviation event',
-        ],
-        [
-            'url' => 'https://assets.us.ivao.aero/uploads/ebusca.jpg',
-            'href' => '#',
-            'title' => 'EBUSCA Airport',
-            'description' => 'Scenic European destination'
-        ],
-        [
-            'url' => 'https://assets.us.ivao.aero/uploads/AtlantaRFE1200by800.png', 
-            'href' => '#',
-            'title' => 'Premium Atlanta Event',
-            'description' => 'High-profile aviation gathering'
-        ],
-        [
-            'url' => 'https://assets.us.ivao.aero/uploads/ebusca.jpg',
-            'href' => '#',
-            'title' => 'Quick European Hop',
-            'description' => 'Short distance tour'
-        ],
-        [
-            'url' => 'https://assets.us.ivao.aero/uploads/AtlantaRFE1200by800.png',
-            'href' => '#',
-            'title' => 'Regional Atlanta',
-            'description' => 'Regional aviation focus'
-        ]
-    ];
+    /**
+     * Get certified virtual airlines data formatted for carousel
+     */
+    #[Computed]
+    public function certifiedVAs(): array
+    {
+        return VirtualAirline::all()
+            ->map(fn($va) => $va->toCarouselFormat())
+            ->toArray();
+    }
 
-    // VA data
-    public array $certifiedVAs = [
-        [
-            'title' => 'Atlas Skyways',
-            'date' => 'AXW | Bases: KCVG - KIND',
-            'description' => 'Lorem ipsum Atlas Skyways',
-            'image' => 'https://api.ivao.aero/v2/virtualAirlines/905/onlineLogo?apiKey=34a24206c5dca07d17a1',
-            'link' => 'https://flyatlas-va.com/'
-        ],
-        [
-            'title' => 'Delta Virtual',
-            'date' => 'DAL | Bases: KATL - KMSP - KJFK',
-            'description' => 'Lorem ipsum Delta Virtual',
-            'image' => 'https://api.ivao.aero/v2/virtualAirlines/829/onlineLogo?apiKey=34a24206c5dca07d17a1',
-            'link' => 'https://vflydelta.com/'
-        ],
-        [
-            'title' => 'Crosswind Airways',
-            'date' => 'XWA | Bases: KJFK',
-            'description' => 'Lorem ipsum Crosswind Airways',
-            'image' => 'https://api.ivao.aero/v2/virtualAirlines/952/mainLogo?apiKey=34a24206c5dca07d17a1',
-            'link' => 'https://crosswind-va.com/'
-        ],
-        [
-            'title' => 'Flight Sim Central',
-            'date' => 'XFS | Bases: KFDW - KOKC',
-            'description' => 'Lorem ipsum Flight Sim Central',
-            'image' => 'https://api.ivao.aero/v2/virtualAirlines/968/mainLogo?apiKey=34a24206c5dca07d17a1',
-            'link' => 'https://www.flightsimcentral.org/'
-        ]
-    ];
-    
+    /**
+     * Check if there are any virtual airlines
+     */
+    #[Computed]
+    public function hasVirtualAirlines(): bool
+    {
+        return count($this->certifiedVAs) > 0;
+    }
+
+    /**
+     * Set active tab for mobile view
+     */
     public function setActiveTab($tab): void
     {
         $this->activeTab = $tab;
@@ -94,7 +41,18 @@ new class extends Component {
      */
     public function getToursData(): array
     {
-        return $this->toursImages;
+        return Tour::all()
+            ->map(fn($tour) => $tour->toBentoFormat())
+            ->toArray();
+    }
+
+    /**
+     * Check if there are any tours
+     */
+    #[Computed]
+    public function hasTours(): bool
+    {
+        return count($this->getToursData()) > 0;
     }
 }; ?>
 
@@ -111,39 +69,55 @@ new class extends Component {
                     >
                 <x-tab name="tours" label="Tours" icon="phosphor.airplane-takeoff">
                     <x-card class="flex flex-col h-full">
-                        <div class="flex-1">
-                            {{-- Bento Grid for Tours --}}
-                            <livewire:app_component-bento-grid :images="$this->getToursData()" setup-id="5B9B48E8344A" wire:key="mobile-tours" />
-                        </div>
+                        @if($this->hasTours)
+                            <div class="flex-1">
+                                {{-- Bento Grid for Tours --}}
+                                <livewire:app_component-bento-grid :images="$this->getToursData()" setup-id="5B9B48E8344A" wire:key="mobile-tours" />
+                            </div>
 
-                        {{-- Call to Action - Pushed to bottom --}}
-                        <div class="text-center mt-auto pt-10">
-                            <x-button class="btn btn-accent btn-lg" link="{{ $toursRepo }}" external>
-                                <x-icon name="phosphor.airplane-takeoff" class="w-5 h-5" />
-                                View All Tours
-                            </x-button>
-                        </div>
+                            {{-- Call to Action - Pushed to bottom --}}
+                            <div class="text-center mt-auto pt-10">
+                                <x-button class="btn btn-accent btn-lg" link="{{ $toursRepo }}" external>
+                                    <x-icon name="phosphor.airplane-takeoff" class="w-5 h-5" />
+                                    View All Tours
+                                </x-button>
+                            </div>
+                        @else
+                            <div class="flex flex-col items-center justify-center py-12 text-center">
+                                <x-icon name="phosphor.airplane-takeoff" class="w-16 h-16 text-base-content/30 mb-4" />
+                                <h4 class="text-lg font-semibold text-base-content/70 mb-2">No Tours Available</h4>
+                                <p class="text-sm text-base-content/50">Check back soon for exciting flight routes!</p>
+                            </div>
+                        @endif
                     </x-card>
                 </x-tab>
 
                 <x-tab name="virtual-airlines" label="VAs" icon="phosphor.buildings">
-                    {{-- Virtual Airlines Carousel --}}
-                    <livewire:app_component-carousel 
-                        :items="$certifiedVAs"
-                        image-key="image"
-                        title-key="title"
-                        subtitle-key="date"
-                        description-key="description"
-                        link-key="link"
-                        link-label="More information"
-                        link-icon="phosphor.link"
-                        :auto-advance-interval="4"
-                        :interaction-delay="6"
-                        wire:key="mobile-va-carousel"
-                        image-height="30vh"
-                        image-width="45vw"
-                        :shuffle="true"
-                    />
+                    @if($this->hasVirtualAirlines)
+                        {{-- Virtual Airlines Carousel --}}
+                        <livewire:app_component-carousel 
+                            :items="$this->certifiedVAs"
+                            image-key="image"
+                            title-key="title"
+                            subtitle-key="date"
+                            description-key="description"
+                            link-key="link"
+                            link-label="More information"
+                            link-icon="phosphor.link"
+                            :auto-advance-interval="4"
+                            :interaction-delay="6"
+                            wire:key="mobile-va-carousel"
+                            image-height="30vh"
+                            image-width="45vw"
+                            :shuffle="true"
+                        />
+                    @else
+                        <x-card class="flex flex-col items-center justify-center py-12 text-center">
+                            <x-icon name="phosphor.buildings" class="w-16 h-16 text-base-content/30 mb-4" />
+                            <h4 class="text-lg font-semibold text-base-content/70 mb-2">No Virtual Airlines</h4>
+                            <p class="text-sm text-base-content/50">We're working on partnerships with virtual airlines.</p>
+                        </x-card>
+                    @endif
                 </x-tab>
             </x-tabs>
         </x-card>
@@ -155,41 +129,60 @@ new class extends Component {
             {{-- Virtual Airlines Section --}}
             <div class="lg:col-span-1 flex flex-col">
                 <x-card title="Virtual Airlines" subtitle="Certified Partners" shadow separator class="flex-1">
-                    {{-- Virtual Airlines Carousel --}}
-                    <livewire:app_component-carousel 
-                        :items="$certifiedVAs"
-                        image-key="image"
-                        title-key="title"
-                        subtitle-key="date"
-                        description-key="description"
-                        link-key="link"
-                        link-label="More information"
-                        link-icon="phosphor.link"
-                        :auto-advance-interval="4"
-                        :interaction-delay="6"
-                        wire:key="desktop-va-carousel"
-                        image-height="20vh"
-                        image-width="30vw"
-                        :shuffle="true"
-                    />
+                    @if($this->hasVirtualAirlines)
+                        {{-- Virtual Airlines Carousel --}}
+                        <livewire:app_component-carousel 
+                            :items="$this->certifiedVAs"
+                            image-key="image"
+                            title-key="title"
+                            subtitle-key="date"
+                            description-key="description"
+                            link-key="link"
+                            link-label="More information"
+                            link-icon="phosphor.link"
+                            :auto-advance-interval="4"
+                            :interaction-delay="6"
+                            wire:key="desktop-va-carousel"
+                            image-height="20vh"
+                            image-width="30vw"
+                            :shuffle="true"
+                        />
+                    @else
+                        <div class="flex flex-col items-center justify-center py-12 text-center h-full">
+                            <x-icon name="phosphor.buildings" class="w-16 h-16 text-base-content/30 mb-4" />
+                            <h4 class="text-lg font-semibold text-base-content/70 mb-2">No Virtual Airlines</h4>
+                            <p class="text-sm text-base-content/50">
+                                Wanna partner up?<br>
+                                Learn how to <a class="underline" href="{{ route('pilots.virtual-airlines') }}">join us</a>.
+                            </p>
+                        </div>
+                    @endif
                 </x-card>
             </div>
 
             {{-- Tours Section --}}
             <div class="lg:col-span-2 flex flex-col">
                 <x-card title="Tours" subtitle="Discover Amazing Flight Routes" shadow separator class="flex flex-col flex-1">
-                    <div class="flex-1">
-                        {{-- Bento Grid for Tours --}}
-                        <livewire:app_component-bento-grid :images="$this->getToursData()" wire:key="desktop-tours" setup-id="5B9B48E8344A" />
-                    </div>
+                    @if($this->hasTours)
+                        <div class="flex-1">
+                            {{-- Bento Grid for Tours --}}
+                            <livewire:app_component-bento-grid :images="$this->getToursData()" wire:key="desktop-tours" setup-id="A1C2B6E7A15A" />
+                        </div>
 
-                    {{-- Call to Action - Pushed to bottom --}}
-                    <div class="text-center mt-auto pt-20">
-                        <x-button class="btn btn-accent btn-lg" link="{{ $toursRepo }}" external>
-                            <x-icon name="phosphor.airplane-takeoff" class="w-5 h-5" />
-                            View All Tours
-                        </x-button>
-                    </div>
+                        {{-- Call to Action - Pushed to bottom --}}
+                        <div class="text-center mt-auto pt-20">
+                            <x-button class="btn btn-accent btn-lg" link="{{ $toursRepo }}" external>
+                                <x-icon name="phosphor.airplane-takeoff" class="w-5 h-5" />
+                                View All Tours
+                            </x-button>
+                        </div>
+                    @else
+                        <div class="flex flex-col items-center justify-center py-12 text-center flex-1">
+                            <x-icon name="phosphor.airplane-takeoff" class="w-16 h-16 text-base-content/30 mb-4" />
+                            <h4 class="text-lg font-semibold text-base-content/70 mb-2">No Tours Available</h4>
+                            <p class="text-sm text-base-content/50">Check back soon for exciting flight adventures!</p>
+                        </div>
+                    @endif
                 </x-card>
             </div>
         </div>

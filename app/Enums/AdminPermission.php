@@ -83,7 +83,11 @@ enum AdminPermission: string
         // App - Granular
         case APP_GDPR = 'app_gdpr';
 
-
+    // Flight Operations - Global
+    case FLTOPS = 'fltops';
+        // Flight Operations - Granular
+        case FLTOPS_TOURS = 'fltops_tours';
+        case FLTOPS_VA = 'fltops_va';
 
     /**
      * Get permission category
@@ -100,6 +104,11 @@ enum AdminPermission: string
             // App
             self::APP,
             self::APP_GDPR => 'Application',
+
+            // Flight Operations
+            self::FLTOPS,
+            self::FLTOPS_TOURS,
+            self::FLTOPS_VA => 'Flight Operations',
         };
     }
 
@@ -118,6 +127,33 @@ enum AdminPermission: string
             // App
             self::APP => 'Manage application',
             self::APP_GDPR => 'Handle GDPR compliance',
+
+            // Flight Operations
+            self::FLTOPS => 'Manage Flight Operations',
+            self::FLTOPS_TOURS => 'Manage Tours',
+            self::FLTOPS_VA => 'Manage Virtual Airlines',
+        };
+    }
+
+    /**
+     * Get route for specific permission
+     * Returns the route name associated with each granular permission
+     */
+    public function route(): ?string
+    {
+        return match($this) {
+            // Admins permissions
+            self::ADMINS_EDIT_PERMISSIONS => route('admin.manage'),
+            
+            // Application permissions
+            self::APP_GDPR => route('admin.app.gdpr'),
+
+            // Flight 
+            self::FLTOPS_TOURS => route('admin.flight-ops.tours'),
+            self::FLTOPS_VA => route('admin.flight-ops.virtual-airlines'),
+            
+            // Global and system-wide permissions have no direct route
+            default => null
         };
     }
 
@@ -130,6 +166,8 @@ enum AdminPermission: string
             self::ALL => 'phosphor.crown',
             self::ADMINS_EDIT_PERMISSIONS => 'phosphor.users',
             self::APP_GDPR => 'phosphor.biohazard',
+            self::FLTOPS_TOURS => 'phosphor.globe-hemisphere-west',
+            self::FLTOPS_VA => 'phosphor.airplane-takeoff',
             default => 'phosphor.check-circle'
         };
     }
@@ -142,6 +180,7 @@ enum AdminPermission: string
         return match($category) {
             'Admins' => 'phosphor.users',
             'Application' => 'phosphor.wrench',
+            'Flight Operations' => 'phosphor.airplane-tilt',
             default => 'phosphor.circle'
         };
     }
@@ -154,6 +193,7 @@ enum AdminPermission: string
         return match($category) {
             'Admins' => 'accent',
             'Application' => 'secondary',
+            'Flight Operations' => 'primary',
             default => 'base-300'
         };
     }
@@ -166,12 +206,10 @@ enum AdminPermission: string
         return match($category) {
             'Admins' => route('admin.manage'),
             'Application' => route('admin.app.gdpr'),
+            'Flight Operations' => route('admin.flight-ops'),
             default => null
         };
     }
-
-
-    /** Utility functions */
 
     /**
      * Get all permissions as array
