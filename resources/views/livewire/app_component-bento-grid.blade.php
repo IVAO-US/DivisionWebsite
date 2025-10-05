@@ -4,7 +4,7 @@ use Livewire\Volt\Component;
 new class extends Component {
     public array $images = [];
     public array $optimizedImages = [];
-    public int $maxRowsDesktop = 4;
+    public int $maxRowsDesktop = 6;
     public int $maxRowsTablet = 0; // 0 = infinite
     public int $maxRowsMobile = 0; // 0 = infinite
     
