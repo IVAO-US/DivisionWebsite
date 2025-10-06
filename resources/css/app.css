@@ -336,7 +336,7 @@
         
         /* Typography */
         font-size: 1rem !important;
-        font-weight: 500 !important;
+        font-weight: 400 !important;
         
         /* Appearance */
         border: 0px solid transparent !important;
@@ -516,12 +516,12 @@
 /* Root variables and utilities */
 :root {
     /* Scrollbar */
-    scrollbar-color: var(--color-base-content) var(--color-base-300) !important;
+    scrollbar-color: var(--color-base-content) var(--color-secondary) !important;
     --scrollbar-thumb: var(--color-base-content) !important;
-    --scrollbar-track: var(--color-base-300) !important;
+    --scrollbar-track: var(--color-secondary) !important;
 
     /* Livewire */
-    --livewire-progress-bar-color: var(--color-primary) !important;
+    --livewire-progress-bar-color: var(--color-secondary) !important;
 }
 
 /**
