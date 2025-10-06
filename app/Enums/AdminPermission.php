@@ -82,6 +82,7 @@ enum AdminPermission: string
     case APP = 'app';
         // App - Granular
         case APP_GDPR = 'app_gdpr';
+        case APP_HEADLINE = 'app_headline';
 
     // Flight Operations - Global
     case FLTOPS = 'fltops';
@@ -103,6 +104,7 @@ enum AdminPermission: string
 
             // App
             self::APP,
+            self::APP_HEADLINE,
             self::APP_GDPR => 'Application',
 
             // Flight Operations
@@ -126,6 +128,7 @@ enum AdminPermission: string
 
             // App
             self::APP => 'Manage application',
+            self::APP_HEADLINE => 'Handle Headline',
             self::APP_GDPR => 'Handle GDPR compliance',
 
             // Flight Operations
@@ -146,6 +149,7 @@ enum AdminPermission: string
             self::ADMINS_EDIT_PERMISSIONS => route('admin.manage'),
             
             // Application permissions
+            self::APP_HEADLINE => route('admin.app.headline'),
             self::APP_GDPR => route('admin.app.gdpr'),
 
             // Flight 
@@ -165,6 +169,7 @@ enum AdminPermission: string
         return match($this) {
             self::ALL => 'phosphor.crown',
             self::ADMINS_EDIT_PERMISSIONS => 'phosphor.users',
+            self::APP_HEADLINE => 'phosphor.newspaper-clipping',
             self::APP_GDPR => 'phosphor.biohazard',
             self::FLTOPS_TOURS => 'phosphor.globe-hemisphere-west',
             self::FLTOPS_VA => 'phosphor.airplane-takeoff',
