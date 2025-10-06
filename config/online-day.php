@@ -13,7 +13,7 @@ return [
     
     'enabled' => true,
     'title' => 'US Online Day',
-    'day_of_week' => 4, // 1 (Monday) to 7 (Sunday) - 4 = Thursday
+    'day_of_week' => 4, // /!\ 0 = SUNDAY
     'time_start' => '18:00:00',
     'time_end' => '06:00:00',
     'type' => 'online_day',
