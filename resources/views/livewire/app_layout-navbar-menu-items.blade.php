@@ -199,11 +199,11 @@ new class extends Component
                     {{ $item['title'] }}
                 </div>
                 
-                <ul tabindex="0" class="dropdown-content menu bg-primary shadow-xl rounded-box w-64 p-2">
+                <ul tabindex="0" class="dropdown-content menu bg-base-100 shadow-xl rounded-box w-64 p-2">
                     @foreach($item['submenus'] as $submenu)
                         <li>
                             <a href="{{ $this->getUrl($submenu) }}"
-                               class="text-primary-content hover:bg-secondary transition-colors"
+                               class="text-base-content hover:!bg-secondary hover:!text-secondary transition-colors"
                                target="{{ $this->getTarget($submenu) }}"
                                rel="{{ $this->getRel($submenu) }}"
                             >

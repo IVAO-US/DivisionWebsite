@@ -19,7 +19,7 @@
     <x-app-headline />
 
     {{-- NAV BAR --}}
-    <div class="w-full bg-primary sticky top-0 z-40">
+    <div class="w-full bg-base-100 sticky top-0 z-40">
         <div class="mx-auto flex items-center">
             {{-- NAVBAR --}}
             <div class="flex-1">
