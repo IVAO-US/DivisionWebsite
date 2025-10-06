@@ -112,11 +112,11 @@
 
         /* === IVAO US AMERICAN COLORS (Dark Mode Red-White-Blue) === */
         /* Primary Blue: Enhanced luminosity while keeping American spirit */
-        --color-primary: #497BB9;
+        --color-primary: #0065E5;
         --color-primary-content: #FFFFFF;
         
         /* Secondary Blue: Bright American blue for dark contrast */
-        --color-secondary: #0065E5;
+        --color-secondary: #7C8EA9;
         --color-secondary-content: #FFFFFF;
         
         /* Accent Red: Enhanced #E63946 for dark mode visibility */
@@ -336,7 +336,7 @@
         
         /* Typography */
         font-size: 1rem !important;
-        font-weight: 400 !important;
+        font-weight: 500 !important;
         
         /* Appearance */
         border: 0px solid transparent !important;
@@ -416,6 +416,7 @@
         margin-bottom: 0.25rem !important;
         transition: all 0.15s ease-in-out !important;
         padding-inline: 18px !important;
+        @apply font-medium;
     }
 
     .dropdown-content.menu li > a:hover {
@@ -458,6 +459,10 @@
         margin: 0rem 0 !important;
         background-color: transparent !important;
         color: var(--color-base-content) !important;
+    }
+
+    .menu :where(li>details>summary) {
+        @apply font-medium;
     }
 
     details > ul.mary-hideable > li > a {
@@ -516,9 +521,9 @@
 /* Root variables and utilities */
 :root {
     /* Scrollbar */
-    scrollbar-color: var(--color-base-content) var(--color-secondary) !important;
-    --scrollbar-thumb: var(--color-base-content) !important;
-    --scrollbar-track: var(--color-secondary) !important;
+    scrollbar-color: var(--color-secondary) var(--color-base-100) !important;
+    --scrollbar-thumb: var(--color-secondary) !important;
+    --scrollbar-track: var(--color-base-content) !important;
 
     /* Livewire */
     --livewire-progress-bar-color: var(--color-secondary) !important;

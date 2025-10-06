@@ -203,7 +203,7 @@ new class extends Component
                     @foreach($item['submenus'] as $submenu)
                         <li>
                             <a href="{{ $this->getUrl($submenu) }}"
-                               class="text-base-content hover:!bg-secondary hover:!text-secondary transition-colors"
+                               class="transition-colors"
                                target="{{ $this->getTarget($submenu) }}"
                                rel="{{ $this->getRel($submenu) }}"
                             >
@@ -222,7 +222,7 @@ new class extends Component
                 <x-menu-sub title="{{ $item['title'] }}">
                     @foreach($item['submenus'] as $submenu)
                         <a href="{{ $this->getUrl($submenu) }}"
-                           class="my-0.5 py-1.5 px-4 hover:text-inherit whitespace-nowrap text-lg pl-2 flex items-center w-full"
+                           class="my-0.5 py-1.5 px-4 !font-medium hover:text-inherit whitespace-nowrap text-lg pl-2 flex items-center w-full"
                            target="{{ $this->getTarget($submenu) }}"
                            rel="{{ $this->getRel($submenu) }}"
                         >
