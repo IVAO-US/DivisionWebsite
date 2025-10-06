@@ -2,15 +2,24 @@
 use Livewire\Volt\Component;
 use App\Models\Tour;
 use App\Models\VirtualAirline;
+use App\Models\AppSetting;
 use Livewire\Attributes\Computed;
 
 new class extends Component {
     public string $activeTab = 'tours';
     
     /* Tours details prop */
-    public string $bentoSetupId = "4E9C525BA46A";
+    public string $bentoSetupId;
     public string $toursRepo = 'https://tours.th.ivao.aero/index.php?div=US';
 
+    /**
+     * Mount component
+     */
+    public function mount(): void
+    {
+        // Load bento seed from database, fallback to default if not set
+        $this->bentoSetupId = AppSetting::get('homepage_tours_bento_seed');
+    }
     
     /**
      * Get certified virtual airlines data formatted for carousel
@@ -76,7 +85,7 @@ new class extends Component {
                         @if($this->hasTours)
                             <div class="flex-1">
                                 {{-- Bento Grid for Tours --}}
-                                <livewire:app_component-bento-grid :images="$this->getToursData()" setup-id="5B9B48E8344A" wire:key="mobile-tours" />
+                                <livewire:app_component-bento-grid :images="$this->getToursData()" setup-id="{{ $bentoSetupId }}" wire:key="mobile-tours" />
                             </div>
 
                             {{-- Call to Action - Pushed to bottom --}}
