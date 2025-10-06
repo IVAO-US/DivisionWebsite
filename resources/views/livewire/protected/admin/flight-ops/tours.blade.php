@@ -5,6 +5,7 @@ use Livewire\Volt\Component;
 
 use App\Models\Tour;
 use App\Models\Admin;
+use App\Models\AppSetting;
 use Illuminate\Support\Facades\Auth;
 
 use Mary\Traits\Toast;
@@ -56,7 +57,9 @@ class extends Component {
         $this->showBentoDebug = !$this->showBentoDebug;
         
         if ($this->showBentoDebug) {
-            $this->debugSetupId = $this->generateRandomSetupId();
+            // Load current saved seed or generate new one
+            $savedSeed = AppSetting::get('homepage_tours_bento_seed');
+            $this->debugSetupId = $savedSeed ?? $this->generateRandomSetupId();
         }
     }
 
@@ -79,6 +82,29 @@ class extends Component {
     {
         $this->debugSetupId = $this->generateRandomSetupId();
         $this->success('New layout generated!');
+    }
+
+    /**
+     * Save current seed to database
+     */
+    public function saveBentoSeed(): void
+    {
+        if (empty($this->debugSetupId)) {
+            $this->error('No layout to save. Please generate a layout first.');
+            return;
+        }
+
+        AppSetting::set('homepage_tours_bento_seed', $this->debugSetupId, 'string');
+        
+        $this->success('Bento layout saved successfully! This layout will now be displayed on the homepage.');
+    }
+
+    /**
+     * Get current saved seed from database
+     */
+    public function getCurrentSavedSeed(): ?string
+    {
+        return AppSetting::get('homepage_tours_bento_seed');
     }
 
     /**
@@ -124,7 +150,7 @@ class extends Component {
     </x-card>
 
     {{-- Bento Debug Card --}}
-    <x-card title="Bento Grid Debug" subtitle="Generate and preview bento grid layouts" shadow separator class="border-l-4 border-l-secondary">
+    <x-card title="Bento Grid Layout Manager" subtitle="Generate, preview and save bento grid layouts for the homepage" shadow separator class="border-l-4 border-l-secondary">
         <x-slot:menu>
             <x-button 
                 :label="$showBentoDebug ? 'Hide' : 'Show'"
@@ -136,30 +162,44 @@ class extends Component {
 
         @if($showBentoDebug)
             <div class="space-y-4">
+                {{-- Current Saved Seed Info --}}
+                @if($currentSavedSeed = $this->getCurrentSavedSeed())
+                    <x-alert title="Active Homepage Layout" icon="phosphor.check-circle" class="alert-success">
+                        The current homepage is using seed: <code class="font-mono bg-success/20 px-2 py-1 rounded">{{ $currentSavedSeed }}</code>
+                    </x-alert>
+                @else
+                    <x-alert title="No Saved Layout" icon="phosphor.warning" class="alert-warning">
+                        No layout has been saved yet. The homepage is using the default fallback seed.
+                    </x-alert>
+                @endif
+
                 {{-- Setup ID Display --}}
                 <div class="bg-base-200 p-4 rounded-lg">
-                    <label class="text-sm font-semibold text-base-content mb-2 block">Setup ID (Seed)</label>
+                    <label class="text-sm font-semibold mb-2 block">Setup ID (Seed)</label>
                     <div class="flex items-center gap-2">
                         <code class="text-lg font-mono bg-base-300 px-3 py-2 rounded flex-1">{{ $debugSetupId }}</code>
                         <x-button 
                             icon="phosphor.arrow-clockwise"
                             class="btn-sm btn-primary"
                             wire:click="regenerateBentoLayout"
-                            tooltip="Generate new layout"
+                            tooltip="Generate new random layout"
+                        />
+                        <x-button 
+                            icon="phosphor.floppy-disk"
+                            class="btn-sm btn-success"
+                            wire:click="saveBentoSeed"
+                            tooltip="Save this layout to homepage"
                         />
                     </div>
-                    <p class="text-sm text-base-content mt-2">
-                        Use this Setup ID in your Bento Component to reproduce this exact layout<br>
-                        <br>
-                        The webmaster must alter the <b>homepage_components-flight-ops.blade.php</b> file.<br>
-                        He must alter the <b>$bentoSetupId</b> property at the top of the component file.
+                    <p class="text-sm mt-2 opacity-70">
+                        Click "Save" to use this layout on the homepage, or click "Regenerate" to try a different arrangement.
                     </p>
                 </div>
 
                 {{-- Bento Grid Preview --}}
                 @if(count($this->getToursDataForBento()) > 0)
                     <div class="bg-base-200 p-6 rounded-lg">
-                        <h4 class="text-sm font-semibold text-base-content/80 mb-4">Layout Preview</h4>
+                        <h4 class="text-sm font-semibold opacity-80 mb-4">Layout Preview</h4>
                         <livewire:app_component-bento-grid 
                             :images="$this->getToursDataForBento()" 
                             :setup-id="$debugSetupId"
@@ -167,7 +207,7 @@ class extends Component {
                         />
                     </div>
                 @else
-                    <div class="text-center py-8 text-base-content/60">
+                    <div class="text-center py-8 opacity-60">
                         <x-icon name="phosphor.airplane-takeoff" class="w-12 h-12 mx-auto mb-2 opacity-50" />
                         <p>
                             No tours available to preview.<br>
