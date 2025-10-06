@@ -117,7 +117,10 @@ Route::middleware('auth')->group(function () {
             Volt::route('/admin/manage', 'protected.admin.manage')->name('admin.manage');
         });
 
-        /* Review gdpr */
+        /* Application: Headline / GDPR */
+        Route::middleware('admin.permissions:app_headline')->group(function () {
+            Volt::route('/admin/app/headline', 'protected.admin.app.headline')->name('admin.app.headline');
+        });
         Route::middleware('admin.permissions:app_gdpr')->group(function () {
             Volt::route('/admin/app/gdpr', 'protected.admin.app.gdpr')->name('admin.app.gdpr');
         });

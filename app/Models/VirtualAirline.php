@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class VirtualAirline extends Model
 {
@@ -46,6 +47,32 @@ class VirtualAirline extends Model
     }
 
     /**
+     * Get formatted description with clickable links and line breaks
+     */
+    protected function formattedDescription(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                if (!$this->description) {
+                    return null;
+                }
+                
+                // Convert line breaks to <br> tags
+                $formatted = nl2br(e($this->description));
+                
+                // Convert URLs to clickable links with external attribute
+                $formatted = preg_replace(
+                    '/(https?:\/\/[^\s<]+)/i',
+                    '<a href="$1" target="_blank" rel="noopener noreferrer external" class="underline">$1</a>',
+                    $formatted
+                );
+                
+                return $formatted;
+            }
+        );
+    }
+
+    /**
      * Format virtual airline data for carousel component
      *
      * @return array
@@ -55,7 +82,7 @@ class VirtualAirline extends Model
         return [
             'title' => $this->name,
             'date' => $this->formatted_hubs,
-            'description' => $this->description,
+            'description' => $this->formatted_description,
             'image' => $this->banner,
             'link' => $this->link,
         ];
