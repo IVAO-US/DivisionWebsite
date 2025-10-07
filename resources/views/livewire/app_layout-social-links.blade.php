@@ -9,7 +9,7 @@ new class extends Component {
     public array $socialLinks = [
         ['platform' => 'discord', 'url' => 'https://discord.us.ivao.aero/', 'icon' => 'phosphor.discord-logo-fill'],
         ['platform' => 'youtube', 'url' => 'https://www.youtube.com/@IVAO_US', 'icon' => 'phosphor.youtube-logo-fill'],
-        ['platform' => 'twitch', 'url' => 'https://www.twitch.tv/ivao_usa', 'icon' => 'phosphor.twitch-logo-fill'],
+        ['platform' => 'twitch', 'url' => 'https://www.twitch.tv/ivaousa', 'icon' => 'phosphor.twitch-logo-fill'],
         ['platform' => 'facebook', 'url' => 'https://www.facebook.com/ivaousa', 'icon' => 'phosphor.facebook-logo-fill'],
         ['platform' => 'instagram', 'url' => 'https://www.instagram.com/ivaousa/', 'icon' => 'phosphor.instagram-logo-fill'],
         ['platform' => 'tiktok', 'url' => 'https://www.tiktok.com/@ivao_usa', 'icon' => 'phosphor.tiktok-logo-fill'],
