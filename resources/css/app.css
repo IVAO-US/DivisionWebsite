@@ -1,4 +1,10 @@
+/* Loading fonts */
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:opsz,wght@6..12,400;6..12,500;6..12,600;6..12,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+/* Loading Tailwind */
 @import 'tailwindcss';
+
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
@@ -44,7 +50,7 @@
         --color-primary-content: #FFFFFF;
         
         /* Secondary Blue: Refined intermediate between primary and light */
-        --color-secondary: #0152B9;
+        --color-secondary: #0D2C99;
         --color-secondary-content: #FFFFFF;
         
         /* Accent Red: #E63946 - The authentic American red from ChatGPT 2025 */
@@ -80,11 +86,11 @@
         /* Tertiary background - Light neutral for depth */
         --color-base-300: #9E9E9E;
         /* Main text - Strong readable dark */
-        --color-base-content: #111827;
+        --color-base-content: #22201D
 
         /* === REFINED MODERN STYLING === */
         /* Button outline */
-        --btn-color: #FFFFFF;
+        --btn-color: var(--color-base-content);
 
         /* Border radius - Contemporary premium feel */
         --radius-selector: 0.5rem;   /* 12px - modern sophistication */
@@ -116,7 +122,7 @@
         --color-primary-content: #FFFFFF;
         
         /* Secondary Blue: Bright American blue for dark contrast */
-        --color-secondary: #60A5FA;
+        --color-secondary: #7C8EA9;
         --color-secondary-content: #FFFFFF;
         
         /* Accent Red: Enhanced #E63946 for dark mode visibility */
@@ -156,7 +162,7 @@
 
         /* === REFINED MODERN STYLING (Matching Light Theme) === */
         /* Button outline */
-        --btn-color: #767676;
+        --btn-color: var(--color-base-content);
 
         /* Border radius - Contemporary premium feel */
         --radius-selector: 0.5rem;   /* 12px - modern sophistication */
@@ -203,10 +209,6 @@
 * Theme customization
 * 
 */
-
-/* IVAO Customisation: load fonts */
-@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:opsz,wght@6..12,400;6..12,500;6..12,600;6..12,700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
 
 @layer base {
     html {
@@ -339,10 +341,10 @@
         font-weight: 500 !important;
         
         /* Appearance */
-        border: 2px solid transparent !important;
+        border: 0px solid transparent !important;
         border-radius: 0.5rem !important;
         background-color: transparent !important;
-        color: white !important;
+        color: var(--color-base-content) !important;
         
         /* Transitions */
         transition: all 0.2s ease-in-out !important;
@@ -369,9 +371,9 @@
     .menu-horizontal li > .navbar-item-custom:hover,
     .menu-horizontal .btn.navbar-item-custom:hover,
     .menu .navbar-item-custom:hover {
-        border-color: white !important;
+        border-color: var(--color-secondary) !important;
         background-color: transparent !important;
-        color: white !important;
+        color: var(--color-base-content) !important;
     }
 
     /* === ACTIVE STATES === */
@@ -391,45 +393,11 @@
     .menu .navbar-item-custom.active,
     .menu .navbar-item-custom[aria-current="page"],
     .menu .navbar-item-custom.mary-active-menu {
-        background-color: var(--color-secondary) !important;
-        border-color: white !important;
-        color: white !important;
+        background-color: var(--color-base-100) !important;
+        border-color: var(--color-secondary) !important;
+        color: var(--color-secondary) !important;
     }
 
-    /* === FORCE WHITE TEXT === */
-    /* Ensure white text in all states and nested elements */
-    .navbar-item-custom,
-    .navbar-item-custom *,
-    .navbar-item-custom:hover,
-    .navbar-item-custom:hover *,
-    .navbar-item-custom.active,
-    .navbar-item-custom.active *,
-    .navbar-item-custom[aria-current="page"],
-    .navbar-item-custom[aria-current="page"] *,
-    .navbar-item-custom.mary-active-menu,
-    .navbar-item-custom.mary-active-menu *,
-    .menu-horizontal .navbar-item-custom,
-    .menu-horizontal .navbar-item-custom *,
-    .menu-horizontal .navbar-item-custom:hover,
-    .menu-horizontal .navbar-item-custom:hover *,
-    .menu-horizontal .navbar-item-custom.active,
-    .menu-horizontal .navbar-item-custom.active *,
-    .menu-horizontal .navbar-item-custom[aria-current="page"],
-    .menu-horizontal .navbar-item-custom[aria-current="page"] *,
-    .menu-horizontal .navbar-item-custom.mary-active-menu,
-    .menu-horizontal .navbar-item-custom.mary-active-menu *,
-    .menu .navbar-item-custom,
-    .menu .navbar-item-custom *,
-    .menu .navbar-item-custom:hover,
-    .menu .navbar-item-custom:hover *,
-    .menu .navbar-item-custom.active,
-    .menu .navbar-item-custom.active *,
-    .menu .navbar-item-custom[aria-current="page"],
-    .menu .navbar-item-custom[aria-current="page"] *,
-    .menu .navbar-item-custom.mary-active-menu,
-    .menu .navbar-item-custom.mary-active-menu * {
-        color: white !important;
-    }
 
     /* === DROPDOWN STYLES === */
     .dropdown.dropdown-hover .btn.navbar-item-custom {
@@ -450,11 +418,12 @@
         margin-bottom: 0.25rem !important;
         transition: all 0.15s ease-in-out !important;
         padding-inline: 18px !important;
+        @apply font-medium;
     }
 
     .dropdown-content.menu li > a:hover {
         background-color: var(--color-secondary) !important;
-        color: white !important;
+        color: var(--color-base-100) !important;
         border-radius: 0px !important;
         /* transform: translateX(4px) !important; */
     }
@@ -462,15 +431,15 @@
     .dropdown-hover:hover .btn.navbar-item-custom,
     .dropdown.dropdown-open .btn.navbar-item-custom,
     .dropdown:focus-within .btn.navbar-item-custom {
-        border-color: white !important;
-        background-color: transparent !important;
-        color: white !important;
+        background-color: var(--color-base-100) !important;
+        border-color: var(--color-secondary) !important;
+        color: var(--color-secondary) !important;
     }
 
     .dropdown-hover:hover .btn.navbar-item-custom *,
     .dropdown.dropdown-open .btn.navbar-item-custom *,
     .dropdown:focus-within .btn.navbar-item-custom * {
-        color: white !important;
+        color: var(--color-base-content) !important;
     }
 
 
@@ -491,7 +460,11 @@
         min-height: 2rem !important;
         margin: 0rem 0 !important;
         background-color: transparent !important;
-        color: white !important;
+        color: var(--color-base-content) !important;
+    }
+
+    .menu :where(li>details>summary) {
+        @apply font-medium;
     }
 
     details > ul.mary-hideable > li > a {
@@ -538,17 +511,24 @@
             color: color-mix(in oklab, var(--color-base-content) 66%, transparent);
         }
     }
+
+    @supports (color:color-mix(in lab,red,red)) {
+        .menu :where(li:not(.menu-title,.disabled)>:not(ul,details,.menu-title):not(.menu-active,:active,.btn):hover,li:not(.menu-title,.disabled)>details>summary:not(.menu-title):not(.menu-active,:active,.btn):hover) {
+            color: var(--color-base-100) !important;
+            background-color: var(--color-secondary) !important;
+        }
+    }
 }
 
 /* Root variables and utilities */
 :root {
     /* Scrollbar */
-    scrollbar-color: var(--color-base-content) var(--color-base-300) !important;
-    --scrollbar-thumb: var(--color-base-content) !important;
-    --scrollbar-track: var(--color-base-300) !important;
+    scrollbar-color: var(--color-secondary) var(--color-base-100) !important;
+    --scrollbar-thumb: var(--color-secondary) !important;
+    --scrollbar-track: var(--color-base-content) !important;
 
     /* Livewire */
-    --livewire-progress-bar-color: var(--color-primary) !important;
+    --livewire-progress-bar-color: var(--color-secondary) !important;
 }
 
 /**

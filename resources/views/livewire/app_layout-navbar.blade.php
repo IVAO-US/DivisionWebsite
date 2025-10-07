@@ -31,7 +31,7 @@ new class extends Component
 
 <div>
     {{-- NAVBAR --}}
-    <x-nav full-width class="!px-0 !py-0 !mb-0 lg:!mb-1 !bg-primary !border-b-0">
+    <x-nav full-width class="!px-0 !py-0 !mb-0 lg:!mb-1 !bg-base-100 !border-b-0">
         <x-slot:brand>
             <div class="w-full h-16 hidden lg:grid grid-cols-3 items-center">
                 
@@ -53,7 +53,7 @@ new class extends Component
 
                         {{-- Admin Access button --}}
                         @if($this->isAdmin)
-                            <x-button icon="phosphor.wrench" class="btn-neutral btn-circle" tooltipBottom="Admin Panel" link="{{ route('admin.index') }}" spinner />
+                            <x-button icon="phosphor.wrench" class="btn-primary btn-circle" tooltipBottom="Admin Panel" link="{{ route('admin.index') }}" spinner />
                         @endif
                         
                     <livewire:app_layout-theme-toggle instanceId="desktop" />
@@ -71,11 +71,11 @@ new class extends Component
                 <div class="justify-end">
                     {{-- Mobile actions --}}
                     <div class="flex items-center gap-2">
-                        <x-button icon="phosphor.list" wire:click="toggleMenu" class="btn btn-accent" />
+                        <x-button icon="phosphor.list" wire:click="toggleMenu" class="btn btn-base-content btn-outline" />
 
                         {{-- Admin Access button --}}
                         @if($this->isAdmin)
-                            <x-button icon="phosphor.wrench" class="btn-neutral btn-circle" tooltipBottom="Admin Panel" link="{{ route('admin.index') }}" spinner />
+                            <x-button icon="phosphor.wrench" class="btn-primary btn-circle" tooltipBottom="Admin Panel" link="{{ route('admin.index') }}" spinner />
                         @endif
 
                         <livewire:app_layout-theme-toggle instanceId="mobile" />
@@ -87,7 +87,7 @@ new class extends Component
 
     {{-- Mobile menu --}}
     @if ($this->mobileMenuOpen)
-        <div class="lg:hidden absolute left-0 right-0 w-full bg-secondary shadow-md z-50 top-full pb-4">
+        <div class="lg:hidden absolute left-0 right-0 w-full bg-base-200 shadow-md z-50 top-full pb-4">
             <x-menu activate-by-route class="menu-vertical w-full">
                 <livewire:app_layout-navbar-menu-items :className="'menu-vertical w-full px-6'" :showLinkIcons="true" />
             </x-menu>

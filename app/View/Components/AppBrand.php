@@ -25,8 +25,8 @@ class AppBrand extends Component
                 <a href="/" wire:navigate>
                     <div {{ $attributes->class([]) }}>
                         <div class="flex items-center gap-2 max-h-20">
-                            <img src="/assets/img/IVAO-US_white.svg" alt="IVAO US Logo" class="h-18 w-18" />
-                            <h3 class="text-white hidden sm:block">IVAO US</h1>
+                            <img src="/assets/img/us-full-blue.png" alt="IVAO US Logo" class="h-12 sm:h-15 lg:h-18 w-32 sm:w-43 lg:w-54" />
+                            {{-- <h3 class="text-white hidden sm:block">IVAO US</h3> --}}
                         </div>
                     </div>
                 </a>
