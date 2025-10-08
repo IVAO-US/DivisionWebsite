@@ -563,7 +563,7 @@ new class extends Component {
                         @if($type !== 'default')
                             <div class="flex items-center gap-2">
                                 <x-icon name="{{ $colors['icon'] }}" class="w-5 h-5 {{ str_replace('bg-', 'text-', $colors['dot']) }}" />
-                                <span class="text-base-content text-sm">{{ ucfirst($type) }}</span>
+                                <span class="text-base-content text-sm">{{ str($type)->replace('_', ' ')->title() }}</span>
                             </div>
                         @endif
                     @endforeach
