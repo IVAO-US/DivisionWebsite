@@ -440,7 +440,7 @@ new class extends Component {
             <x-button 
                 wire:click="toggleViewMode" 
                 icon="{{ $weeklyMode ? 'phosphor.calendar' : 'phosphor.calendar-dots' }}"
-                class="btn-circle btn-sm {{ $weeklyMode ? 'btn-primary' : 'btn-ghost' }}"
+                class="btn-circle btn-sm {{ $weeklyMode ? 'btn-primary' : 'btn-secondary' }}"
                 title="{{ $weeklyMode ? 'Switch to Monthly View' : 'Switch to Weekly View' }}"
             />
         @elseif(!$displayWeekly && $this->canNavigateNext())
@@ -460,7 +460,7 @@ new class extends Component {
         {{-- Calendar Grid --}}
         <div class="w-full flex-1 flex flex-col">
             {{-- Days of Week Header : Cannot be displayed on mobile --}}
-            <div class="hidden lg:grid {{ $this->getGridColsClass() }} gap-1 mb-2">
+            <div class="{{ $weeklyMode ? 'hidden' : 'grid' }} lg:grid {{ $this->getGridColsClass() }} gap-1 mb-2">
                 @foreach($this->getDayNamesForHeader() as $dayName)
                     <div class="text-center font-bold text-base-content/70 py-1 text-xs">
                         {{ $dayName }}
