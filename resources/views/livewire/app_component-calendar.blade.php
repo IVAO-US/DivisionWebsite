@@ -459,8 +459,8 @@ new class extends Component {
     <div class="flex-1 flex flex-col">
         {{-- Calendar Grid --}}
         <div class="w-full flex-1 flex flex-col">
-            {{-- Days of Week Header --}}
-            <div class="grid {{ $this->getGridColsClass() }} gap-1 mb-2">
+            {{-- Days of Week Header : Cannot be displayed on mobile --}}
+            <div class="hidden lg:grid {{ $this->getGridColsClass() }} gap-1 mb-2">
                 @foreach($this->getDayNamesForHeader() as $dayName)
                     <div class="text-center font-bold text-base-content/70 py-1 text-xs">
                         {{ $dayName }}
