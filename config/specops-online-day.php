@@ -20,5 +20,5 @@ return [
     'time_end' => '22:00:00',
     'type' => 'online_day',
     'illustration' => 'https://assets.us.ivao.aero/uploads/SO4.jpg',
-    'description' => 'Join us <b>every 3rd Wednesday of the month between 18:00 UTC and 22:00 UTC for SpecOps!</b>.',
+    'description' => 'Join us <b>every 3rd Wednesday of the month between 18:00 UTC and 22:00 UTC for SpecOps!</b><br><br><a href="https://forum.ivao.aero/threads/special-operations-online-day.383424/" target="_blank">Click here for more information.</a>',
 ];
