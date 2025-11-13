@@ -69,11 +69,16 @@ new class extends Component {
             ->orderBy('time_start')
             ->get();
         
-        // Get recurring Online Days for the next 4 months
+
+        // Get recurring Online Days (weekly) for the next 4 months
         $onlineDays = RecurringEventService::getCalendarOnlineDays(3, 4);
+
+        // Get recurring SpecOps Online Days (monthly) for the next 4 months
+        $specOpsOnlineDays = RecurringEventService::getCalendarSpecOpsOnlineDays(3, 4);
+
         
-        // Merge database sessions with recurring events
-        $allSessions = $sessions->concat($onlineDays)->sortBy([
+        // Merge database sessions with all recurring events
+        $allSessions = $sessions->concat($onlineDays)->concat($specOpsOnlineDays)->sortBy([
             ['date', 'asc'],
             ['time_start', 'asc']
         ]);

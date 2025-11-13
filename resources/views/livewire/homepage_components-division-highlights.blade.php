@@ -34,16 +34,23 @@ new class extends Component {
             ];
         })->toArray();
         
-        // Add the next Online Day to the carousel
+        // Add the next recurring events to the carousel
         $nextOnlineDay = RecurringEventService::getNextOnlineDay();
-        
-        if ($nextOnlineDay) {
-            // Insert at the beginning of the array
+        $nextSpecOpsDay = RecurringEventService::getNextSpecOpsOnlineDay();
+
+        // Collect all next recurring events
+        $nextRecurringEvents = collect([
+            $nextOnlineDay,
+            $nextSpecOpsDay
+        ])->filter()->sortBy('date'); // Filter null values and sort by date
+
+        // Add recurring events to the carousel
+        foreach ($nextRecurringEvents->reverse() as $recurringEvent) {
             array_unshift($upcomingEvents, [
-                'title' => $nextOnlineDay['title'],
-                'date' => $nextOnlineDay['date']->format('l, F jS'),
-                'description' => $nextOnlineDay['description'],
-                'image' => $nextOnlineDay['illustration'],
+                'title' => $recurringEvent['title'],
+                'date' => $recurringEvent['date']->format('l, F jS'),
+                'description' => $recurringEvent['description'],
+                'image' => $recurringEvent['illustration'],
                 'link' => 'https://forum.ivao.aero/forums/events.1457/'
             ]);
         }
