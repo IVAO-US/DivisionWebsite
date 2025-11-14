@@ -3887,16 +3887,16 @@
         },
         {
             "name": "robsontenorio/mary",
-            "version": "2.4.8",
+            "version": "2.4.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/robsontenorio/mary.git",
-                "reference": "da994de22f4c8926c511dc4590ff368c538e34f4"
+                "reference": "d8a080c130186a0895999430d3e9b8192aac97c3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/robsontenorio/mary/zipball/da994de22f4c8926c511dc4590ff368c538e34f4",
-                "reference": "da994de22f4c8926c511dc4590ff368c538e34f4",
+                "url": "https://api.github.com/repos/robsontenorio/mary/zipball/d8a080c130186a0895999430d3e9b8192aac97c3",
+                "reference": "d8a080c130186a0895999430d3e9b8192aac97c3",
                 "shasum": ""
             },
             "require": {
@@ -3962,7 +3962,7 @@
             ],
             "support": {
                 "issues": "https://github.com/robsontenorio/mary/issues",
-                "source": "https://github.com/robsontenorio/mary/tree/2.4.8"
+                "source": "https://github.com/robsontenorio/mary/tree/2.4.9"
             },
             "funding": [
                 {
@@ -3970,7 +3970,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-10-24T13:47:16+00:00"
+            "time": "2025-11-14T12:47:53+00:00"
         },
         {
             "name": "symfony/clock",
@@ -9930,16 +9930,16 @@
         },
         {
             "name": "theseer/tokenizer",
-            "version": "1.2.3",
+            "version": "1.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/theseer/tokenizer.git",
-                "reference": "737eda637ed5e28c3413cb1ebe8bb52cbf1ca7a2"
+                "reference": "d74205c497bfbca49f34d4bc4c19c17e22db4ebb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/theseer/tokenizer/zipball/737eda637ed5e28c3413cb1ebe8bb52cbf1ca7a2",
-                "reference": "737eda637ed5e28c3413cb1ebe8bb52cbf1ca7a2",
+                "url": "https://api.github.com/repos/theseer/tokenizer/zipball/d74205c497bfbca49f34d4bc4c19c17e22db4ebb",
+                "reference": "d74205c497bfbca49f34d4bc4c19c17e22db4ebb",
                 "shasum": ""
             },
             "require": {
@@ -9968,7 +9968,7 @@
             "description": "A small library for converting tokenized PHP source code into XML and potentially other formats",
             "support": {
                 "issues": "https://github.com/theseer/tokenizer/issues",
-                "source": "https://github.com/theseer/tokenizer/tree/1.2.3"
+                "source": "https://github.com/theseer/tokenizer/tree/1.3.0"
             },
             "funding": [
                 {
@@ -9976,7 +9976,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-03-03T12:36:25+00:00"
+            "time": "2025-11-13T13:44:09+00:00"
         },
         {
             "name": "webmozart/assert",
