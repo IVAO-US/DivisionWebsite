@@ -2,22 +2,22 @@
 
 namespace App\Traits;
 
-use App\Services\SEOService;
+use App\Services\SeoService;
 use App\Traits\BreadcrumbsTrait;
 
 trait HasSEO
 {
     use BreadcrumbsTrait;
 
-    protected ?SEOService $seoService = null;
+    protected ?SeoService $seoService = null;
 
     /**
      * Get SEO Service instance
      */
-    protected function seo(): SEOService
+    protected function seo(): SeoService
     {
         if (!$this->seoService) {
-            $this->seoService = app(SEOService::class);
+            $this->seoService = app(SeoService::class);
         }
         
         return $this->seoService;
