@@ -7,15 +7,23 @@ use Livewire\Volt\Component;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 
+use Mary\Traits\Toast;
+use App\Traits\HasSEO;
+
 new 
 #[Layout('components.layouts.app')]
-#[Title('Guest Controller Approval')]
 class extends Component {
-    /* User information */
-    public User $user;
-    
+    use Toast, HasSEO;
+
     public function mount(): void
-    {
+	{
+		$this->setSEOWithBreadcrumbs(
+			title: 'Guest Controller Approval',
+			description: config('seotools.meta.defaults.description'),
+			image: asset('assets/seo/snapshot.jpg'),
+			keywords: config('seotools.meta.defaults.keywords')
+		);
+
         if(Auth::check()) {
             $this->user = Auth::user();
             $this->fill($this->user);

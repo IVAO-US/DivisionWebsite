@@ -5,10 +5,23 @@ use Livewire\Attributes\Computed;
 use Livewire\Volt\Component;
 use App\Models\VirtualAirline;
 
+use Mary\Traits\Toast;
+use App\Traits\HasSEO;
+
 new 
 #[Layout('components.layouts.app')]
-#[Title('Virtual Airlines')]
 class extends Component {
+    use Toast, HasSEO;
+
+    public function mount(): void
+	{
+		$this->setSEOWithBreadcrumbs(
+			title: 'Virtual Airlines',
+			description: config('seotools.meta.defaults.description'),
+			image: asset('assets/seo/snapshot.jpg'),
+			keywords: config('seotools.meta.defaults.keywords')
+		);
+	}
     
     /**
      * Get virtual airlines data from database

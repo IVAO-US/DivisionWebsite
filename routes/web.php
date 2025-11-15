@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Auth;
 
 use App\Http\Controllers\IvaoController;
 
+use App\Services\SitemapService;
+
 /**
  * ROUTING CONVENTIONS FOR AUTOMATIC BREADCRUMBS
  * ---------------------------------------------
@@ -31,107 +33,144 @@ use App\Http\Controllers\IvaoController;
 
 /* -- */
 
-/**
- *  Log in
- *  IVAO: Handling within the auth-button component & with a callback route
- */
+/* Rate limiting (60 requests/minute) */
+Route::middleware(['throttle:60,1'])->group(function () {
 
-Route::redirect('/login', '/auth/ivao/callback')->name('login');       /* Alias for Middleware::Auth */
-Route::get('/auth/ivao/callback', [IvaoController::class, 'handleCallback'])->name('auth.ivao.callback');
+    /**
+     *  Log in
+     *  IVAO: Handling within the auth-button component & with a callback route
+     */
 
-
-/**
- *  Log out 
- *  IVAO: Handling within the auth-button component
- */
+    Route::redirect('/login', '/auth/ivao/callback')->name('login');       /* Alias for Middleware::Auth */
+    Route::get('/auth/ivao/callback', [IvaoController::class, 'handleCallback'])->name('auth.ivao.callback');
 
 
-/**
- *  Breadcrumbs
- *  Named routes for categories without index page
- */
-Route::redirect('/users',       '/users/settings')->name('users');
-Route::redirect('/division',    '/')->name('division');
-Route::redirect('/members',     '/')->name('members');
-Route::redirect('/atcs',        '/')->name('ATCs');
-Route::redirect('/pilots',      '/')->name('pilots');
-Route::redirect('/training',    '/')->name('training');
-    /* Admin breadcrumbs => make sure to redirect to dashboard */
-    Route::redirect('/admin',               '/admin/dashboard')->name('Admin');
-    Route::redirect('/admin/app',           '/admin/dashboard')->name('Application');
-    Route::redirect('/admin/flight-ops',    '/admin/dashboard')->name('Flight Operations');
+    /**
+     *  Log out 
+     *  IVAO: Handling within the auth-button component
+     */
 
 
-/**
- *  Unprotected routes
- */
-
-/* Home */
-Volt::route('/', 'home')->name('home');
-
-/* Division */
-Volt::route('/division/our-history',    'division.our-history')->name('division.our-history');
-Volt::route('/division/transfer',       'division.transfer')->name('division.transfer');
-
-/* Community */
-Volt::route('/members/support',         'members.support')->name('members.support');
-
-/* ATCs */
-Volt::route('/atcs/become-atc',         'atcs.become-atc')->name('atcs.become-atc');
-
-/* Pilots */
-Volt::route('/pilots/virtual-airlines', 'pilots.virtual-airlines')->name('pilots.virtual-airlines');
-
-/* Training */
-Volt::route('/training/request',    'training.request')->name('training.request');
-Volt::route('/training/exams',      'training.exams')->name('training.exams');
-Volt::route('/training/gca',        'training.gca')->name('training.gca');
-
-/* Privacy Policy + Terms of Service */
-Volt::route('/tos',     'tos')           ->name('tos');
-Volt::route('/privacy', 'privacy-policy')->name('privacy');
+    /**
+     *  Breadcrumbs
+     *  Named routes for categories without index page
+     */
+    Route::redirect('/users',       '/users/settings')->name('users');
+    Route::redirect('/division',    '/')->name('division');
+    Route::redirect('/members',     '/')->name('members');
+    Route::redirect('/atcs',        '/')->name('ATCs');
+    Route::redirect('/pilots',      '/')->name('pilots');
+    Route::redirect('/training',    '/')->name('training');
+        /* Admin breadcrumbs => make sure to redirect to dashboard */
+        Route::redirect('/admin',               '/admin/dashboard')->name('Admin');
+        Route::redirect('/admin/app',           '/admin/dashboard')->name('Application');
+        Route::redirect('/admin/flight-ops',    '/admin/dashboard')->name('Flight Operations');
 
 
-/**
- *  Protected routes
- *  Logged-in auth user status required
- */
+    /**
+     *  Unprotected routes
+     */
 
-Route::middleware('auth')->group(function () {
+    /* Home */
+    Volt::route('/', 'home')->name('home');
 
-    /* User profile */
-    Volt::route('/users/settings', 'protected.users.settings')->name('users.settings');
+    /* Division */
+    Volt::route('/division/our-history',    'division.our-history')->name('division.our-history');
+    Volt::route('/division/transfer',       'division.transfer')->name('division.transfer');
+
+    /* Community */
+    Volt::route('/members/support',         'members.support')->name('members.support');
+
+    /* ATCs */
+    Volt::route('/atcs/become-atc',         'atcs.become-atc')->name('atcs.become-atc');
+
+    /* Pilots */
+    Volt::route('/pilots/virtual-airlines', 'pilots.virtual-airlines')->name('pilots.virtual-airlines');
+
+    /* Training */
+    Volt::route('/training/request',    'training.request')->name('training.request');
+    Volt::route('/training/exams',      'training.exams')->name('training.exams');
+    Volt::route('/training/gca',        'training.gca')->name('training.gca');
+
+    /* Privacy Policy + Terms of Service */
+    Volt::route('/tos',     'tos')           ->name('tos');
+    Volt::route('/privacy', 'privacy-policy')->name('privacy');
 
 
     /**
      *  Protected routes
-     *  Admin status required
+     *  Logged-in auth user status required
      */
-    Route::middleware('admin')->group(function () {
 
-        /* Dashboard: no specific permission required */ 
-        Volt::route('/admin/dashboard', 'protected.admin.index')->name('admin.index');
+    Route::middleware('auth')->group(function () {
 
-        /* Manage admin */
-        Route::middleware('admin.permissions:admins_edit_permissions')->group(function () {
-            Volt::route('/admin/manage', 'protected.admin.manage')->name('admin.manage');
-        });
+        /* User profile */
+        Volt::route('/users/settings', 'protected.users.settings')->name('users.settings');
 
-        /* Application: Headline / GDPR */
-        Route::middleware('admin.permissions:app_headline')->group(function () {
-            Volt::route('/admin/app/headline', 'protected.admin.app.headline')->name('admin.app.headline');
-        });
-        Route::middleware('admin.permissions:app_gdpr')->group(function () {
-            Volt::route('/admin/app/gdpr', 'protected.admin.app.gdpr')->name('admin.app.gdpr');
-        });
 
-        /* Flight Ops : Tours + VAs */
-        Route::middleware('admin.permissions:fltops_tours')->group(function () {
-            Volt::route('/admin/flight-ops/tours', 'protected.admin.flight-ops.tours')->name('admin.flight-ops.tours');
-        });
-        Route::middleware('admin.permissions:fltops_va')->group(function () {
-            Volt::route('/admin/flight-ops/virtual-airlines', 'protected.admin.flight-ops.virtual-airlines')->name('admin.flight-ops.virtual-airlines');
-        });
+        /**
+         *  Protected routes
+         *  Admin status required
+         */
+        Route::middleware('admin')->group(function () {
 
+            /* Dashboard: no specific permission required */ 
+            Volt::route('/admin/dashboard', 'protected.admin.index')->name('admin.index');
+
+            /* Manage admin */
+            Route::middleware('admin.permissions:admins_edit_permissions')->group(function () {
+                Volt::route('/admin/manage', 'protected.admin.manage')->name('admin.manage');
+            });
+
+            /* Application: Headline / GDPR */
+            Route::middleware('admin.permissions:app_headline')->group(function () {
+                Volt::route('/admin/app/headline', 'protected.admin.app.headline')->name('admin.app.headline');
+            });
+            Route::middleware('admin.permissions:app_gdpr')->group(function () {
+                Volt::route('/admin/app/gdpr', 'protected.admin.app.gdpr')->name('admin.app.gdpr');
+            });
+
+            /* Flight Ops : Tours + VAs */
+            Route::middleware('admin.permissions:fltops_tours')->group(function () {
+                Volt::route('/admin/flight-ops/tours', 'protected.admin.flight-ops.tours')->name('admin.flight-ops.tours');
+            });
+            Route::middleware('admin.permissions:fltops_va')->group(function () {
+                Volt::route('/admin/flight-ops/virtual-airlines', 'protected.admin.flight-ops.virtual-airlines')->name('admin.flight-ops.virtual-airlines');
+            });
+
+        });
     });
 });
+
+/**
+ * Sitemap + Robots.txt
+ * Rate limiting (100 requests/minute)
+ * */
+
+Route::middleware(['throttle:100,1'])->group(function () {
+    
+    Route::get('/robots.txt', function () {
+        if (config('seotools.robots.block_in_non_production') && !app()->environment('production')) {
+            return response("User-agent: *\nDisallow: /")
+                ->header('Content-Type', 'text/plain');
+        }
+
+        $disallowedPaths = config('seotools.robots.disallowed_paths', []);
+        $sitemapUrl = config('app.url') . '/sitemap.xml';
+        
+        $content = "User-agent: *\nAllow: /\n\n";
+        
+        // Add disallowed paths
+        foreach ($disallowedPaths as $path) {
+            $content .= "Disallow: {$path}\n";
+        }
+        
+        $content .= "\nSitemap: {$sitemapUrl}";
+        
+        return response($content)->header('Content-Type', 'text/plain');
+    })->name('robots');
+
+    Route::get('/sitemap.xml', function (SitemapService $sitemapService) {
+        return $sitemapService->generate()->toResponse(request());
+    })->name('sitemap');
+}); 

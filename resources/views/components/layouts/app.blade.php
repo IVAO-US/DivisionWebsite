@@ -5,7 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ isset($title) ? $title.' - '.config('app.name') : config('app.name') }}</title>
+    {{-- SEO Meta Tags: it will includes <title> --}}
+	{!! SEO::generate(true) !!}
+
+    {{-- Apple Touch Icon --}}
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('favicon.ico') }}">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -36,7 +40,7 @@
                 <x-slot:content class="mt-8 mb-20 px-0 lg:px-10">
                     
                     {{-- Breadcrumbs --}}
-                    <livewire:app_layout-breadcrumbs :title="$title" />
+                    <livewire:app_layout-breadcrumbs />
 
                     {{-- Page App --}}
                     {{ $slot }}

@@ -3,16 +3,26 @@ use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Volt\Component;
 
+use Mary\Traits\Toast;
+use App\Traits\HasSEO;
+
 new 
 #[Layout('components.layouts.app')]
-#[Title('Become ATC')]
 class extends Component {
+    use Toast, HasSEO;
     public int $currentStep = 1;
     public int $maxUnlockedStep = 1;
     public string $selectedTab = "1-tab";
     
     public function mount(): void
     {
+		$this->setSEOWithBreadcrumbs(
+			title: 'Become ATC',
+			description: config('seotools.meta.defaults.description'),
+			image: asset('assets/seo/snapshot.jpg'),
+			keywords: config('seotools.meta.defaults.keywords')
+		);
+
         $this->currentStep = 1;
         $this->maxUnlockedStep = 1;
         $this->selectedTab = "1-tab";

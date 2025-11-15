@@ -5,11 +5,23 @@ use Livewire\Attributes\Rule;
 
 use Livewire\Volt\Component;
 
+use Mary\Traits\Toast;
+use App\Traits\HasSEO;
+
 new 
 #[Layout('components.layouts.app')]
-#[Title('Members Support')]
 class extends Component {
+    use Toast, HasSEO;
 
+    public function mount(): void
+	{
+		$this->setSEOWithBreadcrumbs(
+			title: 'Members Support',
+			description: config('seotools.meta.defaults.description'),
+			image: asset('assets/seo/snapshot.jpg'),
+			keywords: config('seotools.meta.defaults.keywords')
+		);
+	}
 }; ?>
 
 <div>

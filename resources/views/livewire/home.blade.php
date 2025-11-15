@@ -1,18 +1,27 @@
 <?php
 use Livewire\Attributes\Layout;
-use Livewire\Attributes\Title;
 
 use Livewire\Volt\Component;
 use Illuminate\Support\Facades\Session;
 use App\Models\User;
 
 use Mary\Traits\Toast;
+use App\Traits\HasSEO;
 
 new 
 #[Layout('components.layouts.homepage')]
-#[Title('Welcome')]
 class extends Component {
-    use Toast;
+    use Toast, HasSEO;
+
+    public function mount(): void
+	{
+		$this->setSEOWithBreadcrumbs(
+			title: 'Welcome',
+			description: config('seotools.meta.defaults.description'),
+			image: asset('assets/seo/snapshot.jpg'),
+			keywords: config('seotools.meta.defaults.keywords')
+		);
+	}
 
     /* Pending toast following authentication attempt */
     public function pendingToast(): void

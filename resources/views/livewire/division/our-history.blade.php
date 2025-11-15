@@ -4,15 +4,23 @@ use Livewire\Attributes\Title;
 use Livewire\Attributes\Rule; 
 
 use Livewire\Volt\Component;
+use App\Traits\HasSEO;
 
 new 
 #[Layout('components.layouts.app')]
-#[Title('Our History')]
 class extends Component {
+    use HasSEO;
     public array $slides = [];
 
     public function mount(): void
     {
+		$this->setSEOWithBreadcrumbs(
+			title: 'Our History',
+			description: config('seotools.meta.defaults.description'),
+			image: asset('assets/seo/snapshot.jpg'),
+			keywords: config('seotools.meta.defaults.keywords')
+		);
+
         $this->slides = [
             [
                 'image' => '../assets/img/our-history/2006-2008.png',

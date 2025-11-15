@@ -5,12 +5,22 @@ use Livewire\Attributes\Title;
 use Livewire\Volt\Component;
 
 use Mary\Traits\Toast;
+use App\Traits\HasSEO;
 
 new 
 #[Layout('components.layouts.app')]
-#[Title('Privacy Policy')]
 class extends Component {
-    use Toast;
+    use Toast, HasSEO;
+
+    public function mount(): void
+	{
+		$this->setSEOWithBreadcrumbs(
+			title: 'Privacy Policy',
+			description: config('seotools.meta.defaults.description'),
+			image: asset('assets/seo/snapshot.jpg'),
+			keywords: config('seotools.meta.defaults.keywords')
+		);
+	}
 }; ?>
 
 <div>

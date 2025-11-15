@@ -3,10 +3,23 @@ use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Volt\Component;
 
+use Mary\Traits\Toast;
+use App\Traits\HasSEO;
+
 new 
 #[Layout('components.layouts.app')]
-#[Title('Exams')]
 class extends Component {
+    use Toast, HasSEO;
+
+    public function mount(): void
+	{
+		$this->setSEOWithBreadcrumbs(
+			title: 'Exams',
+			description: config('seotools.meta.defaults.description'),
+			image: asset('assets/seo/snapshot.jpg'),
+			keywords: config('seotools.meta.defaults.keywords')
+		);
+	}
 }; ?>
 
 <div>

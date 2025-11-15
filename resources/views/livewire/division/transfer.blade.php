@@ -7,15 +7,23 @@ use Livewire\Volt\Component;
 
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Traits\HasSEO;
 
 new 
 #[Layout('components.layouts.app')]
-#[Title('Division Transfer')]
 class extends Component {
+    use HasSEO;
     /* User information */
     public User $user;
     public function mount(): void
     {
+		$this->setSEOWithBreadcrumbs(
+			title: 'Division Transfer',
+			description: config('seotools.meta.defaults.description'),
+			image: asset('assets/seo/snapshot.jpg'),
+			keywords: config('seotools.meta.defaults.keywords')
+		);
+
         if(Auth::check()) {
             $this->user = Auth::user();
             $this->fill($this->user);
