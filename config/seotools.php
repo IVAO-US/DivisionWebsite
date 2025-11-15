@@ -75,6 +75,57 @@ return [
         | Format: ['route' => 'route.name', 'priority' => float, 'frequency' => 'monthly']
         */
         'static_pages' => [
+            // Division pages
+            [
+                'route' => 'division.our-history',
+                'priority' => 0.8,
+                'frequency' => 'monthly',
+            ],
+            [
+                'route' => 'division.transfer',
+                'priority' => 0.7,
+                'frequency' => 'monthly',
+            ],
+
+            // Community/Members pages
+            [
+                'route' => 'members.support',
+                'priority' => 0.8,
+                'frequency' => 'weekly',
+            ],
+
+            // ATCs pages
+            [
+                'route' => 'atcs.become-atc',
+                'priority' => 0.8,
+                'frequency' => 'monthly',
+            ],
+
+            // Pilots pages
+            [
+                'route' => 'pilots.virtual-airlines',
+                'priority' => 0.7,
+                'frequency' => 'monthly',
+            ],
+
+            // Training pages
+            [
+                'route' => 'training.request',
+                'priority' => 0.9,
+                'frequency' => 'weekly',
+            ],
+            [
+                'route' => 'training.exams',
+                'priority' => 0.8,
+                'frequency' => 'monthly',
+            ],
+            [
+                'route' => 'training.gca',
+                'priority' => 0.7,
+                'frequency' => 'monthly',
+            ],
+
+            // Legal pages
             [
                 'route' => 'tos',
                 'priority' => 0.5,
