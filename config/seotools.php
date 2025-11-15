@@ -9,11 +9,11 @@ return [
     */
     'meta' => [
         'defaults' => [
-            'title' => env('APP_NAME', 'App Name'),
+            'title' => env('APP_NAME', 'IVAO United States Division'),
             'titleBefore' => false,
-            'description' => 'The official IVAO United States Division website.',
+            'description' => 'Join the IVAO United States Division for virtual aviation. ATC training, pilot resources, virtual airlines, and a vibrant flight simulation community.',
             'separator' => ' - ',
-            'keywords' => array('ivao', 'us', 'usa', 'virtual', 'aviation', 'american', 'atc'),
+            'keywords' => array('ivao', 'ivao us', 'ivao usa', 'virtual aviation', 'flight simulation', 'atc training', 'air traffic control', 'virtual airlines', 'pilot training', 'vatsim alternative', 'online flying', 'flight sim community'),
             'canonical' => null,
             'robots' => 'index,follow',
         ],
@@ -30,11 +30,11 @@ return [
     
     'opengraph' => [
         'defaults' => [
-            'title' => env('APP_NAME', 'Laravel Starter'),
-            'description' => 'The official IVAO United States Division website.',
+            'title' => env('APP_NAME', 'IVAO United States Division'),
+            'description' => 'Join the IVAO United States Division for virtual aviation. ATC training, pilot resources, virtual airlines, and a vibrant flight simulation community.',
             'url' => env('APP_URL'),
             'type' => 'website',
-            'site_name' => env('APP_NAME', 'Laravel Starter'),
+            'site_name' => env('APP_NAME', 'IVAO United States Division'),
             'images' => [
                 env('APP_URL') . 'assets/seo/snapshot.jpg',
             ],
@@ -44,18 +44,18 @@ return [
     'twitter' => [
         'defaults' => [
             'card' => 'summary_large_image',
-            //'site' => env('SEO_TWITTER_SITE', '@yourhandle'),
+            'site' => env('SEO_TWITTER_SITE', '@Ivaousa'),
             //'creator' => env('SEO_TWITTER_CREATOR', '@yourhandle'),
-            'title' => env('APP_NAME', 'Laravel Starter'),
-            'description' => 'The official IVAO United States Division website.',
+            'title' => env('APP_NAME', 'IVAO United States Division'),
+            'description' => 'Join the IVAO United States Division for virtual aviation. ATC training, pilot resources, virtual airlines, and a vibrant flight simulation community.',
             'image' => env('APP_URL') . 'assets/seo/snapshot.jpg',
         ],
     ],
     
     'json-ld' => [
         'defaults' => [
-            'title' => env('APP_NAME', 'Laravel Starter'),
-            'description' => 'The official IVAO United States Division website.',
+            'title' => env('APP_NAME', 'IVAO United States Division'),
+            'description' => 'Join the IVAO United States Division for virtual aviation. ATC training, pilot resources, virtual airlines, and a vibrant flight simulation community.',
             'url' => env('APP_URL'),
             'type' => 'WebPage',
             'images' => [
@@ -156,7 +156,15 @@ return [
         /*
         | Paths to disallow in robots.txt
         */
-        'disallowed_paths' => [],
+        'disallowed_paths' => [
+            '/admin',
+            '/admin/*',
+            '/users',
+            '/users/*',
+            '/auth',
+            '/auth/*',
+            '/login',
+        ],
 
         /*
         | Block all robots in non-production environments
