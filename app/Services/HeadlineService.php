@@ -12,7 +12,7 @@ class HeadlineService
     /**
      * Get the current headline data based on priority:
      * 1. Division Sessions (happening now)
-     * 2. Online Day (happening now)
+     * 2. Online Day or SpecOps Online Day (happening now)
      * 3. MOTD (Message of the Day)
      * 4. null (no headline)
      */
@@ -28,10 +28,15 @@ class HeadlineService
                 return $divisionSession;
             }
 
-            // Priority 2: Check for Online Day
+            // Priority 2: Check for Online Day or SpecOps Online Day
             $onlineDay = self::getActiveOnlineDay();
             if ($onlineDay) {
                 return $onlineDay;
+            }
+
+            $specOpsOnlineDay = self::getActiveSpecOpsOnlineDay();
+            if ($specOpsOnlineDay) {
+                return $specOpsOnlineDay;
             }
 
             // Priority 3: Check for MOTD
@@ -124,6 +129,80 @@ class HeadlineService
             ),
             'link' => null,
         ];
+    }
+
+    /**
+     * Get active SpecOps Online Day (happening now)
+     * This event occurs on the Nth weekday of each month (e.g., 3rd Wednesday)
+     */
+    private static function getActiveSpecOpsOnlineDay(): ?array
+    {
+        $config = config('specops-online-day');
+
+        if (!$config || !$config['enabled']) {
+            return null;
+        }
+
+        $now = Carbon::now('UTC');
+        $currentTime = $now->format('H:i:s');
+
+        $startTime = $config['time_start'];
+        $endTime = $config['time_end'];
+
+        // Check if today is the Nth weekday of the month
+        $dayOfWeek = $config['day_of_week'];
+        $nthWeek = $config['nth_week'];
+
+        $expectedDate = self::calculateNthWeekdayOfMonth($now, $dayOfWeek, $nthWeek);
+
+        if (!$now->isSameDay($expectedDate)) {
+            return null;
+        }
+
+        // Check if current time is within the event window
+        $isActive = ($currentTime >= $startTime && $currentTime <= $endTime);
+
+        if (!$isActive) {
+            return null;
+        }
+
+        return [
+            'type' => 'specops_online_day',
+            'icon' => 'phosphor.globe-hemisphere-west',
+            'title' => 'Happening now!',
+            'message' => sprintf(
+                '%s is active between %s UTC and %s UTC.',
+                $config['title'],
+                substr($startTime, 0, 5),
+                substr($endTime, 0, 5)
+            ),
+            'link' => null,
+        ];
+    }
+
+    /**
+     * Calculate the Nth occurrence of a specific weekday in a given month
+     *
+     * @param Carbon $date Any date within the target month
+     * @param int $dayOfWeek Day of week (0 = Sunday, 1 = Monday, ..., 6 = Saturday)
+     * @param int $nthWeek Which occurrence (1 = first, 2 = second, 3 = third, etc.)
+     */
+    private static function calculateNthWeekdayOfMonth(Carbon $date, int $dayOfWeek, int $nthWeek): Carbon
+    {
+        $firstDayOfMonth = $date->copy()->startOfMonth();
+        $firstOccurrence = $firstDayOfMonth->copy();
+
+        // Convert dayOfWeek for Carbon (0 = Sunday in config, but Carbon uses ISO where Monday = 1)
+        $carbonDayOfWeek = $dayOfWeek === 0 ? 7 : $dayOfWeek;
+
+        if ($firstOccurrence->dayOfWeekIso !== $carbonDayOfWeek) {
+            while ($firstOccurrence->dayOfWeekIso !== $carbonDayOfWeek) {
+                $firstOccurrence->addDay();
+            }
+        }
+
+        // Add weeks to get to the Nth occurrence
+        return $firstOccurrence->addWeeks($nthWeek - 1);
     }
 
     /**
