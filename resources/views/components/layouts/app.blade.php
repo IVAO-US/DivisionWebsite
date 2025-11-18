@@ -27,7 +27,7 @@
         <div class="mx-auto flex items-center">
             {{-- NAVBAR --}}
             <div class="flex-1">
-                <livewire:app_layout-navbar />
+                <livewire:navbar />
             </div>
         </div>
     </div>
@@ -38,9 +38,9 @@
         <div class="max-w-7xl mx-auto flex-1 px-10">
             <x-main with-nav full-width>
                 <x-slot:content class="mt-8 mb-20 px-0 lg:px-10">
-                    
+
                     {{-- Breadcrumbs --}}
-                    <livewire:app_layout-breadcrumbs />
+                    <livewire:breadcrumbs />
 
                     {{-- Page App --}}
                     {{ $slot }}
@@ -51,7 +51,7 @@
     </div>
 
     {{-- FOOTER - Takes full width --}}
-    <livewire:app_layout-footer />
+    <livewire:footer />
 
     {{-- TOAST area --}}
     <x-toast />

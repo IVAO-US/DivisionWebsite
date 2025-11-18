@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "38acfdda4a9c0014462e105814aa5eed",
+    "content-hash": "bf596265e7831d74f5e7c22980c0a0f4",
     "packages": [
         {
             "name": "artesaos/seotools",
@@ -1583,16 +1583,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v12.38.1",
+            "version": "v12.39.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "7f3012af6059f5f64a12930701cd8caed6cf7c17"
+                "reference": "1a6176129ef28eaf42b6b4a6250025120c3d8dac"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/7f3012af6059f5f64a12930701cd8caed6cf7c17",
-                "reference": "7f3012af6059f5f64a12930701cd8caed6cf7c17",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/1a6176129ef28eaf42b6b4a6250025120c3d8dac",
+                "reference": "1a6176129ef28eaf42b6b4a6250025120c3d8dac",
                 "shasum": ""
             },
             "require": {
@@ -1798,7 +1798,7 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2025-11-13T02:12:47+00:00"
+            "time": "2025-11-18T15:16:10+00:00"
         },
         {
             "name": "laravel/prompts",
@@ -2365,33 +2365,38 @@
         },
         {
             "name": "league/uri",
-            "version": "7.5.1",
+            "version": "7.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/uri.git",
-                "reference": "81fb5145d2644324614cc532b28efd0215bda430"
+                "reference": "f625804987a0a9112d954f9209d91fec52182344"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/uri/zipball/81fb5145d2644324614cc532b28efd0215bda430",
-                "reference": "81fb5145d2644324614cc532b28efd0215bda430",
+                "url": "https://api.github.com/repos/thephpleague/uri/zipball/f625804987a0a9112d954f9209d91fec52182344",
+                "reference": "f625804987a0a9112d954f9209d91fec52182344",
                 "shasum": ""
             },
             "require": {
-                "league/uri-interfaces": "^7.5",
-                "php": "^8.1"
+                "league/uri-interfaces": "^7.6",
+                "php": "^8.1",
+                "psr/http-factory": "^1"
             },
             "conflict": {
                 "league/uri-schemes": "^1.0"
             },
             "suggest": {
                 "ext-bcmath": "to improve IPV4 host parsing",
+                "ext-dom": "to convert the URI into an HTML anchor tag",
                 "ext-fileinfo": "to create Data URI from file contennts",
                 "ext-gmp": "to improve IPV4 host parsing",
                 "ext-intl": "to handle IDN host with the best performance",
+                "ext-uri": "to use the PHP native URI class",
                 "jeremykendall/php-domain-parser": "to resolve Public Suffix and Top Level Domain",
                 "league/uri-components": "Needed to easily manipulate URI objects components",
+                "league/uri-polyfill": "Needed to backport the PHP URI extension for older versions of PHP",
                 "php-64bit": "to improve IPV4 host parsing",
+                "rowbot/url": "to handle WHATWG URL",
                 "symfony/polyfill-intl-idn": "to handle IDN host via the Symfony polyfill if ext-intl is not present"
             },
             "type": "library",
@@ -2419,6 +2424,7 @@
             "description": "URI manipulation library",
             "homepage": "https://uri.thephpleague.com",
             "keywords": [
+                "URN",
                 "data-uri",
                 "file-uri",
                 "ftp",
@@ -2431,9 +2437,11 @@
                 "psr-7",
                 "query-string",
                 "querystring",
+                "rfc2141",
                 "rfc3986",
                 "rfc3987",
                 "rfc6570",
+                "rfc8141",
                 "uri",
                 "uri-template",
                 "url",
@@ -2443,7 +2451,7 @@
                 "docs": "https://uri.thephpleague.com",
                 "forum": "https://thephpleague.slack.com",
                 "issues": "https://github.com/thephpleague/uri-src/issues",
-                "source": "https://github.com/thephpleague/uri/tree/7.5.1"
+                "source": "https://github.com/thephpleague/uri/tree/7.6.0"
             },
             "funding": [
                 {
@@ -2451,26 +2459,25 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-12-08T08:40:02+00:00"
+            "time": "2025-11-18T12:17:23+00:00"
         },
         {
             "name": "league/uri-interfaces",
-            "version": "7.5.0",
+            "version": "7.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/uri-interfaces.git",
-                "reference": "08cfc6c4f3d811584fb09c37e2849e6a7f9b0742"
+                "reference": "ccbfb51c0445298e7e0b7f4481b942f589665368"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/uri-interfaces/zipball/08cfc6c4f3d811584fb09c37e2849e6a7f9b0742",
-                "reference": "08cfc6c4f3d811584fb09c37e2849e6a7f9b0742",
+                "url": "https://api.github.com/repos/thephpleague/uri-interfaces/zipball/ccbfb51c0445298e7e0b7f4481b942f589665368",
+                "reference": "ccbfb51c0445298e7e0b7f4481b942f589665368",
                 "shasum": ""
             },
             "require": {
                 "ext-filter": "*",
                 "php": "^8.1",
-                "psr/http-factory": "^1",
                 "psr/http-message": "^1.1 || ^2.0"
             },
             "suggest": {
@@ -2478,6 +2485,7 @@
                 "ext-gmp": "to improve IPV4 host parsing",
                 "ext-intl": "to handle IDN host with the best performance",
                 "php-64bit": "to improve IPV4 host parsing",
+                "rowbot/url": "to handle WHATWG URL",
                 "symfony/polyfill-intl-idn": "to handle IDN host via the Symfony polyfill if ext-intl is not present"
             },
             "type": "library",
@@ -2502,7 +2510,7 @@
                     "homepage": "https://nyamsprod.com"
                 }
             ],
-            "description": "Common interfaces and classes for URI representation and interaction",
+            "description": "Common tools for parsing and resolving RFC3987/RFC3986 URI",
             "homepage": "https://uri.thephpleague.com",
             "keywords": [
                 "data-uri",
@@ -2527,7 +2535,7 @@
                 "docs": "https://uri.thephpleague.com",
                 "forum": "https://thephpleague.slack.com",
                 "issues": "https://github.com/thephpleague/uri-src/issues",
-                "source": "https://github.com/thephpleague/uri-interfaces/tree/7.5.0"
+                "source": "https://github.com/thephpleague/uri-interfaces/tree/7.6.0"
             },
             "funding": [
                 {
@@ -2535,20 +2543,20 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-12-08T08:18:47+00:00"
+            "time": "2025-11-18T12:17:23+00:00"
         },
         {
             "name": "livewire/livewire",
-            "version": "v3.6.4",
+            "version": "v4.0.0-beta.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/livewire/livewire.git",
-                "reference": "ef04be759da41b14d2d129e670533180a44987dc"
+                "reference": "640182b29e63f75150c6e11b4468e74bcd2fab00"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/livewire/livewire/zipball/ef04be759da41b14d2d129e670533180a44987dc",
-                "reference": "ef04be759da41b14d2d129e670533180a44987dc",
+                "url": "https://api.github.com/repos/livewire/livewire/zipball/640182b29e63f75150c6e11b4468e74bcd2fab00",
+                "reference": "640182b29e63f75150c6e11b4468e74bcd2fab00",
                 "shasum": ""
             },
             "require": {
@@ -2603,7 +2611,7 @@
             "description": "A front-end framework for Laravel.",
             "support": {
                 "issues": "https://github.com/livewire/livewire/issues",
-                "source": "https://github.com/livewire/livewire/tree/v3.6.4"
+                "source": "https://github.com/livewire/livewire/tree/v4.0.0-beta.3"
             },
             "funding": [
                 {
@@ -2611,79 +2619,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-07-17T05:12:15+00:00"
-        },
-        {
-            "name": "livewire/volt",
-            "version": "v1.9.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/livewire/volt.git",
-                "reference": "4b289eef2f15398987a923d9f813cad6a6a19ea4"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/livewire/volt/zipball/4b289eef2f15398987a923d9f813cad6a6a19ea4",
-                "reference": "4b289eef2f15398987a923d9f813cad6a6a19ea4",
-                "shasum": ""
-            },
-            "require": {
-                "laravel/framework": "^10.38.2|^11.0|^12.0",
-                "livewire/livewire": "^3.6.1|^4.0",
-                "php": "^8.1"
-            },
-            "require-dev": {
-                "laravel/folio": "^1.1",
-                "mockery/mockery": "^1.6",
-                "orchestra/testbench": "^8.15.0|^9.0|^10.0",
-                "pestphp/pest": "^2.9.5|^3.0",
-                "phpstan/phpstan": "^1.10"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Livewire\\Volt\\VoltServiceProvider"
-                    ]
-                },
-                "branch-alias": {
-                    "dev-master": "1.x-dev"
-                }
-            },
-            "autoload": {
-                "files": [
-                    "functions.php"
-                ],
-                "psr-4": {
-                    "Livewire\\Volt\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Taylor Otwell",
-                    "email": "taylor@laravel.com"
-                },
-                {
-                    "name": "Nuno Maduro",
-                    "email": "nuno@laravel.com"
-                }
-            ],
-            "description": "An elegantly crafted functional API for Laravel Livewire.",
-            "homepage": "https://github.com/livewire/volt",
-            "keywords": [
-                "laravel",
-                "livewire",
-                "volt"
-            ],
-            "support": {
-                "issues": "https://github.com/livewire/volt/issues",
-                "source": "https://github.com/livewire/volt"
-            },
-            "time": "2025-10-30T02:46:00+00:00"
+            "time": "2025-11-12T21:09:04+00:00"
         },
         {
             "name": "masterminds/html5",
@@ -8862,16 +8798,16 @@
         },
         {
             "name": "phpdocumentor/type-resolver",
-            "version": "1.10.0",
+            "version": "1.10.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpDocumentor/TypeResolver.git",
-                "reference": "679e3ce485b99e84c775d28e2e96fade9a7fb50a"
+                "reference": "431c02da15e566adb0ad9c5030fa6f6204d9de9e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpDocumentor/TypeResolver/zipball/679e3ce485b99e84c775d28e2e96fade9a7fb50a",
-                "reference": "679e3ce485b99e84c775d28e2e96fade9a7fb50a",
+                "url": "https://api.github.com/repos/phpDocumentor/TypeResolver/zipball/431c02da15e566adb0ad9c5030fa6f6204d9de9e",
+                "reference": "431c02da15e566adb0ad9c5030fa6f6204d9de9e",
                 "shasum": ""
             },
             "require": {
@@ -8914,9 +8850,9 @@
             "description": "A PSR-5 based resolver of Class names, Types and Structural Element Names",
             "support": {
                 "issues": "https://github.com/phpDocumentor/TypeResolver/issues",
-                "source": "https://github.com/phpDocumentor/TypeResolver/tree/1.10.0"
+                "source": "https://github.com/phpDocumentor/TypeResolver/tree/1.10.1"
             },
-            "time": "2024-11-09T15:12:26+00:00"
+            "time": "2025-11-18T07:51:16+00:00"
         },
         {
             "name": "phpstan/phpdoc-parser",
@@ -10692,13 +10628,13 @@
         }
     ],
     "aliases": [],
-    "minimum-stability": "stable",
-    "stability-flags": [],
+    "minimum-stability": "beta",
+    "stability-flags": {},
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
         "php": "^8.2"
     },
-    "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "platform-dev": {},
+    "plugin-api-version": "2.6.0"
 }
