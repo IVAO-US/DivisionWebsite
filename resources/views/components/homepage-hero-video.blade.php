@@ -26,7 +26,60 @@ new class extends Component {
                 preload="metadata"
                 poster="{{ $posterPath }}"
                 class="custom-video w-full h-full object-cover object-center"
-                x-data="heroVideo">
+                x-data="{
+                    video: null,
+                    playPromise: null,
+
+                    init() {
+                        this.video = this.$el;
+
+                        if (!this.video) {
+                            console.error('❌ Video element not found');
+                            return;
+                        }
+
+                        // iOS Safari compatibility setup
+                        this.video.muted = true;
+                        this.video.playsInline = true;
+
+                        // Event listeners for video states
+                        this.video.addEventListener('loadedmetadata', () => {
+                            this.attemptAutoplay();
+                        });
+
+                        this.video.addEventListener('canplay', () => {
+                            this.video.classList.remove('opacity-0');
+                            this.video.classList.add('opacity-100');
+                        });
+
+                        this.video.addEventListener('error', (e) => {
+                            console.error('❌ Video error:', e);
+                            this.fallbackToImage();
+                        });
+
+                        // Initial autoplay attempt
+                        this.attemptAutoplay();
+                    },
+
+                    attemptAutoplay() {
+                        this.playPromise = this.video.play();
+
+                        if (this.playPromise !== undefined) {
+                            this.playPromise
+                                .then(() => {
+                                    // Autoplay successful
+                                })
+                                .catch(error => {
+                                    console.log('⚠️ Autoplay failed:', error.name);
+                                    this.fallbackToImage();
+                                });
+                        }
+                    },
+
+                    fallbackToImage() {
+                        this.video.style.display = 'none';
+                    }
+                }">
                     <source src="{{ $videoPath }}#t=0.001" type="video/mp4">
                     <source src="{{ str_replace('.mp4', '.webm', $videoPath) }}#t=0.001" type="video/webm">
                     Your browser does not support the video tag.
@@ -70,89 +123,4 @@ new class extends Component {
             </div>
         </div>
     </section>
-
-    {{-- JavaScript for iOS Safari video handling --}}
-    @script
-        // Register Alpine.js component
-        Alpine.data('heroVideo', () => ({
-            video: null,
-            playPromise: null,
-
-            init() {
-                this.video = document.getElementById('hero-video');
-
-                if (!this.video) {
-                    console.error('❌ Video element not found');
-                    return;
-                }
-
-                //console.log('🚀 Initializing video for iOS Safari compatibility');
-
-                // iOS Safari compatibility setup
-                this.video.muted = true;
-                this.video.playsInline = true;
-
-                // Event listeners for video states
-                this.video.addEventListener('loadedmetadata', () => {
-                    //console.log('✅ Video metadata loaded');
-                    this.attemptAutoplay();
-                });
-
-                this.video.addEventListener('canplay', () => {
-                    //console.log('✅ Video can play - showing video');
-                    // Show video with fade-in effect
-                    this.video.classList.remove('opacity-0');
-                    this.video.classList.add('opacity-100');
-                });
-
-                this.video.addEventListener('play', () => {
-                    //console.log('▶️ Video started playing successfully');
-                });
-
-                this.video.addEventListener('error', (e) => {
-                    console.error('❌ Video error:', e);
-                    this.fallbackToImage();
-                });
-
-                // Initial autoplay attempt
-                this.attemptAutoplay();
-            },
-
-            attemptAutoplay() {
-                //console.log('🎬 Attempting autoplay...');
-
-                // iOS Safari autoplay with promise handling
-                this.playPromise = this.video.play();
-
-                if (this.playPromise !== undefined) {
-                    this.playPromise
-                        .then(() => {
-                            //console.log('✅ Autoplay successful!');
-                        })
-                        .catch(error => {
-                            console.log('⚠️ Autoplay failed:', error.name);
-                            this.fallbackToImage();
-                        });
-                }
-            },
-
-            fallbackToImage() {
-                //console.log('🔄 Falling back to background image');
-                // Hide video and keep the background image
-                this.video.style.display = 'none';
-                // Background image is already set on parent div
-            }
-        }))
-
-        // iOS Safari detection and logging
-        const isIOSSafari = /iPad|iPhone|iPod/.test(navigator.userAgent) &&
-                           /Safari/.test(navigator.userAgent) &&
-                           !/CriOS|FxiOS|OPiOS|mercury/.test(navigator.userAgent);
-
-        if (isIOSSafari) {
-            //console.log('📱 iOS Safari detected - applying specific optimizations');
-        } else {
-            //console.log('🖥️ Desktop/other browser detected');
-        }
-    @endscript
 </div>
