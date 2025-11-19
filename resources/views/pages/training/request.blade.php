@@ -7,7 +7,7 @@ use Mary\Traits\Toast;
 use App\Traits\HasSEO;
 
 new 
-#[Layout('components.layouts.app')]
+#[Layout('layouts.app')]
 class extends Component {
     use Toast, HasSEO;
 
@@ -23,7 +23,7 @@ class extends Component {
 }; ?>
 
 <div>
-    <x-header title="Training" size="h2" subtitle="Ready to start your training journey?" class="!mb-5" />
+    <x-header title="Training" size="h2" subtitle="Ready to start your training journey?" class="!mb-5" use-h1 />
 
     <x-card title="Training Request" subtitle="How to request your training" shadow separator>
         

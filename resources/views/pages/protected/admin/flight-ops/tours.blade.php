@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Mary\Traits\Toast;
 
 new 
-#[Layout('components.layouts.app')]
+#[Layout('layouts.app')]
 #[Title('Manage Tours')]
 class extends Component {
     use Toast;

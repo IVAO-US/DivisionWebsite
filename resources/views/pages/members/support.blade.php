@@ -9,7 +9,7 @@ use Mary\Traits\Toast;
 use App\Traits\HasSEO;
 
 new 
-#[Layout('components.layouts.app')]
+#[Layout('layouts.app')]
 class extends Component {
     use Toast, HasSEO;
 
@@ -25,7 +25,7 @@ class extends Component {
 }; ?>
 
 <div>
-    <x-header title="Members Support" size="h2" subtitle="Frequently Asked Questions" class="!mb-5" />
+    <x-header title="Members Support" size="h2" subtitle="Frequently Asked Questions" class="!mb-5" use-h1 />
 
     <x-card title="Account Support" subtitle="Common questions about your account" shadow separator>
         <h5 class="mb-4">How do I reset my password?</h5>

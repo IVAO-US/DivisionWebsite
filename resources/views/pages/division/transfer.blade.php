@@ -10,7 +10,7 @@ use App\Models\User;
 use App\Traits\HasSEO;
 
 new 
-#[Layout('components.layouts.app')]
+#[Layout('layouts.app')]
 class extends Component {
     use HasSEO;
     /* User information */
@@ -32,7 +32,7 @@ class extends Component {
 }; ?>
 
 <div>
-    <x-header title="Division Transfer" size="h2" subtitle="Thinking about joining us?" class="!mb-5" />
+    <x-header title="Division Transfer" size="h2" subtitle="Thinking about joining us?" class="!mb-5" use-h1 />
 
     <x-card title="Division Transfer Procedure" subtitle="How to change your IVAO Division?" shadow separator>
         <x-alert icon="phosphor.warning" class="w-full alert-error border-error bg-error mb-6 ">

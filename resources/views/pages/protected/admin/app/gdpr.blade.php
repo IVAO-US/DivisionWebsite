@@ -17,7 +17,7 @@ use App\Models\GdprDeletionLog;
 use App\Enums\AdminPermission;
 
 new 
-#[Layout('components.layouts.app')]
+#[Layout('layouts.app')]
 #[Title('GDPR Management')]
 class extends Component {
     use Toast, WithPagination;

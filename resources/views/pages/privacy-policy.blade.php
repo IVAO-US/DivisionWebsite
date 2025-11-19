@@ -8,7 +8,7 @@ use Mary\Traits\Toast;
 use App\Traits\HasSEO;
 
 new 
-#[Layout('components.layouts.app')]
+#[Layout('layouts.app')]
 class extends Component {
     use Toast, HasSEO;
 
@@ -25,7 +25,7 @@ class extends Component {
 
 <div>
 
-    <x-header title="Privacy Policy" size="h2" subtitle="We value your privacy" class="!mb-5" />
+    <x-header title="Privacy Policy" size="h2" subtitle="We value your privacy" class="!mb-5" use-h1 />
 
     <x-card title="Learn how we protect your personal data" subtitle="Please note that the IVAO Terms of Service supersede these terms when conflicting." class="text-justify" shadow separator>
 

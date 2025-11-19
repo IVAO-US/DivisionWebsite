@@ -9,7 +9,7 @@ use Mary\Traits\Toast;
 use App\Traits\HasSEO;
 
 new 
-#[Layout('components.layouts.app')]
+#[Layout('layouts.app')]
 class extends Component {
     use Toast, HasSEO;
 
@@ -53,6 +53,7 @@ class extends Component {
         size="h2" 
         subtitle="Our certified partner virtual airlines connecting flight simulation enthusiasts worldwide" 
         class="!mb-8" 
+        use-h1
     />
 
     <x-card title="Certified VAs" subtitle="Our IVAO Certified Virtual Airlines" shadow separator>

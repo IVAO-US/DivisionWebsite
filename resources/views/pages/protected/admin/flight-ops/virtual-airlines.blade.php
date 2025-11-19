@@ -11,7 +11,7 @@ use Mary\Traits\Toast;
 
 
 new 
-#[Layout('components.layouts.app')]
+#[Layout('layouts.app')]
 #[Title('Manage Virtual Airlines')]
 class extends Component {
 

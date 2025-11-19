@@ -7,7 +7,7 @@ use Livewire\Component;
 use App\Traits\HasSEO;
 
 new 
-#[Layout('components.layouts.app')]
+#[Layout('layouts.app')]
 class extends Component {
     use HasSEO;
     public array $slides = [];
@@ -83,7 +83,7 @@ class extends Component {
 }; ?>
 
 <div>
-    <x-header title="Our History" size="h2" subtitle="A look into the past of IVAO USA and the North America Division." class="!mb-5" />
+    <x-header title="Our History" size="h2" subtitle="A look into the past of IVAO USA and the North America Division." class="!mb-5" use-h1 />
 
     <x-card title="Blast from the past" subtitle="Visit the web archive for more details." shadow separator>
         <x-carousel :slides="$slides" class="!h-[50vh] lg:!h-[65vh] lg:!h-[80vh]" />

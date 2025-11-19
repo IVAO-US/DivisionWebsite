@@ -9,7 +9,7 @@ use Mary\Traits\Toast;
 use App\Traits\HasSEO;
 
 new 
-#[Layout('components.layouts.homepage')]
+#[Layout('layouts.homepage')]
 class extends Component {
     use Toast, HasSEO;
 
@@ -53,6 +53,7 @@ class extends Component {
 <div x-data x-init="$wire.pendingToast()">
     
     {{-- Hero Section with Video Background --}}
+    <h1 class="hidden">IVAO United States Division</h1> {{-- SEO - Do not remove --}}
     <livewire:homepage-hero-video />
     
     {{-- What We Offer Section with American Flag Background --}}

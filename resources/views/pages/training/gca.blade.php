@@ -11,7 +11,7 @@ use Mary\Traits\Toast;
 use App\Traits\HasSEO;
 
 new 
-#[Layout('components.layouts.app')]
+#[Layout('layouts.app')]
 class extends Component {
     use Toast, HasSEO;
 
@@ -32,7 +32,7 @@ class extends Component {
 }; ?>
 
 <div>
-    <x-header title="Guest Controller Approval" size="h2" subtitle="The US Division is part of the GCA Program" class="!mb-5" />
+    <x-header title="Guest Controller Approval" size="h2" subtitle="The US Division is part of the GCA Program" class="!mb-5" use-h1 />
 
     <x-card title="How to get your GCA?" subtitle="Protocol as per IVAO Rules & Regulations" shadow separator>
         

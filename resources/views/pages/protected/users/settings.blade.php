@@ -17,7 +17,7 @@ use App\Enums\PilotRating;
 use Mary\Traits\Toast;
 
 new 
-#[Layout('components.layouts.app')]
+#[Layout('layouts.app')]
 #[Title('My Profile')]
 class extends Component {
     use Toast;

@@ -14,7 +14,7 @@ use App\Services\HeadlineService;
 use App\Enums\AdminPermission;
 
 new 
-#[Layout('components.layouts.app')]
+#[Layout('layouts.app')]
 #[Title('Manage Headline')]
 class extends Component {
     use Toast;

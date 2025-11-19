@@ -7,7 +7,7 @@ use Mary\Traits\Toast;
 use App\Traits\HasSEO;
 
 new 
-#[Layout('components.layouts.app')]
+#[Layout('layouts.app')]
 class extends Component {
     use Toast, HasSEO;
     public int $currentStep = 1;
@@ -60,7 +60,7 @@ class extends Component {
 }; ?>
 
 <div>
-    <x-header title="Become ATC" size="h2" subtitle="How to become a great Air Traffic Controller?" class="!mb-5" />
+    <x-header title="Become ATC" size="h2" subtitle="How to become a great Air Traffic Controller?" class="!mb-5" use-h1 />
 
     <x-tabs wire:model="selectedTab"
             class="w-full"

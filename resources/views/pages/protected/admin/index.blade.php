@@ -10,7 +10,7 @@ use App\Models\User;
 use App\Models\Admin;
 
 new 
-#[Layout('components.layouts.app')]
+#[Layout('layouts.app')]
 #[Title('Dashboard')]
 class extends Component {
     use Toast;
