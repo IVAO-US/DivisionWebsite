@@ -73,6 +73,7 @@ new class extends Component {
     </section>
 
     {{-- JavaScript for iOS Safari video handling --}}
+    @script
     <script>
         // Make function available globally for Alpine.js
         window.heroVideo = function() {
@@ -160,4 +161,5 @@ new class extends Component {
             }
         })();
     </script>
+    @endscript
 </div>
