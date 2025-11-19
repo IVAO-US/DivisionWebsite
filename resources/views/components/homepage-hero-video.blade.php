@@ -74,57 +74,58 @@ new class extends Component {
 
     {{-- JavaScript for iOS Safari video handling --}}
     <script>
-        function heroVideo() {
+        // Make function available globally for Alpine.js
+        window.heroVideo = function() {
             return {
                 video: null,
                 playPromise: null,
-                
+
                 initVideo() {
                     this.video = document.getElementById('hero-video');
-                    
+
                     if (!this.video) {
                         console.error('❌ Video element not found');
                         return;
                     }
-                    
+
                     //console.log('🚀 Initializing video for iOS Safari compatibility');
-                    
+
                     // iOS Safari compatibility setup
                     this.video.muted = true;
                     this.video.playsInline = true;
-                    
+
                     // Event listeners for video states
                     this.video.addEventListener('loadedmetadata', () => {
                         //console.log('✅ Video metadata loaded');
                         this.attemptAutoplay();
                     });
-                    
+
                     this.video.addEventListener('canplay', () => {
                         //console.log('✅ Video can play - showing video');
                         // Show video with fade-in effect
                         this.video.classList.remove('opacity-0');
                         this.video.classList.add('opacity-100');
                     });
-                    
+
                     this.video.addEventListener('play', () => {
                         //console.log('▶️ Video started playing successfully');
                     });
-                    
+
                     this.video.addEventListener('error', (e) => {
                         console.error('❌ Video error:', e);
                         this.fallbackToImage();
                     });
-                    
+
                     // Initial autoplay attempt
                     this.attemptAutoplay();
                 },
-                
+
                 attemptAutoplay() {
                     //console.log('🎬 Attempting autoplay...');
-                    
+
                     // iOS Safari autoplay with promise handling
                     this.playPromise = this.video.play();
-                    
+
                     if (this.playPromise !== undefined) {
                         this.playPromise
                             .then(() => {
@@ -136,7 +137,7 @@ new class extends Component {
                             });
                     }
                 },
-                
+
                 fallbackToImage() {
                     //console.log('🔄 Falling back to background image');
                     // Hide video and keep the background image
@@ -145,13 +146,13 @@ new class extends Component {
                 }
             }
         }
-        
+
         // iOS Safari detection and logging
         (function() {
-            const isIOSSafari = /iPad|iPhone|iPod/.test(navigator.userAgent) && 
-                               /Safari/.test(navigator.userAgent) && 
+            const isIOSSafari = /iPad|iPhone|iPod/.test(navigator.userAgent) &&
+                               /Safari/.test(navigator.userAgent) &&
                                !/CriOS|FxiOS|OPiOS|mercury/.test(navigator.userAgent);
-            
+
             if (isIOSSafari) {
                 //console.log('📱 iOS Safari detected - applying specific optimizations');
             } else {
