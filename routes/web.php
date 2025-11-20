@@ -1,5 +1,4 @@
 <?php
-use Livewire\Volt\Volt;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -72,29 +71,29 @@ Route::middleware(['throttle:60,1'])->group(function () {
      */
 
     /* Home */
-    Volt::route('/', 'home')->name('home');
+    Route::livewire('/', 'pages::home')->name('home');
 
     /* Division */
-    Volt::route('/division/our-history',    'division.our-history')->name('division.our-history');
-    Volt::route('/division/transfer',       'division.transfer')->name('division.transfer');
+    Route::livewire('/division/our-history',    'pages::division.our-history')->name('division.our-history');
+    Route::livewire('/division/transfer',       'pages::division.transfer')->name('division.transfer');
 
     /* Community */
-    Volt::route('/members/support',         'members.support')->name('members.support');
+    Route::livewire('/members/support',         'pages::members.support')->name('members.support');
 
     /* ATCs */
-    Volt::route('/atcs/become-atc',         'atcs.become-atc')->name('atcs.become-atc');
+    Route::livewire('/atcs/become-atc',         'pages::atcs.become-atc')->name('atcs.become-atc');
 
     /* Pilots */
-    Volt::route('/pilots/virtual-airlines', 'pilots.virtual-airlines')->name('pilots.virtual-airlines');
+    Route::livewire('/pilots/virtual-airlines', 'pages::pilots.virtual-airlines')->name('pilots.virtual-airlines');
 
     /* Training */
-    Volt::route('/training/request',    'training.request')->name('training.request');
-    Volt::route('/training/exams',      'training.exams')->name('training.exams');
-    Volt::route('/training/gca',        'training.gca')->name('training.gca');
+    Route::livewire('/training/request',    'pages::training.request')->name('training.request');
+    Route::livewire('/training/exams',      'pages::training.exams')->name('training.exams');
+    Route::livewire('/training/gca',        'pages::training.gca')->name('training.gca');
 
     /* Privacy Policy + Terms of Service */
-    Volt::route('/tos',     'tos')           ->name('tos');
-    Volt::route('/privacy', 'privacy-policy')->name('privacy');
+    Route::livewire('/tos',     'pages::tos')           ->name('tos');
+    Route::livewire('/privacy', 'pages::privacy-policy')->name('privacy');
 
 
     /**
@@ -105,7 +104,7 @@ Route::middleware(['throttle:60,1'])->group(function () {
     Route::middleware('auth')->group(function () {
 
         /* User profile */
-        Volt::route('/users/settings', 'protected.users.settings')->name('users.settings');
+        Route::livewire('/users/settings', 'pages::protected.users.settings')->name('users.settings');
 
 
         /**
@@ -114,28 +113,28 @@ Route::middleware(['throttle:60,1'])->group(function () {
          */
         Route::middleware('admin')->group(function () {
 
-            /* Dashboard: no specific permission required */ 
-            Volt::route('/admin/dashboard', 'protected.admin.index')->name('admin.index');
+            /* Dashboard: no specific permission required */
+            Route::livewire('/admin/dashboard', 'pages::protected.admin.index')->name('admin.index');
 
             /* Manage admin */
             Route::middleware('admin.permissions:admins_edit_permissions')->group(function () {
-                Volt::route('/admin/manage', 'protected.admin.manage')->name('admin.manage');
+                Route::livewire('/admin/manage', 'pages::protected.admin.manage')->name('admin.manage');
             });
 
             /* Application: Headline / GDPR */
             Route::middleware('admin.permissions:app_headline')->group(function () {
-                Volt::route('/admin/app/headline', 'protected.admin.app.headline')->name('admin.app.headline');
+                Route::livewire('/admin/app/headline', 'pages::protected.admin.app.headline')->name('admin.app.headline');
             });
             Route::middleware('admin.permissions:app_gdpr')->group(function () {
-                Volt::route('/admin/app/gdpr', 'protected.admin.app.gdpr')->name('admin.app.gdpr');
+                Route::livewire('/admin/app/gdpr', 'pages::protected.admin.app.gdpr')->name('admin.app.gdpr');
             });
 
             /* Flight Ops : Tours + VAs */
             Route::middleware('admin.permissions:fltops_tours')->group(function () {
-                Volt::route('/admin/flight-ops/tours', 'protected.admin.flight-ops.tours')->name('admin.flight-ops.tours');
+                Route::livewire('/admin/flight-ops/tours', 'pages::protected.admin.flight-ops.tours')->name('admin.flight-ops.tours');
             });
             Route::middleware('admin.permissions:fltops_va')->group(function () {
-                Volt::route('/admin/flight-ops/virtual-airlines', 'protected.admin.flight-ops.virtual-airlines')->name('admin.flight-ops.virtual-airlines');
+                Route::livewire('/admin/flight-ops/virtual-airlines', 'pages::protected.admin.flight-ops.virtual-airlines')->name('admin.flight-ops.virtual-airlines');
             });
 
         });
