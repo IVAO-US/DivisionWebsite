@@ -15,6 +15,9 @@ new
 class extends Component {
     use Toast, HasSEO;
 
+    /* User information */
+    public User $user;
+
     public function mount(): void
 	{
 		$this->setSEOWithBreadcrumbs(
