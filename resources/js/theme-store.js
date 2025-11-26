@@ -47,10 +47,23 @@ document.addEventListener('alpine:init', () => {
         // Current theme state (will be set in init)
         current: LIGHT_THEME,
 
+        // Initialization flag to prevent re-evaluation on Livewire navigation
+        _initialized: false,
+
         /**
          * Initialize theme from localStorage or system preferences
+         * ⚠️ IMPORTANT: Only runs ONCE per session to prevent theme reset on navigation
          */
         init() {
+            // ===================================================================
+            // CRITICAL: Prevent re-initialization on Livewire SPA navigation
+            // ===================================================================
+            if (this._initialized) {
+                console.log('Theme store already initialized. Skipping re-initialization.');
+                return;
+            }
+            this._initialized = true;
+
             let initialTheme = null;
 
             try {
@@ -58,11 +71,14 @@ document.addEventListener('alpine:init', () => {
                 const stored = localStorage.getItem('mary-theme-toggle');
 
                 if (stored) {
+                    // User has already chosen a theme - USE IT (don't re-evaluate)
                     initialTheme = stored;
+                    console.log(`Theme loaded from localStorage: ${initialTheme}`);
                 } else {
-                    // Fallback to system preference
+                    // First visit - use system preference and save it
                     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
                     initialTheme = prefersDark ? DARK_THEME : LIGHT_THEME;
+                    console.log(`First visit - using system preference: ${initialTheme}`);
 
                     // Try to save preference (may fail in private browsing)
                     try {
@@ -84,13 +100,15 @@ document.addEventListener('alpine:init', () => {
             // Apply theme immediately to avoid flash
             this.applyTheme();
 
-            // Listen for system preference changes
+            // Listen for system preference changes (ONLY if no manual preference exists)
             window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-                // Only auto-switch if user hasn't manually set a preference
+                // Only auto-switch if user hasn't manually chosen a theme
                 try {
-                    if (!localStorage.getItem('mary-theme-toggle')) {
+                    const hasManualChoice = localStorage.getItem('mary-theme-toggle');
+                    if (!hasManualChoice) {
                         this.current = e.matches ? DARK_THEME : LIGHT_THEME;
                         this.applyTheme();
+                        console.log(`System preference changed. Auto-switched to: ${this.current}`);
                     }
                 } catch (err) {
                     // In private browsing, always follow system preference
@@ -147,4 +165,37 @@ document.addEventListener('alpine:init', () => {
 
     // Initialize the store immediately
     Alpine.store('theme').init();
+});
+
+// ============================================
+// LIVEWIRE SPA NAVIGATION SUPPORT
+// ============================================
+// Reapply theme after Livewire navigation (wire:navigate)
+// The DOM is replaced during SPA navigation, so data-theme attribute is lost
+document.addEventListener('livewire:navigated', () => {
+    try {
+        // Get current theme from Alpine.js store (persists during navigation)
+        const currentTheme = Alpine.store('theme')?.current;
+
+        if (currentTheme) {
+            // Reapply theme from Alpine.js store
+            document.documentElement.setAttribute('data-theme', currentTheme);
+            console.log(`[Livewire Nav] Theme reapplied: ${currentTheme}`);
+        } else {
+            // Fallback: read from localStorage if Alpine store not ready
+            const stored = localStorage.getItem('mary-theme-toggle');
+            if (stored) {
+                document.documentElement.setAttribute('data-theme', stored);
+                console.log(`[Livewire Nav] Theme reapplied from localStorage: ${stored}`);
+            } else {
+                // Ultimate fallback: system preference
+                const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                const theme = prefersDark ? DARK_THEME : LIGHT_THEME;
+                document.documentElement.setAttribute('data-theme', theme);
+                console.log(`[Livewire Nav] Theme reapplied from system preference: ${theme}`);
+            }
+        }
+    } catch (e) {
+        console.error('[Livewire Nav] Failed to reapply theme:', e);
+    }
 });
