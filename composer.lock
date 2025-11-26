@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bf596265e7831d74f5e7c22980c0a0f4",
+    "content-hash": "637158b67a5abd1eb1d5f499eb72b005",
     "packages": [
         {
             "name": "artesaos/seotools",
@@ -1583,16 +1583,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v12.38.1",
+            "version": "v12.40.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "7f3012af6059f5f64a12930701cd8caed6cf7c17"
+                "reference": "2e986acbf9acf62cba13400bc23c4d639bf188b9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/7f3012af6059f5f64a12930701cd8caed6cf7c17",
-                "reference": "7f3012af6059f5f64a12930701cd8caed6cf7c17",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/2e986acbf9acf62cba13400bc23c4d639bf188b9",
+                "reference": "2e986acbf9acf62cba13400bc23c4d639bf188b9",
                 "shasum": ""
             },
             "require": {
@@ -1798,7 +1798,7 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2025-11-13T02:12:47+00:00"
+            "time": "2025-11-25T16:16:33+00:00"
         },
         {
             "name": "laravel/prompts",
@@ -2547,16 +2547,16 @@
         },
         {
             "name": "livewire/livewire",
-            "version": "v3.6.4",
+            "version": "v4.0.0-beta.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/livewire/livewire.git",
-                "reference": "ef04be759da41b14d2d129e670533180a44987dc"
+                "reference": "640182b29e63f75150c6e11b4468e74bcd2fab00"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/livewire/livewire/zipball/ef04be759da41b14d2d129e670533180a44987dc",
-                "reference": "ef04be759da41b14d2d129e670533180a44987dc",
+                "url": "https://api.github.com/repos/livewire/livewire/zipball/640182b29e63f75150c6e11b4468e74bcd2fab00",
+                "reference": "640182b29e63f75150c6e11b4468e74bcd2fab00",
                 "shasum": ""
             },
             "require": {
@@ -2611,7 +2611,7 @@
             "description": "A front-end framework for Laravel.",
             "support": {
                 "issues": "https://github.com/livewire/livewire/issues",
-                "source": "https://github.com/livewire/livewire/tree/v3.6.4"
+                "source": "https://github.com/livewire/livewire/tree/v4.0.0-beta.3"
             },
             "funding": [
                 {
@@ -2619,79 +2619,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-07-17T05:12:15+00:00"
-        },
-        {
-            "name": "livewire/volt",
-            "version": "v1.9.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/livewire/volt.git",
-                "reference": "4b289eef2f15398987a923d9f813cad6a6a19ea4"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/livewire/volt/zipball/4b289eef2f15398987a923d9f813cad6a6a19ea4",
-                "reference": "4b289eef2f15398987a923d9f813cad6a6a19ea4",
-                "shasum": ""
-            },
-            "require": {
-                "laravel/framework": "^10.38.2|^11.0|^12.0",
-                "livewire/livewire": "^3.6.1|^4.0",
-                "php": "^8.1"
-            },
-            "require-dev": {
-                "laravel/folio": "^1.1",
-                "mockery/mockery": "^1.6",
-                "orchestra/testbench": "^8.15.0|^9.0|^10.0",
-                "pestphp/pest": "^2.9.5|^3.0",
-                "phpstan/phpstan": "^1.10"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Livewire\\Volt\\VoltServiceProvider"
-                    ]
-                },
-                "branch-alias": {
-                    "dev-master": "1.x-dev"
-                }
-            },
-            "autoload": {
-                "files": [
-                    "functions.php"
-                ],
-                "psr-4": {
-                    "Livewire\\Volt\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Taylor Otwell",
-                    "email": "taylor@laravel.com"
-                },
-                {
-                    "name": "Nuno Maduro",
-                    "email": "nuno@laravel.com"
-                }
-            ],
-            "description": "An elegantly crafted functional API for Laravel Livewire.",
-            "homepage": "https://github.com/livewire/volt",
-            "keywords": [
-                "laravel",
-                "livewire",
-                "volt"
-            ],
-            "support": {
-                "issues": "https://github.com/livewire/volt/issues",
-                "source": "https://github.com/livewire/volt"
-            },
-            "time": "2025-10-30T02:46:00+00:00"
+            "time": "2025-11-12T21:09:04+00:00"
         },
         {
             "name": "masterminds/html5",
@@ -4174,16 +4102,16 @@
         },
         {
             "name": "spatie/browsershot",
-            "version": "5.1.0",
+            "version": "5.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/browsershot.git",
-                "reference": "e942e419947c5148f1d0014b334a7de1f6fe5d9a"
+                "reference": "127c20da43d0d711ebbc64f85053f50bc147c515"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/browsershot/zipball/e942e419947c5148f1d0014b334a7de1f6fe5d9a",
-                "reference": "e942e419947c5148f1d0014b334a7de1f6fe5d9a",
+                "url": "https://api.github.com/repos/spatie/browsershot/zipball/127c20da43d0d711ebbc64f85053f50bc147c515",
+                "reference": "127c20da43d0d711ebbc64f85053f50bc147c515",
                 "shasum": ""
             },
             "require": {
@@ -4191,7 +4119,7 @@
                 "ext-json": "*",
                 "php": "^8.2",
                 "spatie/temporary-directory": "^2.0",
-                "symfony/process": "^6.0|^7.0"
+                "symfony/process": "^6.0|^7.0|^8.0"
             },
             "require-dev": {
                 "pestphp/pest": "^3.0|^4.0",
@@ -4230,7 +4158,7 @@
                 "webpage"
             ],
             "support": {
-                "source": "https://github.com/spatie/browsershot/tree/5.1.0"
+                "source": "https://github.com/spatie/browsershot/tree/5.1.1"
             },
             "funding": [
                 {
@@ -4238,7 +4166,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-11-17T08:47:07+00:00"
+            "time": "2025-11-26T09:49:20+00:00"
         },
         {
             "name": "spatie/crawler",
@@ -8871,16 +8799,16 @@
         },
         {
             "name": "phpdocumentor/type-resolver",
-            "version": "1.10.0",
+            "version": "1.12.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpDocumentor/TypeResolver.git",
-                "reference": "679e3ce485b99e84c775d28e2e96fade9a7fb50a"
+                "reference": "92a98ada2b93d9b201a613cb5a33584dde25f195"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpDocumentor/TypeResolver/zipball/679e3ce485b99e84c775d28e2e96fade9a7fb50a",
-                "reference": "679e3ce485b99e84c775d28e2e96fade9a7fb50a",
+                "url": "https://api.github.com/repos/phpDocumentor/TypeResolver/zipball/92a98ada2b93d9b201a613cb5a33584dde25f195",
+                "reference": "92a98ada2b93d9b201a613cb5a33584dde25f195",
                 "shasum": ""
             },
             "require": {
@@ -8923,9 +8851,9 @@
             "description": "A PSR-5 based resolver of Class names, Types and Structural Element Names",
             "support": {
                 "issues": "https://github.com/phpDocumentor/TypeResolver/issues",
-                "source": "https://github.com/phpDocumentor/TypeResolver/tree/1.10.0"
+                "source": "https://github.com/phpDocumentor/TypeResolver/tree/1.12.0"
             },
-            "time": "2024-11-09T15:12:26+00:00"
+            "time": "2025-11-21T15:09:14+00:00"
         },
         {
             "name": "phpstan/phpdoc-parser",
@@ -10702,12 +10630,14 @@
     ],
     "aliases": [],
     "minimum-stability": "beta",
-    "stability-flags": {},
+    "stability-flags": {
+        "livewire/livewire": 10
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
         "php": "^8.2"
     },
-    "platform-dev": {},
-    "plugin-api-version": "2.6.0"
+    "platform-dev": [],
+    "plugin-api-version": "2.3.0"
 }
