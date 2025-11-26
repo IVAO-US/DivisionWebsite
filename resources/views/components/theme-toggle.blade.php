@@ -4,49 +4,30 @@ use Livewire\Component;
 
 new class extends Component
 {
-    /* Customisation: refer to app.css for theme names */
-    private const LIGHT_THEME   = "ivao";
-    private const DARK_THEME    = "ivao-dark";
-
-
-    /* Class property */
-    public $isDarkMode = false;
-    public $instanceId = '';
-    
-    public function mount(string $instanceId = ''): void
-    {
-        $this->instanceId = $instanceId ?: uniqid();
-        $this->isDarkMode = session('theme', self::LIGHT_THEME) === self::DARK_THEME;
-    }
-    
-    /* Adjust the toggle icon based on current theme */
-    public function getThemeIconProperty(): string
-    {
-        return $this->isDarkMode ? 'phosphor.moon' : 'phosphor.sun';
-    }
-    
-    /* Theme toggler wired with wire:click */
-    public function toggleTheme(): void
-    {
-        $this->isDarkMode = !$this->isDarkMode;
-        session(['theme' => $this->isDarkMode ? self::DARK_THEME : self::LIGHT_THEME]);
-        $this->dispatch('mary-toggle-theme');
-    }
-    
-    /* Getters for accessing constants in the template */
-    public function getLightThemeNameProperty(): string
-    {
-        return self::LIGHT_THEME;
-    }
-    
-    public function getDarkThemeNameProperty(): string
-    {
-        return self::DARK_THEME;
-    }
+    /* Now using a pure Alpine.js solution meant to be more efficient */
 };
 ?>
 
-<div>
-    <x-button :icon="$this->themeIcon" wire:click="toggleTheme" wire:loading.class="opacity-50" class="btn-secondary btn-circle" tooltipBottom="Theme" spinner />
-    <x-theme-toggle lightTheme="{{ $this->lightThemeName }}" darkTheme="{{ $this->darkThemeName }}" class="hidden" id="theme-toggle-{{ $this->instanceId }}" />
+{{--
+    Theme Toggle Component
+    Uses Alpine.js global store to sync theme across all instances
+    Properly handles prefers-color-scheme in private browsing
+    Customisation: refer to theme-store.js for theme names
+--}}
+
+<div x-data="{
+    get isDark() {
+        return $store.theme?.current === $store.theme?.darkTheme;
+    }
+}">
+    <x-button
+        @click="$store.theme?.toggle()"
+        class="btn-sm btn-circle max-xl:btn-soft xl:btn-secondary ml-2 lg:mx-2"
+        spinner
+    >
+        <!-- Sun icon for light mode -->
+        <x-icon name="phosphor.sun" class="w-5 h-5" x-show="!isDark" x-cloak />
+        <!-- Moon icon for dark mode -->
+        <x-icon name="phosphor.moon" class="w-5 h-5" x-show="isDark" x-cloak />
+    </x-button>
 </div>
