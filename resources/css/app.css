@@ -36,6 +36,8 @@
 @plugin "daisyui" {
     themes: false; /* Disable default themes */
 }
+   
+/** Theme toggle: remember to edit js/theme-store.js + views/partials/theme-init-script.blade.php to match these theme names */
 
 /** daisyUI Themes: IVAO US - Light Refined; Enhanced modern elegance */
 @plugin "daisyui/theme" {
@@ -181,7 +183,7 @@
         --noise: 0;
 }
 
-/** Theme toggle: remember to edit "Theme Toggle" Livewire Component if theme names are changed below */
+/** Match the dark theme name in the following */
 @custom-variant dark (&:where([data-theme=ivao-dark], [data-theme=ivao-dark] *));
 
 /** maryUI */

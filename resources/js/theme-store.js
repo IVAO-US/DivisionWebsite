@@ -7,6 +7,7 @@
  * - Persistent storage (localStorage)
  * - Synchronization between multiple toggle buttons
  * - Private browsing mode (localStorage may not work)
+ * - Livewire SPA navigation (wire:navigate) without flash
  *
  * ⚠️ DRY PRINCIPLE: Theme names are ONLY defined here.
  * To change themes, modify LIGHT_THEME and DARK_THEME constants below.
@@ -20,22 +21,74 @@ const LIGHT_THEME = 'ivao';
 const DARK_THEME = 'ivao-dark';
 // ============================================
 
-// Apply initial theme immediately to avoid flash (before Alpine.js loads)
-(function initThemeBeforeAlpine() {
+/**
+ * Get current theme from localStorage or system preference
+ * This function is used across all initialization points
+ */
+function getCurrentTheme() {
     try {
         const stored = localStorage.getItem('mary-theme-toggle');
         if (stored) {
-            document.documentElement.setAttribute('data-theme', stored);
-        } else {
-            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            const initialTheme = prefersDark ? DARK_THEME : LIGHT_THEME;
-            document.documentElement.setAttribute('data-theme', initialTheme);
+            return stored;
         }
     } catch (e) {
-        // localStorage blocked - use system preference
-        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        document.documentElement.setAttribute('data-theme', prefersDark ? DARK_THEME : LIGHT_THEME);
+        // localStorage blocked - fall through to system preference
     }
+
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    return prefersDark ? DARK_THEME : LIGHT_THEME;
+}
+
+/**
+ * Apply theme to document immediately
+ */
+function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+}
+
+// ============================================
+// CRITICAL FIX: MutationObserver to prevent theme flash
+// ============================================
+// This observer watches for changes to the data-theme attribute
+// and immediately restores it if it's removed or changed incorrectly
+// during Livewire navigation (wire:navigate)
+(function initThemeProtection() {
+    let lastKnownTheme = getCurrentTheme();
+    applyTheme(lastKnownTheme);
+
+    // Create observer to watch for attribute changes on <html>
+    const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+            if (mutation.type === 'attributes' && mutation.attributeName === 'data-theme') {
+                const currentTheme = document.documentElement.getAttribute('data-theme');
+                const expectedTheme = getCurrentTheme();
+
+                // If theme attribute is removed or incorrect, restore it immediately
+                if (!currentTheme || (currentTheme !== expectedTheme && expectedTheme !== lastKnownTheme)) {
+                    // Only update if we have a valid stored theme
+                    // This prevents fighting with intentional theme changes
+                    const stored = localStorage.getItem('mary-theme-toggle');
+                    if (stored && currentTheme !== stored) {
+                        applyTheme(stored);
+                        lastKnownTheme = stored;
+                    }
+                }
+            }
+        });
+    });
+
+    // Start observing
+    observer.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['data-theme']
+    });
+
+    // Update lastKnownTheme when theme is explicitly changed
+    window.addEventListener('theme-changed', (e) => {
+        if (e.detail?.theme) {
+            lastKnownTheme = e.detail.theme;
+        }
+    });
 })();
 
 document.addEventListener('alpine:init', () => {
@@ -44,8 +97,8 @@ document.addEventListener('alpine:init', () => {
         lightTheme: LIGHT_THEME,
         darkTheme: DARK_THEME,
 
-        // Current theme state (will be set in init)
-        current: LIGHT_THEME,
+        // Current theme state (synced with getCurrentTheme())
+        current: getCurrentTheme(),
 
         // Initialization flag to prevent re-evaluation on Livewire navigation
         _initialized: false,
@@ -63,32 +116,18 @@ document.addEventListener('alpine:init', () => {
             }
             this._initialized = true;
 
-            let initialTheme = null;
+            // Sync with current theme (already applied by initThemeProtection)
+            this.current = getCurrentTheme();
 
+            // Save to localStorage if it's the first visit
             try {
-                // Try to read from localStorage (persistent user choice)
                 const stored = localStorage.getItem('mary-theme-toggle');
-
-                if (stored) {
-                    // User has already chosen a theme - USE IT (don't re-evaluate)
-                    initialTheme = stored;
-                } else {
-                    // First visit - use system preference and save it
-                    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-                    initialTheme = prefersDark ? DARK_THEME : LIGHT_THEME;                    
-                    localStorage.setItem('mary-theme-toggle', initialTheme);
+                if (!stored) {
+                    localStorage.setItem('mary-theme-toggle', this.current);
                 }
             } catch (e) {
-                // localStorage completely blocked - use system preference only
-                const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-                initialTheme = prefersDark ? DARK_THEME : LIGHT_THEME;
+                // localStorage blocked - continue without saving
             }
-
-            // Set current theme
-            this.current = initialTheme;
-
-            // Apply theme immediately to avoid flash
-            this.applyTheme();
 
             // Listen for system preference changes (ONLY if no manual preference exists)
             window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
@@ -97,23 +136,22 @@ document.addEventListener('alpine:init', () => {
                     const hasManualChoice = localStorage.getItem('mary-theme-toggle');
                     if (!hasManualChoice) {
                         this.current = e.matches ? DARK_THEME : LIGHT_THEME;
-                        this.applyTheme();
+                        applyTheme(this.current);
+                        this.dispatchThemeChanged();
                     }
                 } catch (err) {
                     // In private browsing, always follow system preference
                     this.current = e.matches ? DARK_THEME : LIGHT_THEME;
-                    this.applyTheme();
+                    applyTheme(this.current);
+                    this.dispatchThemeChanged();
                 }
             });
         },
 
         /**
-         * Apply theme to document
+         * Dispatch theme-changed event
          */
-        applyTheme() {
-            document.documentElement.setAttribute('data-theme', this.current);
-
-            // Dispatch event for other components that may listen
+        dispatchThemeChanged() {
             window.dispatchEvent(new CustomEvent('theme-changed', {
                 detail: { theme: this.current }
             }));
@@ -133,8 +171,9 @@ document.addEventListener('alpine:init', () => {
                 // Silently fail in private browsing
             }
 
-            // Apply new theme
-            this.applyTheme();
+            // Apply new theme (MutationObserver will handle it, but we do it anyway for immediate feedback)
+            applyTheme(this.current);
+            this.dispatchThemeChanged();
         },
 
         /**
@@ -159,25 +198,33 @@ document.addEventListener('alpine:init', () => {
 // ============================================
 // LIVEWIRE SPA NAVIGATION SUPPORT
 // ============================================
-// Reapply theme after Livewire navigation (wire:navigate)
-// The DOM is replaced during SPA navigation, so data-theme attribute is lost
-document.addEventListener('livewire:navigated', () => {
-    // Get current theme from Alpine.js store (persists during navigation)
-    const currentTheme = Alpine.store('theme')?.current;
+/**
+ * Additional insurance: Reapply theme before and after Livewire navigation
+ * The MutationObserver above should handle most cases, but these listeners
+ * provide extra protection for edge cases.
+ */
 
-    if (currentTheme) {
-        // Reapply theme from Alpine.js store
-        document.documentElement.setAttribute('data-theme', currentTheme);
-    } else {
-        // Fallback: read from localStorage if Alpine store not ready
-        const stored = localStorage.getItem('mary-theme-toggle');
-        if (stored) {
-            document.documentElement.setAttribute('data-theme', stored);
-        } else {
-            // Ultimate fallback: system preference
-            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            const theme = prefersDark ? DARK_THEME : LIGHT_THEME;
-            document.documentElement.setAttribute('data-theme', theme);
+// Before navigation starts: ensure theme is preserved
+document.addEventListener('livewire:navigating', () => {
+    const theme = getCurrentTheme();
+    if (theme) {
+        applyTheme(theme);
+    }
+});
+
+// After navigation completes: verify theme is still correct
+document.addEventListener('livewire:navigated', () => {
+    const theme = getCurrentTheme();
+    if (theme) {
+        // Only apply if different from current attribute
+        const current = document.documentElement.getAttribute('data-theme');
+        if (current !== theme) {
+            applyTheme(theme);
+        }
+
+        // Sync Alpine store if available
+        if (window.Alpine?.store && Alpine.store('theme')) {
+            Alpine.store('theme').current = theme;
         }
     }
 });

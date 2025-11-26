@@ -1,29 +1,30 @@
 {{--
-    Theme Initialization Script
+    Theme Initialization Script (Critical Path)
 
-    CRITICAL: Must be placed in <head> BEFORE @vite to prevent theme flash
+    ⚡ CRITICAL: Must be placed in <head> BEFORE @vite to prevent initial theme flash
 
-    OPTIMIZATION: Single-line execution without conditionals for instant theme application.
-    Uses short-circuit evaluation (||) to avoid any visible delay.
+    This inline script runs immediately when the page loads, BEFORE any external
+    JavaScript files (including Vite bundles) are loaded. This prevents the theme
+    flash on initial page load.
 
-    Performance:
-    - No try/catch overhead on happy path
-    - No if/else branching delay
-    - Inline ternary for system preference evaluation
-    - localStorage read + setAttribute in ~0.1ms
+    For SPA navigation (wire:navigate), theme persistence is handled by:
+    - MutationObserver in theme-store.js (watches for data-theme changes)
+    - livewire:navigating event (applies theme before navigation)
+    - livewire:navigated event (verifies theme after navigation)
+
+    Performance: localStorage read + setAttribute in ~0.1ms
 --}}
 <script>
-    document.documentElement.setAttribute('data-theme',
-        (function() {
-            try {
-                // Try localStorage first (instant if exists)
-                return localStorage.getItem('mary-theme-toggle') ||
-                    // Fallback: evaluate system preference inline
-                    (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'night' : 'fantasy');
-            } catch (e) {
-                // localStorage blocked - use system preference
-                return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'night' : 'fantasy';
-            }
-        })()
-    );
+    // Immediately apply theme from localStorage or system preference
+    (function() {
+        try {
+            const stored = localStorage.getItem('mary-theme-toggle');
+            const theme = stored || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'ivao-dark' : 'ivao');
+            document.documentElement.setAttribute('data-theme', theme);
+        } catch (e) {
+            // localStorage blocked - use system preference
+            const theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'ivao-dark' : 'ivao';
+            document.documentElement.setAttribute('data-theme', theme);
+        }
+    })();
 </script>
