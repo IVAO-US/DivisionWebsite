@@ -1,4 +1,4 @@
-@extends('components.layouts.errorDocument')
+@extends('layouts.errorDocument')
 
 @section('code', '404')
 
