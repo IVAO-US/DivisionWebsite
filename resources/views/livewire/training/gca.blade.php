@@ -73,10 +73,6 @@ class extends Component {
                     <span>No more than 4 GCAs total including US GCA (effective 31st-2024)</span>
                 </div>
                 
-                <div class="flex items-center gap-3">
-                    <x-icon name="phosphor.warning-circle" class="w-6 h-6 text-success" />
-                    <span>Unless otherwise agreed with the US Training Department, GCA holders shall control the highest rated facility in their GCA approval at least 1 hour every month (effective August 1st-2024)</span>
-                </div>
             </div>
         </div>
 
