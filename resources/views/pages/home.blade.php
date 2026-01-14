@@ -1,0 +1,86 @@
+<?php
+use Livewire\Attributes\Layout;
+
+use Livewire\Component;
+use Illuminate\Support\Facades\Session;
+use App\Models\User;
+
+use Mary\Traits\Toast;
+use App\Traits\HasSEO;
+
+new 
+#[Layout('layouts.homepage')]
+class extends Component {
+    use Toast, HasSEO;
+
+    public function mount(): void
+	{
+		$this->setSEOWithBreadcrumbs(
+			title: 'Welcome',
+			description: config('seotools.meta.defaults.description'),
+			image: asset('assets/seo/snapshot.jpg'),
+			keywords: config('seotools.meta.defaults.keywords')
+		);
+	}
+
+    /* Pending toast following authentication attempt */
+    public function pendingToast(): void
+    {
+        $pendingToast = Session::pull('session_toast');
+        if ($pendingToast) 
+        {
+            $toastParams = [
+                'title' => $pendingToast['title'] ?? 'Notification',
+                'description' => $pendingToast['description'] ?? '',
+                'position' => $pendingToast['position'] ?? 'toast-top toast-end',
+                'icon' => $pendingToast['icon'] ?? 'phosphor.info',
+                'css' => $pendingToast['css'] ?? 'alert-info',
+                'timeout' => $pendingToast['timeout'] ?? 3000,
+                'redirectTo' => $pendingToast['redirectTo'] ?? null
+            ];
+
+            match ($pendingToast['type'] ?? 'info') {
+                'success' => $this->success(...$toastParams),
+                'error' => $this->error(...$toastParams),
+                'warning' => $this->warning(...$toastParams),
+                'info' => $this->info(...$toastParams),
+                default => $this->info(...$toastParams)
+            };
+        }
+    }
+}; ?>
+
+<div x-data x-init="$wire.pendingToast()">
+    
+    {{-- Hero Section with Video Background --}}
+    <h1 class="hidden">IVAO United States Division</h1> {{-- SEO - Do not remove --}}
+    <livewire:homepage-hero-video />
+    
+    {{-- What We Offer Section with American Flag Background --}}
+    {{-- Only displayed when not logged in --}}
+    @guest
+        <livewire:homepage-join-us />
+    @endguest
+    
+    {{-- Division Highlights Section --}}
+    <section class="mx-auto px-5 md:px-15 py-20 bg-base-200">
+        <livewire:homepage-division-highlights />
+    </section>
+    
+    {{-- Tours & VAs Section --}}
+    <section 
+        class="mx-auto px-5 md:px-15 py-20 bg-base-300"
+        style=" background-image: url('/assets/img/flightdeck-777.png');
+                background-size: cover;
+                background-position: center center;
+                background-repeat: no-repeat;
+                background-attachment: fixed;">
+        <livewire:homepage-flight-ops />
+    </section>
+    
+    {{-- Free Education Section --}}
+    <section class="mx-auto px-5 md:px-15 py-20 bg-base-200">
+        <h2 class="text-4xl font-bold text-center">Free Education</h2>
+        <livewire:homepage-training />
+    </section>
+</div>
