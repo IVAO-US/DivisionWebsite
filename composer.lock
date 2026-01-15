@@ -2550,16 +2550,16 @@
         },
         {
             "name": "livewire/livewire",
-            "version": "v4.0.0",
+            "version": "v4.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/livewire/livewire.git",
-                "reference": "7c66e50218be801d6d257714c6642e9024f8a183"
+                "reference": "c7539589d5af82691bef17da17ce4e289269f8d9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/livewire/livewire/zipball/7c66e50218be801d6d257714c6642e9024f8a183",
-                "reference": "7c66e50218be801d6d257714c6642e9024f8a183",
+                "url": "https://api.github.com/repos/livewire/livewire/zipball/c7539589d5af82691bef17da17ce4e289269f8d9",
+                "reference": "c7539589d5af82691bef17da17ce4e289269f8d9",
                 "shasum": ""
             },
             "require": {
@@ -2614,7 +2614,7 @@
             "description": "A front-end framework for Laravel.",
             "support": {
                 "issues": "https://github.com/livewire/livewire/issues",
-                "source": "https://github.com/livewire/livewire/tree/v4.0.0"
+                "source": "https://github.com/livewire/livewire/tree/v4.0.1"
             },
             "funding": [
                 {
@@ -2622,7 +2622,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-01-14T10:40:38+00:00"
+            "time": "2026-01-14T18:40:41+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -3951,20 +3951,20 @@
         },
         {
             "name": "robsontenorio/mary",
-            "version": "2.5.0",
+            "version": "2.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/robsontenorio/mary.git",
-                "reference": "3971e466b947fee5b270e8f8a2ec7449b2866fa3"
+                "reference": "8f91de45487be126ec8a5c7d4068e8a88a117871"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/robsontenorio/mary/zipball/3971e466b947fee5b270e8f8a2ec7449b2866fa3",
-                "reference": "3971e466b947fee5b270e8f8a2ec7449b2866fa3",
+                "url": "https://api.github.com/repos/robsontenorio/mary/zipball/8f91de45487be126ec8a5c7d4068e8a88a117871",
+                "reference": "8f91de45487be126ec8a5c7d4068e8a88a117871",
                 "shasum": ""
             },
             "require": {
-                "blade-ui-kit/blade-heroicons": "^2.0",
+                "blade-ui-kit/blade-heroicons": "^2.6",
                 "illuminate/support": "^10.0|^11.0|^12.0",
                 "jfcherng/php-diff": "^6.15",
                 "laravel/prompts": "^0|^1"
@@ -4010,7 +4010,6 @@
                 "components",
                 "laravel",
                 "livewire",
-                "livewire 3",
                 "livewire components",
                 "livewire packages",
                 "livewire ui",
@@ -4026,7 +4025,7 @@
             ],
             "support": {
                 "issues": "https://github.com/robsontenorio/mary/issues",
-                "source": "https://github.com/robsontenorio/mary/tree/2.5.0"
+                "source": "https://github.com/robsontenorio/mary/tree/2.6.0"
             },
             "funding": [
                 {
@@ -4034,7 +4033,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-12-26T14:19:12+00:00"
+            "time": "2026-01-14T20:27:28+00:00"
         },
         {
             "name": "spatie/browsershot",
@@ -10571,8 +10570,10 @@
         }
     ],
     "aliases": [],
-    "minimum-stability": "stable",
-    "stability-flags": {},
+    "minimum-stability": "beta",
+    "stability-flags": {
+        "livewire/livewire": 10
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
