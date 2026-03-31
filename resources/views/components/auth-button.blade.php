@@ -81,7 +81,7 @@ new class extends Component
     @auth
         {{-- Desktop --}}
         <div class="hidden lg:block">
-            <x-dropdown>
+            <x-dropdown no-x-anchor>
                 <x-slot:trigger>
                     <a class="btn rounded-lg bg-accent text-accent-content border-accent flex items-center gap-2 cursor-pointer">
                         <x-phosphor-headset class="w-5 h-5" />
