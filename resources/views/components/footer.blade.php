@@ -43,6 +43,8 @@ new class extends Component
                 <a href="{{ route('tos') }}" class="hover:text-primary transition-colors">Terms of Service</a>
                 <span class="hidden sm:inline text-base-content/30">|</span>
                 <a href="{{ route('privacy') }}" class="hover:text-primary transition-colors">Privacy Policy</a>
+                <span class="hidden sm:inline text-base-content/30">|</span>
+                <a href="https://wiki.ivao.aero/en/home/ivao/intellectual-property-policy" class="hover:text-primary transition-colors">Intellectual Property Policy</a>
             </div>
 
             <div class="flex justify-center lg:justify-end lg:flex-1 mt-3 lg:mt-0">
