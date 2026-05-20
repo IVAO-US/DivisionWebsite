@@ -61,6 +61,7 @@ new class extends Component
                     ['title' => 'Software', 'link' => 'https://ivao.aero/softdev/software/aurora.asp'],
                     ['title' => 'Facility Ratings', 'link' => 'https://atc.ivao.aero/fras?division=US'],
                     ['title' => 'Scheduling', 'link' => 'https://atc.ivao.aero/schedule'],
+                    ['title' => 'Events', 'link' => 'https://events.us.ivao.aero/'],
                 ]
             ],
             [
