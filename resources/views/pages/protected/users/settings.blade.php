@@ -120,12 +120,11 @@ class extends Component {
     <x-header title="Your Profile" size="h2" subtitle="Edit your account data" class="!mb-5" />
 
     <x-tabs wire:model="defaultTab"
-            class="w-full"
-            label-div-class="bg-base-100 !p-3 !mb-4 rounded-lg font-semibold whitespace-nowrap overflow-x-auto" 
-            active-class="bg-primary p-3 rounded-lg !text-white font-semibold" 
-            label-class="p-3 font-semibold" 
+            class="w-full bg-base-100 !p-3 !mb-4 rounded-lg font-semibold whitespace-nowrap overflow-x-auto"
+            active-class="tab-active bg-primary p-3 rounded-lg !text-white font-semibold"
+            label-class="p-3 font-semibold"
             >
-        <x-tab name="ivaoData-tab" label="Personal Information" icon="phosphor.user" active>
+        <x-tab name="ivaoData-tab" label="Personal Information" icon="phosphor.user">
             <x-card title="Your personal information" subtitle="Retrieved from your IVAO account" shadow separator>
                 <div class="w-full md:w-125 mx-auto">
                     <x-form no-separator>
@@ -142,7 +141,7 @@ class extends Component {
                 </div>
             </x-card>
         </x-tab>
-        <x-tab name="atcData-tab" label="ATC Data" icon="phosphor.radio" active>
+        <x-tab name="atcData-tab" label="ATC Data" icon="phosphor.radio">
             <x-card title="ATC Career" subtitle="Sync'ed from your IVAO profile" shadow separator>
                 <div class="w-full md:w-125 mx-auto">
                     <x-form no-separator>
@@ -161,7 +160,7 @@ class extends Component {
                 </div>
             </x-card>
         </x-tab>
-        <x-tab name="pilotData-tab" label="Pilot Data" icon="phosphor.paper-plane-tilt" active>
+        <x-tab name="pilotData-tab" label="Pilot Data" icon="phosphor.paper-plane-tilt">
             <x-card title="Pilot Career" subtitle="Sync'ed from your IVAO profile" shadow separator>
                 <div class="w-full md:w-125 mx-auto">
                     <x-form no-separator>
@@ -179,7 +178,7 @@ class extends Component {
                 </div>
             </x-card>
         </x-tab>
-        <x-tab name="settings-tab" label="Settings" icon="phosphor.gear" active>
+        <x-tab name="settings-tab" label="Settings" icon="phosphor.gear">
             <x-card title="Edit your settings" subtitle="Customize your experience" shadow separator progress-indicator="updateSettings">
                 <div class="w-full md:w-125 mx-auto">
                     <x-form wire:submit="updateSettings" no-separator>

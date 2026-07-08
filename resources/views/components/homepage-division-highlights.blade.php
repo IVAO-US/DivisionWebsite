@@ -69,10 +69,9 @@ new class extends Component {
             <h3 class="!text-center font-bold text-primary !mb-5">Division Highlights</h3>
             <div class="justify-center">
                 <x-tabs wire:model="activeTab"
-                        class="w-full"
-                        label-div-class="bg-base-100 !p-3 !mb-4 rounded-lg font-semibold whitespace-nowrap overflow-x-auto w-fit mx-auto" 
-                        active-class="bg-primary p-3 rounded-lg !text-white font-semibold" 
-                        label-class="p-3 font-semibold" 
+                        class="bg-base-100 !p-3 !mb-4 rounded-lg font-semibold whitespace-nowrap overflow-x-auto w-fit mx-auto"
+                        active-class="tab-active bg-primary p-3 rounded-lg !text-white font-semibold"
+                        label-class="p-3 font-semibold"
                         >
                     <x-tab name="calendar" label="Calendar" icon="phosphor.calendar">
                         <livewire:homepage-division-calendar :display-weekly="true" use-today-btn="false" wire:key="mobile-calendar" />
