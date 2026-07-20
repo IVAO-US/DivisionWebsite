@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "976bab533d3b8a590a16a8f80d17652b",
+    "content-hash": "7f4c4eebc6dfd5f7acdebb194ccd41fd",
     "packages": [
         {
             "name": "artesaos/seotools",
@@ -3913,16 +3913,16 @@
         },
         {
             "name": "robsontenorio/mary",
-            "version": "2.9.3",
+            "version": "2.9.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/robsontenorio/mary.git",
-                "reference": "a2e25107ca4a165394c7903b42cd955d3ef4925f"
+                "reference": "cb8107008376ce45a21aec9029333212f47a4616"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/robsontenorio/mary/zipball/a2e25107ca4a165394c7903b42cd955d3ef4925f",
-                "reference": "a2e25107ca4a165394c7903b42cd955d3ef4925f",
+                "url": "https://api.github.com/repos/robsontenorio/mary/zipball/cb8107008376ce45a21aec9029333212f47a4616",
+                "reference": "cb8107008376ce45a21aec9029333212f47a4616",
                 "shasum": ""
             },
             "require": {
@@ -3987,7 +3987,7 @@
             ],
             "support": {
                 "issues": "https://github.com/robsontenorio/mary/issues",
-                "source": "https://github.com/robsontenorio/mary/tree/2.9.3"
+                "source": "https://github.com/robsontenorio/mary/tree/2.9.5"
             },
             "funding": [
                 {
@@ -3995,7 +3995,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-07-10T15:57:52+00:00"
+            "time": "2026-07-17T12:41:47+00:00"
         },
         {
             "name": "spatie/crawler",
@@ -10537,5 +10537,5 @@
         "php": "^8.4"
     },
     "platform-dev": {},
-    "plugin-api-version": "2.9.0"
+    "plugin-api-version": "2.6.0"
 }
