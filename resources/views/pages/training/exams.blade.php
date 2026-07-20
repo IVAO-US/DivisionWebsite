@@ -102,7 +102,7 @@ class extends Component {
                 label="Submit Exam Request" 
                 icon="phosphor.paper-plane-tilt" 
                 class="btn btn-accent lg:btn-lg lg:min-w-[250px]"
-                link="https://www.ivao.aero/training/exam/status.asp"
+                link="https://web.us.ivao.aero/training"
                 external
             />
         </div>

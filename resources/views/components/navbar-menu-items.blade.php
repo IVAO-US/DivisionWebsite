@@ -78,8 +78,8 @@ new class extends Component
                 'title' => 'Training',
                 'submenus' => [
                     ['title' => 'Moodle', 'link' => 'https://moodle.us.ivao.aero/'],
-                    ['title' => 'Knowledge Wiki', 'link' => 'https://wiki.us.ivao.aero/'],
-                    ['title' => 'Training Request', 'route' => 'training.request'],
+                    ['title' => 'Wiki', 'link' => 'https://wiki.us.ivao.aero/'],
+                    ['title' => 'Training Request', 'link' => 'https://web.us.ivao.aero/training'],
                     ['title' => 'Exams', 'route' => 'training.exams'],
                     ['title' => 'Guest Controller Approval', 'route' => 'training.gca'],
                 ]

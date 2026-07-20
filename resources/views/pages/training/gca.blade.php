@@ -85,43 +85,9 @@ class extends Component {
             <h5 class="mb-4">Application</h5>
 
             <div class="mb-4">
-                Send an email to: <a href="mailto:us-training@ivao.aero" class="font-semibold underline">us-training@ivao.aero</a>
+            Go to: <a href="https://web.us.ivao.aero/training" class="font-semibold underline">https://web.us.ivao.aero/training</a> and submit a GCA request.
             </div>
-            
-            <div class="pl-5 mb-6">
-                <div class="space-y-3">
-                    
-                    <div class="mb-4">
-                        In your email include:
-                    </div>
-
-                    <div class="flex items-center gap-3">
-                        <x-icon name="phosphor.user" class="w-6 h-6 text-secondary" />
-                        <span>Your name</span>
-                    </div>
-                    
-                    <div class="flex items-center gap-3">
-                        <x-icon name="phosphor.identification-badge" class="w-6 h-6 text-secondary" />
-                        @guest
-                            <span>Your VID</span>
-                        @endguest
-                        @auth
-                            <span>Your VID: <b>{{ $user->vid }}</b></span>
-                        @endauth
-                    </div>
-                    
-                    <div class="flex items-center gap-3">
-                        <x-icon name="phosphor.map-pin" class="w-6 h-6 text-secondary" />
-                        <span>Desired airport/position</span>
-                    </div>
-                    
-                    <div class="flex items-center gap-3">
-                        <x-icon name="phosphor.chat-centered-text" class="w-6 h-6 text-secondary" />
-                        <span>Motivation</span>
-                    </div>
-                </div>
-            </div>
-            
+                        
             <div>
                 Your submission will be reviewed as soon as possible.
             </div>
