@@ -506,6 +506,10 @@
 
     .tab-content {
         padding: 0px !important;
+        /* MaryUI 2.9 code en dur `border-t-base-content/10` sur chaque .tab-content ;
+           daisyUI en fournit la largeur -> ligne pleine largeur au-dessus du panneau.
+           Neutraliser la largeur du bord supérieur (couleur seule ne suffit pas). */
+        border-top: 0 !important;
     }
 
     /* MaryUI 2.9 code en dur un conteneur `tabs tabs-border` ; neutraliser la barre animée de 3px */
