@@ -146,6 +146,18 @@ set in `config/livewire.php`). Reusable Blade components are in `resources/views
 - **`resources/css/app.css` keeps two `@source` lines** for `vendor/.../Pagination` and
   `storage/framework/views` (Tailwind auto-detection skips gitignored paths). Removing
   them breaks MaryUI table paginators. This is intentional — see `LARAVEL13_MIGRATION.md` §5.5.
+- **Modal safe-zone CSS** (end of `app.css`, ported from the Laravel-modernStart starter
+  kit) sits **outside every `@layer` on purpose** — non-layered CSS wins over the
+  daisyUI/Tailwind layers, so no `!important` is needed. It sizes `.modal` with `100dvh`
+  + `env(safe-area-inset-*)` and pins the close `X` and `.modal-action` bar with
+  `position: sticky`, so tall modals stay usable on mobile/short-landscape viewports.
+  The sticky offsets are deliberately "scrollport minus padding" (`top: 0` on the form,
+  `bottom: calc(var(--modal-box-p) * -1)` on the action bar) — do not "fix" them to
+  `var(--modal-box-p)`. If a modal overrides `.modal-box` padding via `box-class`
+  (`p-4`, `p-8`…), set `--modal-box-p` to match on that modal
+  (e.g. `class="[--modal-box-p:1rem]"`), otherwise the `X` and the action-bar background
+  shift by the delta. Note this also overrides `max-h-*` utilities passed in `box-class`
+  (`max-h-9/10` → the safe area), which is intended.
 - **daisyUI themes** are defined inline in `app.css`. If you rename a theme, also update
   `resources/js/theme-store.js` and `resources/views/partials/theme-init-script.blade.php`.
 - **Icons** use the `phosphor.*` prefix (blade-phosphor-icons), e.g. `phosphor.shield-warning`.

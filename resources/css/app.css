@@ -556,3 +556,79 @@ main {
 /**
 * Custom CSS
 */
+
+/* ============================================
+   MODALS - RESPONSIVE VERTICAL SAFE ZONE
+   ============================================
+
+   daisyUI dimensionne .modal-box avec max-h-screen (100vh) et clippe .modal
+   (overflow: clip). Sur mobile/tablette, 100vh = viewport « large » (barre d'URL
+   rétractée) : une modale haute déborde sous la chrome du navigateur sans pouvoir
+   scroller -> bouton X et actions inatteignables. Les safe areas OS (encoche,
+   home indicator) ne sont pas prises en compte non plus.
+
+   Ce bloc est volontairement HORS de tout @layer : le CSS non-layered l'emporte
+   sur les couches daisyUI/Tailwind, donc aucun !important n'est nécessaire.
+
+   Notes :
+   - Si une modale passe un padding custom via box-class (p-4, p-8...), aligner
+     --modal-box-p dessus sur cette modale (ex. class="[--modal-box-p:1rem]"),
+     sinon le X et le fond de la barre d'actions seront décalés du delta.
+   - Les offsets sticky sont calculés « scrollport moins padding » : ne pas
+     « corriger » top: 0 en top: var(--modal-box-p), ça descendrait le X d'un
+     padding entier.
+   - background-color: inherit sur la barre d'actions suit un fond custom passé
+     en box-class ; ne pas le figer sur base-100.
+   ============================================ */
+:root {
+    --modal-safe-block: 1rem;
+    --modal-safe-inline: 0.75rem;
+    --modal-box-p: 1.5rem; /* doit refléter le padding de .modal-box (p-6) */
+}
+
+.modal {
+    height: 100vh; /* fallback */
+    height: 100dvh;
+    padding-top: max(var(--modal-safe-block), env(safe-area-inset-top, 0px));
+    padding-bottom: max(var(--modal-safe-block), env(safe-area-inset-bottom, 0px));
+    padding-left: max(var(--modal-safe-inline), env(safe-area-inset-left, 0px));
+    padding-right: max(var(--modal-safe-inline), env(safe-area-inset-right, 0px));
+}
+
+.modal .modal-box {
+    max-height: 100%;
+    -webkit-overflow-scrolling: touch;
+}
+
+.modal-box > form[method="dialog"] {
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    height: 0;
+}
+
+.modal-box > form[method="dialog"] .btn {
+    top: calc(0.5rem - var(--modal-box-p));
+    inset-inline-end: calc(0.5rem - var(--modal-box-p));
+}
+
+.modal-box > .modal-action {
+    position: sticky;
+    bottom: calc(var(--modal-box-p) * -1);
+    z-index: 998;
+    margin-top: 0.75rem;
+    margin-inline: calc(var(--modal-box-p) * -1);
+    margin-bottom: calc(var(--modal-box-p) * -1);
+    padding: 0.75rem var(--modal-box-p) var(--modal-box-p);
+    background-color: inherit;
+    border-end-start-radius: inherit;
+    border-end-end-radius: inherit;
+}
+
+.modal-bottom { padding-bottom: 0; padding-left: 0; padding-right: 0; }
+.modal-bottom .modal-box { padding-bottom: calc(var(--modal-box-p) + env(safe-area-inset-bottom, 0px)); }
+.modal-top { padding-top: 0; padding-left: 0; padding-right: 0; }
+.modal-top .modal-box { padding-top: calc(var(--modal-box-p) + env(safe-area-inset-top, 0px)); }
+.modal-start, .modal-end { padding-top: 0; padding-bottom: 0; }
+.modal-start { padding-inline-start: 0; }
+.modal-end { padding-inline-end: 0; }
