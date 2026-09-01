@@ -80,12 +80,22 @@ new class extends Component {
     
     public function next(): void
     {
+        // Nothing to cycle through when the carousel has no items...
+        if (empty($this->items)) {
+            return;
+        }
+
         $this->currentIndex = ($this->currentIndex + 1) % count($this->items);
         $this->lastInteractionTime = time();
     }
     
     public function previous(): void
     {
+        // Nothing to cycle through when the carousel has no items...
+        if (empty($this->items)) {
+            return;
+        }
+
         $this->currentIndex = ($this->currentIndex - 1 + count($this->items)) % count($this->items);
         $this->lastInteractionTime = time();
     }
@@ -98,6 +108,12 @@ new class extends Component {
     
     public function autoAdvance(): void
     {
+        // The polling element renders even when there is nothing to show, so an
+        // empty carousel still calls this every few seconds...
+        if (empty($this->items)) {
+            return;
+        }
+
         // Only auto-advance if not paused and if enough time has passed since last interaction
         if (!$this->isPaused && (time() - $this->lastInteractionTime) > $this->interactionDelay) {
             $this->currentIndex = ($this->currentIndex + 1) % count($this->items);
