@@ -81,7 +81,7 @@ new class extends Component
                     ['title' => 'Wiki', 'link' => 'https://wiki.us.ivao.aero/'],
                     ['title' => 'Training Request', 'link' => 'https://web.us.ivao.aero/training'],
                     ['title' => 'Exams', 'route' => 'training.exams'],
-                    ['title' => 'Guest Controller Approval', 'route' => 'training.gca'],
+                    ['title' => 'Guest Controller Approval', 'link' => 'https://wiki.us.ivao.aero/en/atc/guides/gcarequest'],
                 ]
             ],
         ];
