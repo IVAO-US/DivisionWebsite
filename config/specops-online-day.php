@@ -12,7 +12,7 @@ return [
     |
     */
     
-    'enabled' => true,
+    'enabled' => false,
     'title' => 'US SpecOps Online Day',
     'day_of_week' => 3, // /!\ 0 = SUNDAY
     'nth_week' => 3, // Every 3rd week of the month
