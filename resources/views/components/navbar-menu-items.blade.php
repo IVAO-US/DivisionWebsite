@@ -40,7 +40,6 @@ new class extends Component
                     ['title' => 'Staff', 'link' => 'https://www.ivao.aero/staff/division.asp?Id=US'],
                     ['title' => 'LiveTrack', 'link' => 'https://livetrack.us.ivao.aero/'],
                     ['title' => 'Division Transfer', 'route' => 'division.transfer'],
-                    ['title' => 'Rating Transfer', 'link' => 'https://wiki.ivao.aero/en/home/training/main/training_procedures/rating_transfer'],
                 ]
             ],
             [
@@ -50,7 +49,7 @@ new class extends Component
                     ['title' => 'Awards System', 'link' => 'https://awards.us.ivao.aero/'],
                     ['title' => 'Support', 'route' => 'members.support'],
                     ['title' => 'Discord', 'link' => 'https://discord.us.ivao.aero/'],
-                    ['title' => 'Forum', 'link' => 'https://us.forum.ivao.aero/'],
+                    ['title' => 'Forum', 'link' => 'https://forum.ivao.aero/#united-states-of-america.190'],
                 ]
             ],
             [
@@ -82,6 +81,7 @@ new class extends Component
                     ['title' => 'Training Request', 'link' => 'https://web.us.ivao.aero/training'],
                     ['title' => 'Exams', 'route' => 'training.exams'],
                     ['title' => 'Guest Controller Approval', 'link' => 'https://wiki.us.ivao.aero/en/atc/guides/gcarequest'],
+                    ['title' => 'Rating Transfer', 'link' => 'https://wiki.ivao.aero/en/home/training/main/training_procedures/rating_transfer'],
                 ]
             ],
         ];
