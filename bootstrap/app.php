@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 
 use App\Services\SitemapService;
 use App\Http\Middleware\SecurityHeaders;
+use App\Http\Middleware\BlockUnusedVendorRoutes;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -36,6 +37,20 @@ return Application::configure(basePath: dirname(__DIR__))
 
         // Add comprehensive security headers middleware
         $middleware->append(SecurityHeaders::class);
+
+        /*
+         * Answer 404 on the vendor routes the site does not use.
+         *
+         * MaryUI registers an upload, a spotlight and a sidebar-toggle route
+         * itself, outside the throttle groups of routes/web.php, and its
+         * upload stores whatever file a signed-in user sends - here, any IVAO
+         * member who logs in through the SSO. Prepended to the `web` group,
+         * the check runs before the session starts, so these paths create no
+         * session row either (see the middleware to enable one of them).
+         */
+        $middleware->web(prepend: [
+            BlockUnusedVendorRoutes::class,
+        ]);
 
         // Aliases
         $middleware->alias([
