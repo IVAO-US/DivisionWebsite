@@ -198,7 +198,8 @@ new class extends Component {
         $tourTitle = $this->deletingTour->title;
         $this->deletingTour->delete();
         
-        $this->success("Tour '{$tourTitle}' deleted successfully");
+        // MaryUI renders toast titles as HTML (x-html): escape user-controlled values
+        $this->success("Tour '" . e($tourTitle) . "' deleted successfully");
         $this->dispatch('tour-updated');
         $this->closeDeleteModal();
     }

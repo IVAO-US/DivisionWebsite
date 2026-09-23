@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 
 use App\Services\SitemapService;
 use App\Http\Middleware\SecurityHeaders;
+use App\Http\Middleware\BlockUnusedVendorRoutes;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -36,6 +37,42 @@ return Application::configure(basePath: dirname(__DIR__))
 
         // Add comprehensive security headers middleware
         $middleware->append(SecurityHeaders::class);
+
+        /*
+         * No trustProxies(), on purpose.
+         *
+         * The site is reached through Cloudflare, then the local proxy of the
+         * Plesk host, and PHP receives that proxy's address as REMOTE_ADDR
+         * (127.0.0.1 in the sessions table, checked on 2026-09-23). Every
+         * per-IP limit of routes/web.php (throttle:60,1, throttle:100,1) is
+         * therefore one counter shared by all guests; signed-in members are
+         * counted per account. For the same reason the Livewire update
+         * endpoint carries no throttle: it would be one counter for every
+         * guest's polls and clicks.
+         *
+         * Trusting the proxies would give each visitor their own counter, but
+         * Laravel would then store every visitor's IP address in the sessions
+         * table, which the privacy policy does not cover. Should that change,
+         * trust the local proxy and Cloudflare only, and only for the client
+         * address: $middleware->trustProxies(at: ['127.0.0.1', '::1', ...the
+         * ranges of https://www.cloudflare.com/ips/], headers:
+         * Request::HEADER_X_FORWARDED_FOR) - never '*', which lets anyone who
+         * reaches PHP directly pick their IP with X-Forwarded-For.
+         */
+
+        /*
+         * Answer 404 on the vendor routes the site does not use.
+         *
+         * MaryUI registers an upload, a spotlight and a sidebar-toggle route
+         * itself, outside the throttle groups of routes/web.php, and its
+         * upload stores whatever file a signed-in user sends - here, any IVAO
+         * member who logs in through the SSO. Prepended to the `web` group,
+         * the check runs before the session starts, so these paths create no
+         * session row either (see the middleware to enable one of them).
+         */
+        $middleware->web(prepend: [
+            BlockUnusedVendorRoutes::class,
+        ]);
 
         // Aliases
         $middleware->alias([

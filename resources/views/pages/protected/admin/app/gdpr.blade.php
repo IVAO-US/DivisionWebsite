@@ -106,7 +106,8 @@ class extends Component {
         $this->searchResults = [];
         $this->userSearch = '';
         
-        $this->success("User selected: {$this->selectedUser->full_name} - VID: {$this->selectedUser->vid}");
+        // MaryUI renders toast titles as HTML (x-html): escape user-controlled values
+        $this->success("User selected: " . e($this->selectedUser->full_name) . " - VID: {$this->selectedUser->vid}");
     }
     
     /**
@@ -242,7 +243,8 @@ class extends Component {
             $this->clearUser();
             
         } catch (\Exception $e) {
-            $this->error('Deletion failed: ' . $e->getMessage());
+            // MaryUI renders toast titles as HTML (x-html): escape user-controlled values
+            $this->error('Deletion failed: ' . e($e->getMessage()));
         }
     }
     
