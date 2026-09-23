@@ -169,7 +169,8 @@ new class extends Component {
             'permissions' => $this->selectedPermissions
         ]);
 
-        $this->success("Permissions updated for {$this->editingAdmin->user->full_name}");
+        // MaryUI renders toast titles as HTML (x-html): escape user-controlled values
+        $this->success("Permissions updated for " . e($this->editingAdmin->user->full_name));
         $this->closeEditModal();
     }
 
@@ -213,7 +214,8 @@ new class extends Component {
         $adminName = $this->deletingAdmin->user->full_name;
         $this->deletingAdmin->delete();
         
-        $this->success("Administrator {$adminName} removed successfully");
+        // MaryUI renders toast titles as HTML (x-html): escape user-controlled values
+        $this->success("Administrator " . e($adminName) . " removed successfully");
         $this->closeDeleteModal();
     }
 

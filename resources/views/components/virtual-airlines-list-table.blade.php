@@ -140,7 +140,8 @@ new class extends Component {
         // Validate ICAO codes format (4 characters each)
         foreach ($hubs as $hub) {
             if (!preg_match('/^[A-Z]{4}$/', $hub)) {
-                $this->error("Invalid ICAO code format: {$hub}. Must be 4 uppercase letters.");
+                // MaryUI renders toast titles as HTML (x-html): escape user-controlled values
+                $this->error("Invalid ICAO code format: " . e($hub) . ". Must be 4 uppercase letters.");
                 return;
             }
         }
@@ -218,7 +219,8 @@ new class extends Component {
         $vaName = $this->deletingVA->name;
         $this->deletingVA->delete();
         
-        $this->success("Virtual Airline '{$vaName}' deleted successfully");
+        // MaryUI renders toast titles as HTML (x-html): escape user-controlled values
+        $this->success("Virtual Airline '" . e($vaName) . "' deleted successfully");
         $this->dispatch('va-updated');
         $this->closeDeleteModal();
     }
