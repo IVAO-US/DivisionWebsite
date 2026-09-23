@@ -109,6 +109,11 @@ set in `config/livewire.php`). Reusable Blade components are in `resources/views
 - Middleware `CheckAdmin` (`admin`) gates the admin area; `CheckAdminPermission`
   (`admin.permissions:<perm>`) gates individual admin pages. Both flash a
   `session_toast` array and redirect on failure.
+- Both are also Livewire **persistent middleware** (`AppServiceProvider::boot()`): they run
+  again on every Livewire round trip of an admin page, child components included, not only
+  when the page loads, so an administrator who loses a permission loses the page's actions at
+  once. A component action is only as protected as the route of the page it is mounted on:
+  keep new admin pages behind `admin` + `admin.permissions:<perm>` in `routes/web.php`.
 
 ### Two databases
 
@@ -133,6 +138,17 @@ set in `config/livewire.php`). Reusable Blade components are in `resources/views
 - Schedule: regenerate sitemap daily; `division_sessions:sync --forever` every 15 min
   (`withoutOverlapping`, `onOneServer`, `runInBackground`).
 - Global middleware: `App\Http\Middleware\SecurityHeaders` (appended to the web stack).
+- `web` group: `App\Http\Middleware\BlockUnusedVendorRoutes` is prepended and answers 404 on
+  the routes MaryUI registers itself and the site does not use (`mary.upload`,
+  `mary.spotlight`, `mary.toogle-sidebar`), before the session starts. `mary.upload` would
+  otherwise store any file any signed-in user (any IVAO member, through the SSO) sends. To
+  use one of them, protect its route first (validation, permission, throttle), then remove
+  its name from `BlockUnusedVendorRoutes::ROUTES`.
+- No `trustProxies()`, on purpose: behind Cloudflare and the Plesk host's local proxy, PHP
+  sees `127.0.0.1`, so every per-IP `throttle:` limit is one counter shared by all guests,
+  and the Livewire update endpoint has no throttle for that reason. Trusting the proxies
+  would store visitor IP addresses in the `sessions` table, which the privacy policy does
+  not cover. Read the comment in `bootstrap/app.php` before changing either.
 - Health endpoint at `/laravel-health`.
 
 ## Conventions & gotchas
@@ -158,6 +174,16 @@ set in `config/livewire.php`). Reusable Blade components are in `resources/views
   (e.g. `class="[--modal-box-p:1rem]"`), otherwise the `X` and the action-bar background
   shift by the delta. Note this also overrides `max-h-*` utilities passed in `box-class`
   (`max-h-9/10` → the safe area), which is intended.
+- **MaryUI toasts render `title`/`description` with Alpine `x-html`**: wrap every user- or
+  database-provided value in `e()` (member names, tour/VA fields, exception messages), e.g.
+  `$this->success("Tour '" . e($tourTitle) . "' deleted successfully")`. Member names come
+  from the IVAO profile, so any IVAO member chooses them, and the CSP keeps `'unsafe-inline'`
+  for Livewire/Alpine: escaping is the XSS defence.
+- **Fonts are self-hosted**: Poppins and Nunito Sans are Google's own WOFF2 files and CSS
+  (`resources/fonts/`, `resources/css/{poppins,nunito-sans}.css`, imported at the top of
+  `app.css` and bundled by Vite); the error pages use Dosis from
+  `public/errorDocuments/fonts/dosis/`. The CSP allows no third-party style or font host, so
+  never load fonts, stylesheets or scripts from a third-party host.
 - **daisyUI themes** are defined inline in `app.css`. If you rename a theme, also update
   `resources/js/theme-store.js` and `resources/views/partials/theme-init-script.blade.php`.
 - **Icons** use the `phosphor.*` prefix (blade-phosphor-icons), e.g. `phosphor.shield-warning`.
