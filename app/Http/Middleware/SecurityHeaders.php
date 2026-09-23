@@ -46,9 +46,9 @@ class SecurityHeaders
         $csp = [
             "default-src 'self'",
             "script-src 'self' 'unsafe-inline' 'unsafe-eval'",  // Livewire needs unsafe-inline/eval
-            "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com", // Tailwind + Google Fonts
+            "style-src 'self' 'unsafe-inline'",  // Tailwind; fonts are self-hosted, no third-party stylesheet
             "img-src 'self' data: https:",
-            "font-src 'self' data: https://fonts.gstatic.com",  // Inter font + Google Fonts
+            "font-src 'self' data:",  // Self-hosted Poppins and Nunito Sans (Vite build) and Dosis (error pages)
             "connect-src 'self'",
             "frame-ancestors 'self'",
             "base-uri 'self'",
