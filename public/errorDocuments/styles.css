@@ -1,4 +1,27 @@
-@import url('https://fonts.googleapis.com/css?family=Dosis:300,400,500');
+/*
+ * Dosis 2.031beta by Pablo Impallari (www.impallari.com/dosis), SIL OFL 1.1: fonts/dosis/OFL.txt.
+ * The release OTF files, converted to WOFF2 without touching the font data (see fonts/dosis).
+ * Weights 300/400/500 are the set previously requested from Google Fonts; like Google's
+ * stylesheet, no font-display is declared, so text still waits for the font instead of flashing.
+ */
+@font-face {
+    font-family: 'Dosis';
+    font-style: normal;
+    font-weight: 300;
+    src: url('fonts/dosis/Dosis-v2031b-300Light.woff2') format('woff2');
+}
+@font-face {
+    font-family: 'Dosis';
+    font-style: normal;
+    font-weight: 400;
+    src: url('fonts/dosis/Dosis-v2031b-400Regular.woff2') format('woff2');
+}
+@font-face {
+    font-family: 'Dosis';
+    font-style: normal;
+    font-weight: 500;
+    src: url('fonts/dosis/Dosis-v2031b-500Medium.woff2') format('woff2');
+}
 
 @-moz-keyframes rocket-movement { 100% {-moz-transform: translate(1200px,-600px);} }
 @-webkit-keyframes rocket-movement {100% {-webkit-transform: translate(1200px,-600px); } }

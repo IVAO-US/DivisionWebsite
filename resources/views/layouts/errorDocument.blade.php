@@ -13,8 +13,6 @@
 
     <title>@yield("code") Server Error Page</title>
 
-    <link href="https://fonts.googleapis.com/css?family=Montserrat:700,900" rel="stylesheet">
-
     <!-- Theme Styles -->
 	<link rel="stylesheet" href="{{ asset('errorDocuments/styles.css') }}">
 </head>
