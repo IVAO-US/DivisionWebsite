@@ -23,8 +23,9 @@ class SecurityHeaders
         // Prevent MIME type sniffing
         $response->headers->set('X-Content-Type-Options', 'nosniff');
 
-        // Enable XSS protection (legacy browsers)
-        $response->headers->set('X-XSS-Protection', '1; mode=block');
+        // Disable the legacy XSS auditor: removed from modern browsers and a source
+        // of vulnerabilities where it still exists (OWASP recommends 0)
+        $response->headers->set('X-XSS-Protection', '0');
 
         // Referrer policy - balance privacy and functionality
         $response->headers->set('Referrer-Policy', 'strict-origin-when-cross-origin');
@@ -59,9 +60,6 @@ class SecurityHeaders
         if ($request->secure()) {
             $response->headers->set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
         }
-
-        // Expect-CT (Certificate Transparency)
-        $response->headers->set('Expect-CT', 'max-age=86400, enforce');
 
         // Cross-Origin policies
         $response->headers->set('Cross-Origin-Embedder-Policy', 'credentialless');
