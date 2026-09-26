@@ -3,6 +3,7 @@ use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 
 use Livewire\Component;
+use Livewire\Attributes\Locked;
 
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
@@ -15,8 +16,14 @@ new
 class extends Component {
     use Toast, HasSEO;
 
-    /* User information */
-    public User $user;
+    /*
+     * The signed-in account, null for a visitor (mount() fills it only when
+     * someone is signed in). Nullable with a default and locked, as the
+     * browser never writes it: a forged update gets Livewire's 419 instead
+     * of a 500 (see auth-button)
+     */
+    #[Locked]
+    public ?User $user = null;
 
     public function mount(): void
 	{
