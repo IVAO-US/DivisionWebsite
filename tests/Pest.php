@@ -1,5 +1,9 @@
 <?php
 
+use App\Models\User;
+use Illuminate\Testing\TestResponse;
+use Livewire\Livewire;
+
 /*
 |--------------------------------------------------------------------------
 | Test Case
@@ -44,4 +48,65 @@ expect()->extend('toBeOne', function () {
 function something()
 {
     // ..
+}
+
+/**
+ * An IVAO member, as the SSO would have stored them
+ *
+ * @param  array<string, mixed>  $attributes
+ */
+function createMember(array $attributes = []): User
+{
+    $vid = $attributes['vid'] ?? fake()->unique()->numberBetween(9000000, 9999999);
+
+    return User::create([
+        'vid' => $vid,
+        'first_name' => 'Tester',
+        'last_name' => 'Member',
+        'email' => "member-{$vid}@example.test",
+        'rating_atc' => 2,
+        'rating_pilot' => 2,
+        'country' => 'US',
+        'division' => 'US',
+        ...$attributes,
+    ]);
+}
+
+/**
+ * The snapshot of a Livewire component as the browser receives it with a
+ * page (its wire:snapshot attribute), for the current visitor or account
+ */
+function componentSnapshot(string $uri, string $name): string
+{
+    $html = test()->withoutVite()->get($uri)->assertOk()->getContent();
+
+    preg_match_all('/wire:snapshot="([^"]*)"/', $html, $matches);
+
+    foreach ($matches[1] as $attribute) {
+        $snapshot = html_entity_decode($attribute, ENT_QUOTES);
+
+        if ((json_decode($snapshot, true)['memo']['name'] ?? null) === $name) {
+            return $snapshot;
+        }
+    }
+
+    throw new RuntimeException("No {$name} component on {$uri}");
+}
+
+/**
+ * One round trip to the real Livewire update endpoint, sent the way a
+ * browser sends it: the updates and calls are whatever the browser chooses
+ *
+ * @param  array<string, mixed>  $updates
+ * @param  list<array<string, mixed>>  $calls
+ */
+function livewireRoundTrip(string $snapshot, array $updates = [], array $calls = []): TestResponse
+{
+    return test()->postJson(Livewire::getUpdateUri(), [
+        'components' => [[
+            'snapshot' => $snapshot,
+            'updates' => $updates,
+            'calls' => $calls,
+        ]],
+    ], ['X-Livewire' => 'true']);
 }

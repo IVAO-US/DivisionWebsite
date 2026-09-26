@@ -1,5 +1,6 @@
 <?php
 use Livewire\Component;
+use Livewire\Attributes\Locked;
 use Illuminate\Support\Facades\Blade;
 
 use App\Models\User;
@@ -12,8 +13,17 @@ new class extends Component
 {
     use Toast;
 
-    /* User information */
-    public User $user;
+    /*
+     * The signed-in account, null for a visitor (mount() fills it only when
+     * someone is signed in). Nullable with a default, so no path ever reads
+     * it uninitialized, and locked, as the browser never writes it: a forged
+     * update ("user.name") then gets Livewire's 419 before the property is
+     * read, deep paths included. Nullable alone still ends in a 500, as
+     * Livewire has no synthesizer to write into null.
+     */
+    #[Locked]
+    public ?User $user = null;
+
     public function mount(): void
     {
         if(Auth::check()) {
@@ -78,7 +88,13 @@ new class extends Component
 };
 ?>
 <div>
-    @auth
+    {{--
+        The menu follows the account the component holds, not the session:
+        a visitor's snapshot replayed in a session signed in since (a failed
+        "Log in" after signing in from another tab, a forged $refresh) holds
+        no account, and reading one would end in a 500.
+    --}}
+    @if ($user)
         {{-- Desktop --}}
         <div class="hidden lg:block">
             <x-dropdown no-x-anchor right>
@@ -99,9 +115,7 @@ new class extends Component
                 @php echo $this->userMenuItems(); @endphp
             </x-menu-sub>
         </div>
-	@endauth
-
-    @guest
+    @else
         {{-- Desktop --}}
         <div class="hidden lg:block">
             <x-button 
@@ -121,5 +135,5 @@ new class extends Component
                 wire:click="login" 
                 spinner />
         </div>
-    @endguest
+    @endif
 </div>

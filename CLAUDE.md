@@ -69,7 +69,16 @@ touch database/database.sqlite && php artisan migrate --force
 
 `tests/Pest.php` has `RefreshDatabase` **disabled**, so tests run against whatever DB
 the connection points to and expect the tables to already exist (the homepage test hits
-the DB via `HeadlineService`/`AppSetting`). Migrate before testing.
+the DB via `HeadlineService`/`AppSetting`). Migrate before testing. `phpunit.xml` sets
+`DB_DATABASE=testing` without forcing it, so with SQLite export the absolute path in the
+shell, which wins over it:
+`DB_CONNECTION=sqlite DB_DATABASE=$PWD/database/database.sqlite php artisan test`.
+
+Test files that write wrap each test in `DatabaseTransactions` (nothing is dropped) and
+build their accounts with the helpers of `tests/Pest.php` (`createMember()`…).
+`componentSnapshot()` and `livewireRoundTrip()` replay a component's snapshot through the
+real Livewire update endpoint, as a forged request would; they render pages
+`withoutVite()`, so they need no asset build (the homepage test still does).
 
 ## Architecture
 
@@ -179,6 +188,20 @@ set in `config/livewire.php`). Reusable Blade components are in `resources/views
   `$this->success("Tour '" . e($tourTitle) . "' deleted successfully")`. Member names come
   from the IVAO profile, so any IVAO member chooses them, and the CSP keeps `'unsafe-inline'`
   for Livewire/Alpine: escaping is the XSS defence.
+- **A Livewire public property that no `wire:model` writes still receives forged updates**,
+  deep paths included (`user.name`). Give it `#[Locked]` **and** a default, as `auth-button`
+  does (`#[Locked] public ?User $user = null;`): Livewire then refuses the write with a 419
+  before reading the property.
+  - Typed with no default, it stays uninitialized for a visitor, and reading it is a fatal
+    error (500). Nullable alone still ends in a 500: Livewire 4.4.6 has no synthesizer to
+    write into `null`.
+  - Let the template test the property (`@if ($user)`), not `@auth`: a visitor's snapshot
+    replayed in a session signed in since holds no account.
+  - The 419 is still logged (`CannotUpdateLockedPropertyException` is reported).
+  - `#[Locked]` does not cover `calls`: the parameters of an action or of an `#[On]`
+    listener come from the browser and are checked like any input.
+  - A forged deep write into any other public scalar (`search.x`) also ends in a 500 under
+    Livewire 4.4.6: that cannot be closed component by component.
 - **Fonts are self-hosted**: Poppins and Nunito Sans are Google's own WOFF2 files and CSS
   (`resources/fonts/`, `resources/css/{poppins,nunito-sans}.css`, imported at the top of
   `app.css` and bundled by Vite); the error pages use Dosis from
