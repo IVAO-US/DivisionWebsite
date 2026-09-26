@@ -94,7 +94,7 @@ real Livewire update endpoint, as a forged request would; they render pages
   - single-argument pages put the arg last; multi-arg pages use query strings.
 - Auth is IVAO OAuth: `/login` redirects into `IvaoController@handleCallback`
   (`/auth/ivao/callback`). Requires `IVAO_CLIENT_ID`/`IVAO_CLIENT_SECRET`/`OPENID_URL`.
-- Middleware groups: `throttle`, `auth`, then `admin`, then `admin.permissions:<perm>`.
+- Middleware groups: `throttle:pages`, `auth`, then `admin`, then `admin.permissions:<perm>`.
 
 ### Livewire SFC pages (`resources/views/pages/**`)
 
@@ -171,11 +171,28 @@ set in `config/livewire.php`). Reusable Blade components are in `resources/views
   otherwise store any file any signed-in user (any IVAO member, through the SSO) sends. To
   use one of them, protect its route first (validation, permission, throttle), then remove
   its name from `BlockUnusedVendorRoutes::ROUTES`.
+- **Rate limiting**: named limiters, defined in `AppServiceProvider::boot()`, each with a
+  counter of its own, keyed by account (signed in) or IP address (guests):
+
+  | Limiter | Budget | Routes |
+  |---|---|---|
+  | `pages` | 60 / min | every page of `routes/web.php` |
+  | `seo-files` | 100 / min | `robots.txt`, `sitemap.xml` |
+
+  - The Livewire update endpoint has no throttle (see below). Livewire still limits invalid
+    checksums itself: 10 per IP address in 10 minutes, then a 429 on every Livewire request
+    from that address.
+  - Livewire's upload endpoint keeps its default `throttle:60,1`, as no component uploads.
+    A site that adds an upload gives it a named limiter through
+    `livewire.temporary_file_upload.middleware`.
 - No `trustProxies()`, on purpose: behind Cloudflare and the Plesk host's local proxy, PHP
-  sees `127.0.0.1`, so every per-IP `throttle:` limit is one counter shared by all guests,
-  and the Livewire update endpoint has no throttle for that reason. Trusting the proxies
-  would store visitor IP addresses in the `sessions` table, which the privacy policy does
-  not cover. Read the comment in `bootstrap/app.php` before changing either.
+  sees `127.0.0.1`.
+  - Every per-IP limit is therefore one counter per limiter shared by all guests, and
+    Livewire's checksum limit is one counter for everyone, members included.
+  - The Livewire update endpoint has no throttle for that reason.
+  - Trusting the proxies would store visitor IP addresses in the `sessions` table, which
+    the privacy policy does not cover.
+  - Read the comment in `bootstrap/app.php` before changing either.
 - Health endpoint at `/laravel-health`.
 
 ## Conventions & gotchas
@@ -220,6 +237,12 @@ set in `config/livewire.php`). Reusable Blade components are in `resources/views
     listener come from the browser and are checked like any input.
   - A forged deep write into any other public scalar (`search.x`) also ends in a 500 under
     Livewire 4.4.6: that cannot be closed component by component.
+- **An unnamed `throttle:N,1` counts under one key per account (per IP address for a
+  guest), whatever the route**: every unnamed limit shares that counter and compares it to
+  its own maximum, so two groups at 60 and 100 spend each other's budget.
+  - A limit that must count alone takes a named limiter (`RateLimiter::for()`) **with
+    `->by()`**: without it, the key is empty and one counter serves everybody.
+  - A route that names a limiter nobody defined answers 500 (`MissingRateLimiterException`).
 - **Fonts are self-hosted**: Poppins and Nunito Sans are Google's own WOFF2 files and CSS
   (`resources/fonts/`, `resources/css/{poppins,nunito-sans}.css`, imported at the top of
   `app.css` and bundled by Vite); the error pages use Dosis from

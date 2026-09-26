@@ -4,6 +4,9 @@ namespace App\Providers;
 
 use App\Http\Middleware\CheckAdmin;
 use App\Http\Middleware\CheckAdminPermission;
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Livewire\Livewire;
 
@@ -42,5 +45,19 @@ class AppServiceProvider extends ServiceProvider
             CheckAdmin::class,
             CheckAdminPermission::class,
         ]);
+
+        /*
+         * Rate limiters of routes/web.php, each with a counter of its own.
+         *
+         * An unnamed throttle:N,1 counts under one key per account (per IP
+         * address for a guest), whatever the route: every unnamed limit
+         * shares that counter and compares it to its own maximum, so the
+         * robots.txt and sitemap.xml requests spent the pages' budget. A
+         * named limiter counts under its name and the key given by ->by():
+         * without ->by(), that key is empty and one counter serves
+         * everybody. Guests all share the proxy's address (bootstrap/app.php).
+         */
+        RateLimiter::for('pages', fn (Request $request) => Limit::perMinute(60)->by($request->user()?->getAuthIdentifier() ?? $request->ip()));
+        RateLimiter::for('seo-files', fn (Request $request) => Limit::perMinute(100)->by($request->user()?->getAuthIdentifier() ?? $request->ip()));
     }
 }
