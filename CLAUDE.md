@@ -235,6 +235,16 @@ set in `config/livewire.php`). Reusable Blade components are in `resources/views
   (e.g. `class="[--modal-box-p:1rem]"`), otherwise the `X` and the action-bar background
   shift by the delta. Note this also overrides `max-h-*` utilities passed in `box-class`
   (`max-h-9/10` → the safe area), which is intended.
+- **Wide tables keep a visible scrollbar** (`app.css`, `.overflow-x-auto:has(> table)`: every
+  `<x-table>` and the GDPR logs). A themed `::-webkit-scrollbar` is never an overlay on
+  Chrome, Edge, Safari on macOS and Chrome on Android; Firefox and iOS only overlay theirs,
+  so an edge shadow tells there is more to scroll.
+  - The box resets `scrollbar-color` to `auto`: Chrome ignores the pseudo-elements once an
+    element has one, and every element inherits the one of `:root`.
+  - A table of your own gets the same when its `<table>` sits right inside an
+    `.overflow-x-auto` box.
+  - Headless Playwright hides every scrollbar (`--hide-scrollbars`): pass
+    `ignoreDefaultArgs: ['--hide-scrollbars']` to check one.
 - **MaryUI toasts render `title`/`description` with Alpine `x-html`**: wrap every user- or
   database-provided value in `e()` (member names, tour/VA fields, exception messages), e.g.
   `$this->success("Tour '" . e($tourTitle) . "' deleted successfully")`. Member names come
