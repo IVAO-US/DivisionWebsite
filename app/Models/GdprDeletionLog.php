@@ -73,8 +73,10 @@ class GdprDeletionLog extends Model
             $summary[] = "{$voteCount} poll vote(s)";
         }
         
-        if (isset($this->deleted_data['sessions']) && count($this->deleted_data['sessions']) > 0) {
-            $sessionCount = count($this->deleted_data['sessions']);
+        // The GDPR page stores the number of sessions it deleted, not the sessions
+        $sessions = $this->deleted_data['sessions'] ?? 0;
+        $sessionCount = is_countable($sessions) ? count($sessions) : (int) $sessions;
+        if ($sessionCount > 0) {
             $summary[] = "{$sessionCount} session(s)";
         }
         
