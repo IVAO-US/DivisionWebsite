@@ -257,8 +257,9 @@ set in `config/livewire.php`). Reusable Blade components are in `resources/views
   before reading the property. The acting administrator is never a public property: read
   it from the session (`AdminService`, `admins-list-table`, the manage page).
   - Typed with no default, it stays uninitialized for a visitor, and reading it is a fatal
-    error (500). Nullable alone still ends in a 500: Livewire 4.4.6 has no synthesizer to
-    write into `null`.
+    error (500). Nullable alone lets a forged deep write reach Livewire 4.4.6, which has no
+    synthesizer to write into `null`: that ends in the unlogged 419 below, whereas
+    `#[Locked]` refuses the write before anything is read.
   - Let the template test the property (`@if ($user)`), not `@auth`: a visitor's snapshot
     replayed in a session signed in since holds no account.
   - `#[Locked]` does not cover `calls`: the parameters of an action or of an `#[On]`
