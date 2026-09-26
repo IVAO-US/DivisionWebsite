@@ -2,6 +2,8 @@
 
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\DB;
+use Livewire\Livewire;
+use Livewire\Mechanisms\HandleComponents\Checksum;
 
 /*
  * The rate limits of routes/web.php (CLAUDE.md, "Rate limiting"): each named
@@ -17,6 +19,15 @@ use Illuminate\Support\Facades\DB;
  */
 
 uses(DatabaseTransactions::class);
+
+afterEach(function () {
+    Checksum::disableRateLimitingForTesting();
+});
+
+/**
+ * The call of a Livewire round trip that only renders the component again
+ */
+const REFRESH = [['path' => '', 'method' => '$refresh', 'params' => []]];
 
 /**
  * Sends the next requests as this visitor, through Cloudflare and the
@@ -151,8 +162,47 @@ test('Livewire round trips spend no page budget', function () {
     $snapshot = componentSnapshot('/', 'auth-button');
 
     foreach (range(1, 61) as $roundTrip) {
-        livewireRoundTrip($snapshot, calls: [['path' => '', 'method' => '$refresh', 'params' => []]])->assertOk();
+        livewireRoundTrip($snapshot, calls: REFRESH)->assertOk();
     }
 
     $this->get('/users')->assertRedirect();
+});
+
+test('the Livewire update route has a limit of its own', function () {
+    $route = app('router')->getRoutes()->getByName('livewire.update');
+
+    expect($route)->not->toBeNull()
+        ->and($route->gatherMiddleware())->toContain('throttle:livewire-update')
+        ->and(Livewire::getUpdateUri())->toBe('/'.$route->uri());
+});
+
+test('the 601st Livewire round trip of the minute is refused', function () {
+    asVisitor('1.2.3.4');
+    $snapshot = componentSnapshot('/', 'auth-button');
+
+    foreach (range(1, 600) as $roundTrip) {
+        livewireRoundTrip($snapshot, calls: REFRESH)->assertOk();
+    }
+
+    livewireRoundTrip($snapshot, calls: REFRESH)->assertStatus(429);
+
+    asVisitor('1.2.3.5');
+    livewireRoundTrip($snapshot, calls: REFRESH)->assertOk();
+});
+
+test('ten forged checksums turn nobody away', function () {
+    // Livewire answered 429 to every Livewire request of that address for 10 minutes
+    config(['app.debug' => false]);
+    Checksum::enableRateLimitingForTesting();
+
+    $snapshot = componentSnapshot('/', 'auth-button');
+    $forged = json_encode(['checksum' => str_repeat('0', 64)] + json_decode($snapshot, true));
+
+    foreach (range(1, 10) as $request) {
+        livewireRoundTrip($forged, calls: REFRESH)->assertStatus(419);
+    }
+
+    $this->actingAs(createMember());
+
+    livewireRoundTrip($snapshot, calls: REFRESH)->assertOk();
 });

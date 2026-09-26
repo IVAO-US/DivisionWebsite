@@ -179,13 +179,18 @@ set in `config/livewire.php`). Reusable Blade components are in `resources/views
   |---|---|---|
   | `pages` | 60 / min | every page of `routes/web.php` |
   | `seo-files` | 100 / min | `robots.txt`, `sitemap.xml` |
+  | `livewire-update` | 600 / min | Livewire's update endpoint, declared in `AppServiceProvider::register()` |
 
   - A guest whose address is unknown is not limited: one counter for every guest would let
     a single client turn them all away (`AppServiceProvider::perVisitor()`).
   - The cache keeps a hash of the address keyed with the app key, never the address itself.
-  - The Livewire update endpoint has no throttle. Livewire still limits invalid checksums
-    itself: 10 per address in 10 minutes, then a 429 on every Livewire request from that
-    address.
+  - `livewire-update` leaves room for the homepage carousels, which poll every four
+    seconds (up to 60 requests a minute per open tab): past the budget, Livewire shows the
+    429 page in a modal.
+  - Livewire's own lockout on invalid checksums (10 per address in 10 minutes, then a 429
+    on every Livewire request from it, the raw address as cache key) is off: a
+    `checksum.fail` listener answers the 419 before Livewire counts the failure, and
+    `livewire-update` bounds the sender.
   - Livewire's upload endpoint keeps its default `throttle:60,1`, as no component uploads.
     A site that adds an upload gives it a named limiter through
     `livewire.temporary_file_upload.middleware`.
