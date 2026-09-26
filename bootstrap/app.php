@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 
 use App\Services\SitemapService;
 use App\Http\ClientAddress;
+use App\Http\ForgedLivewireRequest;
 use App\Http\Middleware\SecurityHeaders;
 use App\Http\Middleware\BlockUnusedVendorRoutes;
 
@@ -91,4 +92,12 @@ return Application::configure(basePath: dirname(__DIR__))
          * client repeating a request that fails would otherwise fill.
          */
         $exceptions->throttle(fn (Throwable $e) => Limit::perMinute(10)->by($e::class.'@'.$e->getFile().':'.$e->getLine()));
+
+        /*
+         * A forged Livewire request (ForgedLivewireRequest) gets the 419
+         * Livewire gives a corrupt snapshot, and is not logged: only its
+         * sender sees it.
+         */
+        $exceptions->dontReportWhen(fn (Throwable $e) => ForgedLivewireRequest::refused($e));
+        $exceptions->render(fn (Throwable $e) => ForgedLivewireRequest::refused($e) ? response('', 419) : null);
     })->create();

@@ -248,11 +248,18 @@ set in `config/livewire.php`). Reusable Blade components are in `resources/views
     write into `null`.
   - Let the template test the property (`@if ($user)`), not `@auth`: a visitor's snapshot
     replayed in a session signed in since holds no account.
-  - The 419 is still logged (`CannotUpdateLockedPropertyException` is reported).
   - `#[Locked]` does not cover `calls`: the parameters of an action or of an `#[On]`
     listener come from the browser and are checked like any input.
-  - A forged deep write into any other public scalar (`search.x`) also ends in a 500 under
-    Livewire 4.4.6: that cannot be closed component by component.
+- **A forged Livewire request gets an unlogged 419**, as a corrupt snapshot does
+  (`App\Http\ForgedLivewireRequest`, rendered and kept out of the log in `bootstrap/app.php`).
+  - Forged means that Livewire, or the container, refused the request's updates or calls
+    before any code of the site ran: a deep write into a scalar (`search.x`), an unknown or
+    locked property, a method that is no action, an event nobody listens to, a parameter
+    missing or of the wrong type. Livewire 4.4.6 answered most of them with a logged 500.
+  - An error of the site's own code stays a logged 500, even on a forged parameter, and so
+    does an error while rendering; debug mode shows and logs everything.
+  - The classification follows Livewire's call stack (`HandleComponents`): after a Livewire
+    upgrade, run `ForgedLivewireRequestTest`.
 - **An unnamed `throttle:N,1` counts under one key per account (per IP address for a
   guest), whatever the route**: every unnamed limit shares that counter and compares it to
   its own maximum, so two groups at 60 and 100 spend each other's budget.
