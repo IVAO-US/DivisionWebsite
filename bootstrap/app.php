@@ -7,6 +7,7 @@ use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Http\Request;
 
 use App\Services\SitemapService;
+use App\Http\ClientAddress;
 use App\Http\Middleware\SecurityHeaders;
 use App\Http\Middleware\BlockUnusedVendorRoutes;
 
@@ -39,31 +40,25 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->append(SecurityHeaders::class);
 
         /*
-         * No trustProxies(), on purpose.
+         * Trust Cloudflare and the host's local proxy, for the client address
+         * only.
          *
          * The site is reached through Cloudflare, then the local proxy of the
-         * Plesk host, and PHP receives that proxy's address as REMOTE_ADDR
-         * (127.0.0.1 in the sessions table, checked on 2026-09-23). Every
-         * per-IP limit of routes/web.php (the named limiters pages and
-         * seo-files, AppServiceProvider) is therefore one counter shared by
-         * all guests; signed-in members are counted per account. For the
-         * same reason the Livewire update endpoint carries no throttle: it
-         * would be one counter for every guest's polls and clicks. Livewire
-         * still limits invalid checksums on its own, per IP address (10 in
-         * 10 minutes, Checksum::enforceRateLimit()): behind the proxy that
-         * counter is shared by everyone, members included, so ten forged
-         * requests turn away everyone's Livewire requests for up to 10
-         * minutes.
+         * Plesk host: PHP receives 127.0.0.1 as REMOTE_ADDR (the sessions
+         * table, checked on 2026-09-23) and the visitor's address in
+         * X-Forwarded-For. Trusting these proxies for that header gives every
+         * visitor a rate-limit counter of their own (AppServiceProvider),
+         * instead of one counter for all guests that a single client could
+         * exhaust. Never '*', nor the other X-Forwarded-* headers: anyone who
+         * reaches PHP directly could then pick their address, host or scheme.
          *
-         * Trusting the proxies would give each visitor their own counter, but
-         * Laravel would then store every visitor's IP address in the sessions
-         * table, which the privacy policy does not cover. Should that change,
-         * trust the local proxy and Cloudflare only, and only for the client
-         * address: $middleware->trustProxies(at: ['127.0.0.1', '::1', ...the
-         * ranges of https://www.cloudflare.com/ips/], headers:
-         * Request::HEADER_X_FORWARDED_FOR) - never '*', which lets anyone who
-         * reaches PHP directly pick their IP with X-Forwarded-For.
+         * Should the local proxy stop sending the header, the visitor's
+         * address is unknown (ClientAddress::of()) and guests are not limited
+         * rather than sharing one counter. Laravel would store each visitor's
+         * address in the sessions table, which the privacy policy does not
+         * cover: App\Session\DatabaseSessionHandler stores none.
          */
+        $middleware->trustProxies(at: ClientAddress::PROXIES, headers: Request::HEADER_X_FORWARDED_FOR);
 
         /*
          * Answer 404 on the vendor routes the site does not use.

@@ -172,27 +172,35 @@ set in `config/livewire.php`). Reusable Blade components are in `resources/views
   use one of them, protect its route first (validation, permission, throttle), then remove
   its name from `BlockUnusedVendorRoutes::ROUTES`.
 - **Rate limiting**: named limiters, defined in `AppServiceProvider::boot()`, each with a
-  counter of its own, keyed by account (signed in) or IP address (guests):
+  counter of its own, keyed by account (signed in) or visitor address (guests, see
+  "Trusted proxies"):
 
   | Limiter | Budget | Routes |
   |---|---|---|
   | `pages` | 60 / min | every page of `routes/web.php` |
   | `seo-files` | 100 / min | `robots.txt`, `sitemap.xml` |
 
-  - The Livewire update endpoint has no throttle (see below). Livewire still limits invalid
-    checksums itself: 10 per IP address in 10 minutes, then a 429 on every Livewire request
-    from that address.
+  - A guest whose address is unknown is not limited: one counter for every guest would let
+    a single client turn them all away (`AppServiceProvider::perVisitor()`).
+  - The cache keeps a hash of the address keyed with the app key, never the address itself.
+  - The Livewire update endpoint has no throttle. Livewire still limits invalid checksums
+    itself: 10 per address in 10 minutes, then a 429 on every Livewire request from that
+    address.
   - Livewire's upload endpoint keeps its default `throttle:60,1`, as no component uploads.
     A site that adds an upload gives it a named limiter through
     `livewire.temporary_file_upload.middleware`.
-- No `trustProxies()`, on purpose: behind Cloudflare and the Plesk host's local proxy, PHP
-  sees `127.0.0.1`.
-  - Every per-IP limit is therefore one counter per limiter shared by all guests, and
-    Livewire's checksum limit is one counter for everyone, members included.
-  - The Livewire update endpoint has no throttle for that reason.
-  - Trusting the proxies would store visitor IP addresses in the `sessions` table, which
-    the privacy policy does not cover.
-  - Read the comment in `bootstrap/app.php` before changing either.
+- **Trusted proxies**: Cloudflare and the Plesk host's local proxy, for `X-Forwarded-For`
+  only (`bootstrap/app.php`, `App\Http\ClientAddress`). PHP sees `127.0.0.1`; the visitor's
+  address is the right-most one of the header that no trusted proxy added.
+  - Never `'*'`, nor the other `X-Forwarded-*` headers: a client reaching PHP directly
+    could pick its address, host or scheme.
+  - `ClientAddress::of()` gives null when the chain names no visitor (no header): such
+    requests are not limited. Cloudflare's own addresses (a Worker) count like any other.
+  - `ClientAddress::CLOUDFLARE` copies https://www.cloudflare.com/ips/: update it when
+    Cloudflare changes its ranges, or the visitors behind a new range share a counter.
+  - The `sessions` table stores no IP address (`App\Session\DatabaseSessionHandler`,
+    registered in `AppServiceProvider`): the privacy policy does not cover them.
+  - Read the comment in `bootstrap/app.php` before changing any of this.
 - Health endpoint at `/laravel-health`.
 
 ## Conventions & gotchas
