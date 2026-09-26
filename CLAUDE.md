@@ -241,8 +241,10 @@ set in `config/livewire.php`). Reusable Blade components are in `resources/views
   for Livewire/Alpine: escaping is the XSS defence.
 - **A Livewire public property that no `wire:model` writes still receives forged updates**,
   deep paths included (`user.name`). Give it `#[Locked]` **and** a default, as `auth-button`,
-  the navbar and the transfer and GCA pages do (`#[Locked] public ?User $user = null;`):
-  Livewire then refuses the write with a 419 before reading the property.
+  the navbar, the transfer and GCA pages and the admin dashboard, manage and GDPR pages do
+  (`#[Locked] public ?User $user = null;`): Livewire then refuses the write with a 419
+  before reading the property. The acting administrator is never a public property: read
+  it from the session (`AdminService`, `admins-list-table`, the manage page).
   - Typed with no default, it stays uninitialized for a visitor, and reading it is a fatal
     error (500). Nullable alone still ends in a 500: Livewire 4.4.6 has no synthesizer to
     write into `null`.
