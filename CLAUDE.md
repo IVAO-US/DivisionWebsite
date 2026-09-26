@@ -282,6 +282,11 @@ set in `config/livewire.php`). Reusable Blade components are in `resources/views
   never load fonts, stylesheets or scripts from a third-party host.
 - **daisyUI themes** are defined inline in `app.css`. If you rename a theme, also update
   `resources/js/theme-store.js` and `resources/views/partials/theme-init-script.blade.php`.
+  - Mind the `;` of every custom property: a missing one swallows the next declaration
+    into the value (the light theme's `--color-base-content` was invalid that way).
+  - Leave `--btn-color` to daisyUI: set on a theme, it becomes the background of every
+    default button (white on white in dark mode), and `.btn-outline` already falls back to
+    `--color-base-content`.
 - **Icons** use the `phosphor.*` prefix (blade-phosphor-icons), e.g. `phosphor.shield-warning`.
 - No `api/*` routes exist yet; `bootstrap/app.php` still registers the L13 JSON-exception
   default so any future API renders JSON errors.

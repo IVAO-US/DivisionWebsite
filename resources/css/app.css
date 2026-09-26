@@ -88,12 +88,9 @@
         /* Tertiary background - Light neutral for depth */
         --color-base-300: #9E9E9E;
         /* Main text - Strong readable dark */
-        --color-base-content: #22201D
+        --color-base-content: #22201D;
 
         /* === REFINED MODERN STYLING === */
-        /* Button outline */
-        --btn-color: var(--color-base-content);
-
         /* Border radius - Contemporary premium feel */
         --radius-selector: 0.5rem;   /* 12px - modern sophistication */
         --radius-field: 0.25rem;       /* 8px - refined elegance */
@@ -163,9 +160,6 @@
         --color-base-content: #F1F5F9;
 
         /* === REFINED MODERN STYLING (Matching Light Theme) === */
-        /* Button outline */
-        --btn-color: var(--color-base-content);
-
         /* Border radius - Contemporary premium feel */
         --radius-selector: 0.5rem;   /* 12px - modern sophistication */
         --radius-field: 0.25rem;       /* 8px - refined elegance */
