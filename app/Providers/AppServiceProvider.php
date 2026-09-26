@@ -109,6 +109,26 @@ class AppServiceProvider extends ServiceProvider
                 abort(419);
             }
         });
+
+        /*
+         * Send no action's return value to the browser.
+         *
+         * Livewire returns the value of every method a request calls
+         * (effects.returns), and any public method can be called: with(), a
+         * legacy get*Property() or a public helper would hand out the models
+         * they return, every attribute included (the admins' e-mail
+         * addresses). Nothing on the site reads these values: before using
+         * $wire.method().then() or a #[Json] method, exempt it here.
+         */
+        Livewire::listen('response', fn () => function (array $payload): array {
+            foreach ($payload['components'] as $index => $component) {
+                if (isset($component['effects']['returns'])) {
+                    $payload['components'][$index]['effects']['returns'] = array_map(fn () => null, $component['effects']['returns']);
+                }
+            }
+
+            return $payload;
+        });
     }
 
     /**

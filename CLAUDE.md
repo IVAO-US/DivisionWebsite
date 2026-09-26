@@ -260,6 +260,12 @@ set in `config/livewire.php`). Reusable Blade components are in `resources/views
     does an error while rendering; debug mode shows and logs everything.
   - The classification follows Livewire's call stack (`HandleComponents`): after a Livewire
     upgrade, run `ForgedLivewireRequestTest`.
+- **No action's return value reaches the browser**: Livewire returns the value of every
+  method a request calls, and any public method can be called (`with()`, a legacy
+  `get*Property()`, a public helper), which handed out the models they return. A `response`
+  listener in `AppServiceProvider` replaces them with `null`: `$wire.method().then(…)` and
+  `#[Json]` methods get `null`, so exempt them there before using one. Redirects and
+  downloads have effects of their own and still work.
 - **An unnamed `throttle:N,1` counts under one key per account (per IP address for a
   guest), whatever the route**: every unnamed limit shares that counter and compares it to
   its own maximum, so two groups at 60 and 100 spend each other's budget.
