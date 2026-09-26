@@ -184,31 +184,4 @@ class Admin extends Model
             )
         );
     }
-    
-    /**
-     * Add a permission
-     */
-    public function addPermission(AdminPermission $permission): void
-    {
-        $permissions = $this->permissions ?? [];
-        
-        if (!in_array($permission->value, $permissions)) {
-            $permissions[] = $permission->value;
-            $this->permissions = $permissions;
-            $this->save();
-        }
-    }
-    
-    /**
-     * Remove a permission
-     */
-    public function removePermission(AdminPermission $permission): void
-    {
-        $permissions = $this->permissions ?? [];
-        
-        $permissions = array_filter($permissions, fn($perm) => $perm !== $permission->value);
-        
-        $this->permissions = array_values($permissions);
-        $this->save();
-    }
 }

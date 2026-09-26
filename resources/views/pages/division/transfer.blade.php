@@ -4,6 +4,7 @@ use Livewire\Attributes\Title;
 use Livewire\Attributes\Rule; 
 
 use Livewire\Component;
+use Livewire\Attributes\Locked;
 
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
@@ -13,8 +14,15 @@ new
 #[Layout('layouts.app')]
 class extends Component {
     use HasSEO;
-    /* User information */
-    public User $user;
+    /*
+     * The signed-in account, null for a visitor (mount() fills it only when
+     * someone is signed in). Nullable with a default and locked, as the
+     * browser never writes it: a forged update gets Livewire's 419 instead
+     * of a 500 (see auth-button)
+     */
+    #[Locked]
+    public ?User $user = null;
+
     public function mount(): void
     {
 		$this->setSEOWithBreadcrumbs(
@@ -90,19 +98,20 @@ class extends Component {
                     
                     <div class="flex items-center gap-3">
                         <x-icon name="phosphor.mailbox" class="w-6 h-6 text-secondary" />
-                        @guest
+                        {{-- The account the component holds, not the session: a visitor's snapshot replayed once signed in holds none --}}
+                        @if (! $user)
                             <div>
                                 <span>XX-hq@ivao.aero</span>
                                 <div class="text-xs mt-1">
                                     >> where <b>XX</b> is the two-letter designator of <b>your current division</b>.
                                 </div>
                             </div>
-                        @endguest
-                        @auth
+                        @endif
+                        @if ($user)
                             <div>
                                 <span>{{ $user->division }}-hq@ivao.aero</span>
                             </div>
-                        @endauth
+                        @endif
                     </div>
                     
                     <div class="flex items-center gap-3">
@@ -120,19 +129,19 @@ class extends Component {
                 <div class="space-y-3">
                     <div class="flex items-center gap-3">
                         <x-icon name="phosphor.textbox" class="w-6 h-6 text-secondary" />
-                        @guest
+                        @if (! $user)
                             <div>
                                 <span><b>Subject:</b> Division Transfer ######</span>
                                 <div class="text-xs mt-1">
                                     >> Replace ###### with <b>your own VID</b>.
                                 </div>
                             </div>
-                        @endguest
-                        @auth
+                        @endif
+                        @if ($user)
                             <div>
                                 <span><b>Subject:</b> Division Transfer {{ $user->vid }}</span>
                             </div>
-                        @endauth
+                        @endif
                     </div>
 
                     <div class="flex items-center gap-3">

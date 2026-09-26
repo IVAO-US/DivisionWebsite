@@ -32,8 +32,8 @@ use App\Services\SitemapService;
 
 /* -- */
 
-/* Rate limiting (60 requests/minute) */
-Route::middleware(['throttle:60,1'])->group(function () {
+/* Rate limiting: named limiter `pages`, 60 requests/minute (AppServiceProvider) */
+Route::middleware(['throttle:pages'])->group(function () {
 
     /**
      *  Log in
@@ -143,10 +143,10 @@ Route::middleware(['throttle:60,1'])->group(function () {
 
 /**
  * Sitemap + Robots.txt
- * Rate limiting (100 requests/minute)
+ * Rate limiting: named limiter `seo-files`, 100 requests/minute (AppServiceProvider)
  * */
 
-Route::middleware(['throttle:100,1'])->group(function () {
+Route::middleware(['throttle:seo-files'])->group(function () {
     
     Route::get('/robots.txt', function () {
         if (config('seotools.robots.block_in_non_production') && !app()->environment('production')) {

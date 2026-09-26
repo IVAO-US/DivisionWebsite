@@ -44,11 +44,16 @@ return Application::configure(basePath: dirname(__DIR__))
          * The site is reached through Cloudflare, then the local proxy of the
          * Plesk host, and PHP receives that proxy's address as REMOTE_ADDR
          * (127.0.0.1 in the sessions table, checked on 2026-09-23). Every
-         * per-IP limit of routes/web.php (throttle:60,1, throttle:100,1) is
-         * therefore one counter shared by all guests; signed-in members are
-         * counted per account. For the same reason the Livewire update
-         * endpoint carries no throttle: it would be one counter for every
-         * guest's polls and clicks.
+         * per-IP limit of routes/web.php (the named limiters pages and
+         * seo-files, AppServiceProvider) is therefore one counter shared by
+         * all guests; signed-in members are counted per account. For the
+         * same reason the Livewire update endpoint carries no throttle: it
+         * would be one counter for every guest's polls and clicks. Livewire
+         * still limits invalid checksums on its own, per IP address (10 in
+         * 10 minutes, Checksum::enforceRateLimit()): behind the proxy that
+         * counter is shared by everyone, members included, so ten forged
+         * requests turn away everyone's Livewire requests for up to 10
+         * minutes.
          *
          * Trusting the proxies would give each visitor their own counter, but
          * Laravel would then store every visitor's IP address in the sessions

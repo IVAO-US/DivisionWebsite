@@ -69,7 +69,16 @@ touch database/database.sqlite && php artisan migrate --force
 
 `tests/Pest.php` has `RefreshDatabase` **disabled**, so tests run against whatever DB
 the connection points to and expect the tables to already exist (the homepage test hits
-the DB via `HeadlineService`/`AppSetting`). Migrate before testing.
+the DB via `HeadlineService`/`AppSetting`). Migrate before testing. `phpunit.xml` sets
+`DB_DATABASE=testing` without forcing it, so with SQLite export the absolute path in the
+shell, which wins over it:
+`DB_CONNECTION=sqlite DB_DATABASE=$PWD/database/database.sqlite php artisan test`.
+
+Test files that write wrap each test in `DatabaseTransactions` (nothing is dropped) and
+build their accounts with the helpers of `tests/Pest.php` (`createMember()`, `createAdmin()`).
+`componentSnapshot()` and `livewireRoundTrip()` replay a component's snapshot through the
+real Livewire update endpoint, as a forged request would; they render pages
+`withoutVite()`, so they need no asset build (the homepage test still does).
 
 ## Architecture
 
@@ -85,7 +94,7 @@ the DB via `HeadlineService`/`AppSetting`). Migrate before testing.
   - single-argument pages put the arg last; multi-arg pages use query strings.
 - Auth is IVAO OAuth: `/login` redirects into `IvaoController@handleCallback`
   (`/auth/ivao/callback`). Requires `IVAO_CLIENT_ID`/`IVAO_CLIENT_SECRET`/`OPENID_URL`.
-- Middleware groups: `throttle`, `auth`, then `admin`, then `admin.permissions:<perm>`.
+- Middleware groups: `throttle:pages`, `auth`, then `admin`, then `admin.permissions:<perm>`.
 
 ### Livewire SFC pages (`resources/views/pages/**`)
 
@@ -114,6 +123,23 @@ set in `config/livewire.php`). Reusable Blade components are in `resources/views
   when the page loads, so an administrator who loses a permission loses the page's actions at
   once. A component action is only as protected as the route of the page it is mounted on:
   keep new admin pages behind `admin` + `admin.permissions:<perm>` in `routes/web.php`.
+- **Privilege ceiling**: an administrator acts only within the permissions they hold
+  (`AdminPermission::implies()`: a category holds its granular permissions, `*` holds all).
+  - They grant or withdraw only those, and edit or remove another administrator only when
+    they hold every permission of that administrator, before and after the change.
+  - Super administrators are never limited. An administrator without permissions stays
+    within everyone's reach, and nobody edits or removes their own record.
+  - `App\Services\AdminService` is the only place that knows the rule (`grantable()`,
+    `withinRights()`, `canActOnAdmin()`) and the only way to write an admin's permissions
+    or remove an admin (`updatePermissions()`, `removeAdmin()`, which check again).
+  - `admins-list-table` badges an administrator beyond reach ("Beyond your rights", no
+    buttons) and disables the permissions the acting one lacks.
+  - A request beyond the ceiling can only be forged: it gets an `AccessDeniedHttpException`,
+    i.e. the site's 403 page. Laravel does not log it.
+  - The acting administrator is read from the session on every request, never from a
+    public property: a replayed snapshot carries its author's state.
+  - GDPR erasure refuses every administrator: remove the admin record first, which the
+    ceiling guards.
 
 ### Two databases
 
@@ -131,6 +157,7 @@ set in `config/livewire.php`). Reusable Blade components are in `resources/views
 - `SitemapService` — builds `sitemap.xml` manually via spatie `Sitemap::create()` /
   `Url::create()`. Served live at `/sitemap.xml` and regenerated daily to `public/`.
   `public/sitemap.xml` is a generated artifact — do not commit a dev copy.
+- `AdminService` — the privilege ceiling of the admin area (see "Admin permission system").
 - `SeoService`, `RecurringEventService`, plus traits `HasSEO`, `BreadcrumbsTrait`.
 
 ### Scheduled tasks & middleware (`bootstrap/app.php`)
@@ -144,11 +171,28 @@ set in `config/livewire.php`). Reusable Blade components are in `resources/views
   otherwise store any file any signed-in user (any IVAO member, through the SSO) sends. To
   use one of them, protect its route first (validation, permission, throttle), then remove
   its name from `BlockUnusedVendorRoutes::ROUTES`.
+- **Rate limiting**: named limiters, defined in `AppServiceProvider::boot()`, each with a
+  counter of its own, keyed by account (signed in) or IP address (guests):
+
+  | Limiter | Budget | Routes |
+  |---|---|---|
+  | `pages` | 60 / min | every page of `routes/web.php` |
+  | `seo-files` | 100 / min | `robots.txt`, `sitemap.xml` |
+
+  - The Livewire update endpoint has no throttle (see below). Livewire still limits invalid
+    checksums itself: 10 per IP address in 10 minutes, then a 429 on every Livewire request
+    from that address.
+  - Livewire's upload endpoint keeps its default `throttle:60,1`, as no component uploads.
+    A site that adds an upload gives it a named limiter through
+    `livewire.temporary_file_upload.middleware`.
 - No `trustProxies()`, on purpose: behind Cloudflare and the Plesk host's local proxy, PHP
-  sees `127.0.0.1`, so every per-IP `throttle:` limit is one counter shared by all guests,
-  and the Livewire update endpoint has no throttle for that reason. Trusting the proxies
-  would store visitor IP addresses in the `sessions` table, which the privacy policy does
-  not cover. Read the comment in `bootstrap/app.php` before changing either.
+  sees `127.0.0.1`.
+  - Every per-IP limit is therefore one counter per limiter shared by all guests, and
+    Livewire's checksum limit is one counter for everyone, members included.
+  - The Livewire update endpoint has no throttle for that reason.
+  - Trusting the proxies would store visitor IP addresses in the `sessions` table, which
+    the privacy policy does not cover.
+  - Read the comment in `bootstrap/app.php` before changing either.
 - Health endpoint at `/laravel-health`.
 
 ## Conventions & gotchas
@@ -179,6 +223,26 @@ set in `config/livewire.php`). Reusable Blade components are in `resources/views
   `$this->success("Tour '" . e($tourTitle) . "' deleted successfully")`. Member names come
   from the IVAO profile, so any IVAO member chooses them, and the CSP keeps `'unsafe-inline'`
   for Livewire/Alpine: escaping is the XSS defence.
+- **A Livewire public property that no `wire:model` writes still receives forged updates**,
+  deep paths included (`user.name`). Give it `#[Locked]` **and** a default, as `auth-button`,
+  the navbar and the transfer and GCA pages do (`#[Locked] public ?User $user = null;`):
+  Livewire then refuses the write with a 419 before reading the property.
+  - Typed with no default, it stays uninitialized for a visitor, and reading it is a fatal
+    error (500). Nullable alone still ends in a 500: Livewire 4.4.6 has no synthesizer to
+    write into `null`.
+  - Let the template test the property (`@if ($user)`), not `@auth`: a visitor's snapshot
+    replayed in a session signed in since holds no account.
+  - The 419 is still logged (`CannotUpdateLockedPropertyException` is reported).
+  - `#[Locked]` does not cover `calls`: the parameters of an action or of an `#[On]`
+    listener come from the browser and are checked like any input.
+  - A forged deep write into any other public scalar (`search.x`) also ends in a 500 under
+    Livewire 4.4.6: that cannot be closed component by component.
+- **An unnamed `throttle:N,1` counts under one key per account (per IP address for a
+  guest), whatever the route**: every unnamed limit shares that counter and compares it to
+  its own maximum, so two groups at 60 and 100 spend each other's budget.
+  - A limit that must count alone takes a named limiter (`RateLimiter::for()`) **with
+    `->by()`**: without it, the key is empty and one counter serves everybody.
+  - A route that names a limiter nobody defined answers 500 (`MissingRateLimiterException`).
 - **Fonts are self-hosted**: Poppins and Nunito Sans are Google's own WOFF2 files and CSS
   (`resources/fonts/`, `resources/css/{poppins,nunito-sans}.css`, imported at the top of
   `app.css` and bundled by Vite); the error pages use Dosis from
