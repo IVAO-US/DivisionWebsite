@@ -206,6 +206,9 @@ set in `config/livewire.php`). Reusable Blade components are in `resources/views
   - The `sessions` table stores no IP address (`App\Session\DatabaseSessionHandler`,
     registered in `AppServiceProvider`): the privacy policy does not cover them.
   - Read the comment in `bootstrap/app.php` before changing any of this.
+- **Error log**: the same error is logged at most ten times a minute for each place it is
+  thrown from (`$exceptions->throttle()`): the log is one file (`LOG_STACK=single`), which
+  a client repeating a request that fails would otherwise fill.
 - Health endpoint at `/laravel-health`.
 
 ## Conventions & gotchas

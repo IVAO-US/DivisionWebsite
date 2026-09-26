@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -83,4 +84,11 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withExceptions(function (Exceptions $exceptions) {
         // Render exceptions as JSON for API routes (Laravel 13 skeleton default)
         $exceptions->shouldRenderJsonWhen(fn (Request $request) => $request->is('api/*') || $request->expectsJson());
+
+        /*
+         * Log a repeated error at most ten times a minute for each place it
+         * is thrown from. The log is one file (LOG_STACK=single), which a
+         * client repeating a request that fails would otherwise fill.
+         */
+        $exceptions->throttle(fn (Throwable $e) => Limit::perMinute(10)->by($e::class.'@'.$e->getFile().':'.$e->getLine()));
     })->create();
