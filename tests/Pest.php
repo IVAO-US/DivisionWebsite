@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Admin;
 use App\Models\User;
 use Illuminate\Testing\TestResponse;
 use Livewire\Livewire;
@@ -70,6 +71,21 @@ function createMember(array $attributes = []): User
         'division' => 'US',
         ...$attributes,
     ]);
+}
+
+/**
+ * A member who is an administrator holding these permissions
+ *
+ * @param  list<string>  $permissions  AdminPermission values ('*' for a super administrator)
+ * @param  array<string, mixed>  $attributes
+ */
+function createAdmin(array $permissions = [], array $attributes = []): User
+{
+    $user = createMember($attributes);
+
+    Admin::create(['vid' => $user->vid, 'permissions' => $permissions]);
+
+    return $user;
 }
 
 /**

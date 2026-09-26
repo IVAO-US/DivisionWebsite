@@ -2,13 +2,17 @@
 use Livewire\Component;
 use Livewire\Attributes\Validate;
 use Livewire\Attributes\On;
+use Livewire\Attributes\Computed;
+use Livewire\Attributes\Locked;
 
 use App\Models\Admin;
 use App\Models\User;
 use App\Enums\AdminPermission;
+use App\Services\AdminService;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Builder;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 use Mary\Traits\Toast;
 
@@ -18,17 +22,20 @@ new class extends Component {
     /* Search */
     public string $search = '';
 
-    /* Current user for protection */
-    public int $currentUserVid;
-    public ?Admin $currentUserAdmin = null;
-
-    /* Edit modal */
+    /*
+     * Edit modal. The administrator edited and the permissions ticked are
+     * written by the server only (the checkboxes call togglePermission()):
+     * locked, a forged update gets a 419 (CLAUDE.md, "Conventions & gotchas")
+     */
     public bool $editModal = false;
+    #[Locked]
     public ?Admin $editingAdmin = null;
+    #[Locked]
     public array $selectedPermissions = [];
 
-    /* Delete confirmation */
+    /* Delete confirmation (the administrator is set by the server only) */
     public bool $deleteModal = false;
+    #[Locked]
     public ?Admin $deletingAdmin = null;
 
     /* Refresh tracking */
@@ -65,8 +72,6 @@ new class extends Component {
     public function mount($search = '')
     {
         $this->search = $search;
-        $this->currentUserVid = Auth::user()->vid;
-        $this->currentUserAdmin = Admin::where('vid', $this->currentUserVid)->first();
     }
 
     #[On('admin-added')]
@@ -121,39 +126,62 @@ new class extends Component {
         return $categories;
     }
 
+    /*
+     * The administrator acting: read again from the session on every
+     * request, never kept in the component's state, which a snapshot
+     * replayed by another account would carry
+     */
+    private function actor(): ?Admin
+    {
+        return Admin::where('vid', Auth::user()->vid)->first();
+    }
+
+    /* Permission values the acting administrator may grant or withdraw (AdminService::grantable()) */
+    #[Computed]
+    public function grantable(): array
+    {
+        return app(AdminService::class)->grantable($this->actor());
+    }
+
     /* Security helper method using existing infrastructure */
     private function checkPermissions(): bool
     {
-        // Use existing canString method on current user's admin instance
-        return $this->currentUserAdmin?->canString('admins_edit_permissions') ?? false;
+        return $this->actor()?->canString('admins_edit_permissions') ?? false;
     }
 
     /* Edit admin permissions */
-    public function editAdmin(int $adminId)
+    public function editAdmin(int $adminId, AdminService $service)
     {
         if (!$this->checkPermissions()) {
             $this->error('Insufficient permissions to modify administrators');
             return;
         }
 
-        $this->editingAdmin = Admin::with('user')->find($adminId);
-        if (!$this->editingAdmin) {
+        // Kept only once every check passed: the component never holds an administrator it refused
+        $admin = Admin::with('user')->find($adminId);
+        if (!$admin) {
             $this->error('Administrator not found');
             return;
         }
 
-        if ($this->editingAdmin->vid === $this->currentUserVid) {
+        $actor = $this->actor();
+
+        if ($admin->is($actor)) {
             $this->error('You cannot modify your own permissions');
             return;
         }
 
+        // The table offers no edit button on an administrator beyond the acting one's rights
+        throw_unless($service->canActOnAdmin($actor, $admin), AccessDeniedHttpException::class, AdminService::BEYOND_RIGHTS);
+
         // Load current permissions
-        $this->selectedPermissions = $this->editingAdmin->permissions ?? [];
+        $this->editingAdmin = $admin;
+        $this->selectedPermissions = $admin->permissions ?? [];
         $this->editModal = true;
     }
 
     /* Update admin permissions */
-    public function savePermissions()
+    public function savePermissions(AdminService $service)
     {
         if (!$this->editingAdmin) {
             return;
@@ -164,13 +192,29 @@ new class extends Component {
             return;
         }
 
-        // Update permissions
-        $this->editingAdmin->update([
-            'permissions' => $this->selectedPermissions
-        ]);
+        // Read again: the administrator may have gained rights since the window opened
+        $actor = $this->actor();
+        $target = Admin::with('user')->findOrFail($this->editingAdmin->id);
+
+        // The window offers neither the acting administrator's own record, nor an
+        // administrator beyond their rights, nor a permission they do not hold
+        throw_if($target->is($actor), AccessDeniedHttpException::class, AdminService::BEYOND_RIGHTS);
+        throw_unless(
+            $service->canActOnAdmin($actor, $target) && $service->withinRights($actor, $this->selectedPermissions),
+            AccessDeniedHttpException::class,
+            AdminService::BEYOND_RIGHTS
+        );
+
+        // Update permissions (AdminService checks the ceiling again)
+        try {
+            $service->updatePermissions($target, $this->selectedPermissions, $actor);
+        } catch (\Exception $e) {
+            $this->error(e($e->getMessage()));
+            return;
+        }
 
         // MaryUI renders toast titles as HTML (x-html): escape user-controlled values
-        $this->success("Permissions updated for " . e($this->editingAdmin->user->full_name));
+        $this->success("Permissions updated for " . e($target->user->full_name));
         $this->closeEditModal();
     }
 
@@ -183,37 +227,64 @@ new class extends Component {
     }
 
     /* Delete admin confirmation */
-    public function confirmDelete(int $adminId)
+    public function confirmDelete(int $adminId, AdminService $service)
     {
         if (!$this->checkPermissions()) {
             $this->error('Insufficient permissions to remove administrators');
             return;
         }
 
-        $this->deletingAdmin = Admin::with('user')->find($adminId);
-        if (!$this->deletingAdmin) {
+        // Kept only once every check passed: the component never holds an administrator it refused
+        $admin = Admin::with('user')->find($adminId);
+        if (!$admin) {
             $this->error('Administrator not found');
             return;
         }
 
-        if ($this->deletingAdmin->vid === $this->currentUserVid) {
+        $actor = $this->actor();
+
+        if ($admin->is($actor)) {
             $this->error('You cannot remove yourself');
             return;
         }
 
+        // The table offers no delete button on an administrator beyond the acting one's rights
+        throw_unless($service->canActOnAdmin($actor, $admin), AccessDeniedHttpException::class, AdminService::BEYOND_RIGHTS);
+
+        $this->deletingAdmin = $admin;
         $this->deleteModal = true;
     }
 
     /* Delete admin */
-    public function deleteAdmin()
+    public function deleteAdmin(AdminService $service)
     {
         if (!$this->deletingAdmin) {
             return;
         }
 
-        $adminName = $this->deletingAdmin->user->full_name;
-        $this->deletingAdmin->delete();
-        
+        if (!$this->checkPermissions()) {
+            $this->error('Insufficient permissions to remove administrators');
+            return;
+        }
+
+        // Read again: the administrator may have gained rights since the window opened
+        $actor = $this->actor();
+        $target = Admin::with('user')->findOrFail($this->deletingAdmin->id);
+
+        // The table offers neither the acting administrator's own record nor an administrator beyond their rights
+        throw_if($target->is($actor), AccessDeniedHttpException::class, AdminService::BEYOND_RIGHTS);
+        throw_unless($service->canActOnAdmin($actor, $target), AccessDeniedHttpException::class, AdminService::BEYOND_RIGHTS);
+
+        $adminName = $target->user->full_name;
+
+        // AdminService checks the ceiling again
+        try {
+            $service->removeAdmin($target, $actor);
+        } catch (\Exception $e) {
+            $this->error(e($e->getMessage()));
+            return;
+        }
+
         // MaryUI renders toast titles as HTML (x-html): escape user-controlled values
         $this->success("Administrator " . e($adminName) . " removed successfully");
         $this->closeDeleteModal();
@@ -251,6 +322,9 @@ new class extends Component {
     /* Toggle individual permission */
     public function togglePermission(string $permissionValue)
     {
+        // The window disables the permissions the acting administrator does not hold
+        throw_unless(in_array($permissionValue, $this->grantable, true), AccessDeniedHttpException::class, AdminService::BEYOND_RIGHTS);
+
         if ($this->isPermissionSelected($permissionValue)) {
             $this->selectedPermissions = array_diff($this->selectedPermissions, [$permissionValue]);
         } else {
@@ -266,18 +340,20 @@ new class extends Component {
         return $this->isPermissionSelected('*');
     }
 
-    /* Check if category is fully selected */
+    /* Permission values of a category the acting administrator may grant or withdraw */
+    public function getGrantableInCategory(string $category): array
+    {
+        $categoryPermissionValues = array_map(fn($p) => $p->value, $this->getPermissionCategories()[$category] ?? []);
+
+        return array_values(array_intersect($categoryPermissionValues, $this->grantable));
+    }
+
+    /* Check if category is fully selected, as far as the acting administrator may tick it */
     public function isCategoryFullySelected(string $category): bool
     {
-        $categoryPermissions = $this->getPermissionCategories()[$category] ?? [];
-        
-        foreach ($categoryPermissions as $permission) {
-            if (!$this->isPermissionSelected($permission->value)) {
-                return false;
-            }
-        }
-        
-        return count($categoryPermissions) > 0;
+        $grantable = $this->getGrantableInCategory($category);
+
+        return count($grantable) > 0 && array_diff($grantable, $this->selectedPermissions) === [];
     }
 
     /* Check if category is partially selected */
@@ -295,34 +371,30 @@ new class extends Component {
         return $selectedCount > 0 && $selectedCount < count($categoryPermissions);
     }
 
-    /* Toggle all permissions in a category */
+    /* Toggle all permissions in a category: those the acting administrator holds, and only those */
     public function toggleCategoryPermissions(string $category)
     {
+        $categoryPermissionValues = $this->getGrantableInCategory($category);
+
+        // The window disables a category without any permission the acting administrator holds
+        throw_if($categoryPermissionValues === [], AccessDeniedHttpException::class, AdminService::BEYOND_RIGHTS);
+
+        // New keys for the individual checkboxes, so that they show the new selection
         $this->refreshKey = uniqid();
 
-        $categoryPermissions = $this->getPermissionCategories()[$category] ?? [];
-        $isFullySelected = $this->isCategoryFullySelected($category);
-        
-        // Get all permission values for this category
-        $categoryPermissionValues = array_map(fn($p) => $p->value, $categoryPermissions);
-        
-        if ($isFullySelected) {
-            // ALWAYS remove ALL permissions from this category when unchecking
+        if ($this->isCategoryFullySelected($category)) {
+            // Remove them all when unchecking
             $this->selectedPermissions = array_diff($this->selectedPermissions, $categoryPermissionValues);
         } else {
-            // Add all missing permissions from this category
+            // Add the missing ones
             foreach ($categoryPermissionValues as $permValue) {
                 if (!in_array($permValue, $this->selectedPermissions)) {
                     $this->selectedPermissions[] = $permValue;
                 }
             }
         }
-        
+
         $this->selectedPermissions = array_values($this->selectedPermissions);
-        
-        // Force Livewire to refresh the UI to update individual checkboxes
-        $this->dispatch('$refresh');
-        $this->skipRender = false;
     }
 
     /* Get selected granular permission count for a category */
@@ -361,13 +433,20 @@ new class extends Component {
     }
 
     /* Volt with() method */
-    public function with(): array
+    public function with(AdminService $service): array
     {
+        $admins = $this->admins;
+        $actor = $this->actor();
+
         return [
-            'admins' => $this->admins,
+            'admins' => $admins,
             'search' => $this->search,
             'permissionCategories' => $this->getPermissionCategories(),
             'refreshKey' => $this->refreshKey,
+            // The acting administrator's own record: shown, never acted on
+            'actorId' => $actor?->id,
+            // Administrators holding a permission the acting one lacks: shown, never acted on (AdminService::canActOnAdmin())
+            'beyond' => $admins->reject(fn (Admin $admin) => $service->canActOnAdmin($actor, $admin))->pluck('id')->all(),
         ];
     }
 }; 
@@ -446,20 +525,25 @@ new class extends Component {
             @endif
         @endscope
 
-        @scope('actions', $admin)
-            @if($admin->vid !== $this->currentUserVid)
-                <div class="flex gap-2 justify-right">
-                    <x-button 
-                        icon="phosphor.pen" 
-                        class="btn-outline btn-sm btn-secondary"
-                        wire:click="editAdmin({{ $admin->id }})"
-                    />
-                    <x-button 
-                        icon="phosphor.trash" 
-                        class="btn-outline btn-error btn-sm"
-                        wire:click="confirmDelete({{ $admin->id }})"
-                    />
-                </div>
+        @scope('actions', $admin, $beyond, $actorId)
+            @if($admin->id !== $actorId)
+                {{-- An administrator holding a permission the acting one lacks: shown, never acted on --}}
+                @if(in_array($admin->id, $beyond, true))
+                    <x-badge value="Beyond your rights" class="badge-warning whitespace-nowrap" />
+                @else
+                    <div class="flex gap-2 justify-right">
+                        <x-button
+                            icon="phosphor.pen"
+                            class="btn-outline btn-sm btn-secondary"
+                            wire:click="editAdmin({{ $admin->id }})"
+                        />
+                        <x-button
+                            icon="phosphor.trash"
+                            class="btn-outline btn-error btn-sm"
+                            wire:click="confirmDelete({{ $admin->id }})"
+                        />
+                    </div>
+                @endif
             @endif
         @endscope
     </x-table>
@@ -470,10 +554,15 @@ new class extends Component {
                 {{-- Admin Info --}}
                 <div class="flex items-center gap-4 p-4 bg-base-100 rounded-lg border">
                     <div>
-                        <h5 class="font-bold">{{ $editingAdmin->name }}</h5>
+                        <h5 class="font-bold">{{ $editingAdmin->user->full_name }}</h5>
                         <p class="text-sm opacity-70">VID: {{ $editingAdmin->vid }}</p>
                     </div>
                 </div>
+
+                {{-- The permissions the acting administrator does not hold are shown, never granted --}}
+                @if(count($this->grantable) < count(AdminPermission::cases()))
+                    <x-alert title="Some permissions are beyond your rights" description="You can only grant or withdraw the permissions you hold yourself." icon="phosphor.info" class="alert-info" />
+                @endif
 
                 {{-- Permissions by Category --}}
                 <div class="space-y-6">
@@ -485,12 +574,19 @@ new class extends Component {
                                 Super Administrator
                             </h4>
                             
-                            <label class="flex items-center gap-3 cursor-pointer hover:bg-base-200 p-2 rounded">
+                            @php $canGrantAll = in_array('*', $this->grantable, true); @endphp
+                            <label @class([
+                                'flex items-center gap-3 p-2 rounded',
+                                'cursor-pointer hover:bg-base-200' => $canGrantAll,
+                                'cursor-not-allowed opacity-50' => ! $canGrantAll,
+                            ])>
                                 <input 
                                     type="checkbox" 
+                                    value="*"
                                     class="checkbox checkbox-sm checkbox-accent"
                                     wire:click="togglePermission('*')"
                                     @checked($this->isPermissionSelected('*'))
+                                    @disabled(! $canGrantAll)
                                 />
                                 <div class="flex-1">
                                     <div class="font-medium text-sm">All permissions</div>
@@ -512,16 +608,22 @@ new class extends Component {
 
                                 <div class="{{ $this->getModalCardClasses($category, $index) }}">
                                     <div class="card-body p-2">
+                                        @php
+                                            $isFullySelected = $this->isCategoryFullySelected($category);
+                                            $isPartiallySelected = $this->isCategoryPartiallySelected($category);
+                                            // A category without any permission the acting administrator holds is shown, never ticked
+                                            $hasGrantable = $this->getGrantableInCategory($category) !== [];
+                                        @endphp
+
                                         {{-- Category Header (Clickable) --}}
                                         <div 
-                                            class="card-title text-base flex items-center gap-2 cursor-pointer hover:bg-base-200 p-2 rounded transition-colors"
-                                            wire:click="toggleCategoryPermissions('{{ $category }}')"
+                                            @class([
+                                                'card-title text-base flex items-center gap-2 p-2 rounded transition-colors',
+                                                'cursor-pointer hover:bg-base-200' => $hasGrantable,
+                                                'cursor-not-allowed opacity-50' => ! $hasGrantable,
+                                            ])
+                                            @if($hasGrantable) wire:click="toggleCategoryPermissions('{{ $category }}')" @endif
                                         >
-                                            @php
-                                                $isFullySelected = $this->isCategoryFullySelected($category);
-                                                $isPartiallySelected = $this->isCategoryPartiallySelected($category);
-                                            @endphp
-                                            
                                             <input 
                                                 type="checkbox" 
                                                 class="checkbox checkbox-sm {{ AdminPermission::categoryColorProp($category, 'checkbox') }}"
@@ -531,6 +633,7 @@ new class extends Component {
                                                 @endif
                                                 onclick="event.stopPropagation();"
                                                 wire:click="toggleCategoryPermissions('{{ $category }}')"
+                                                @disabled(! $hasGrantable)
                                             />
                                             <x-icon name="{{ AdminPermission::categoryIcon($category) }}" class="w-5 h-5" />
                                             <span>{{ $category }}</span>
@@ -543,13 +646,20 @@ new class extends Component {
 										<div>
 											@foreach($permissions as $permission)
 												@if(str_contains($permission->value, '_'))
-													<label class="flex items-center gap-3 cursor-pointer hover:bg-base-200 p-2 rounded ml-4">
+													@php $canGrant = in_array($permission->value, $this->grantable, true); @endphp
+													<label @class([
+														'flex items-center gap-3 p-2 rounded ml-4',
+														'cursor-pointer hover:bg-base-200' => $canGrant,
+														'cursor-not-allowed opacity-50' => ! $canGrant,
+													])>
 														<input 
 															type="checkbox" 
+															value="{{ $permission->value }}"
 															class="checkbox checkbox-sm {{ AdminPermission::categoryColorProp($category, 'checkbox') }}"
 															wire:click="togglePermission('{{ $permission->value }}')"
 															wire:key="perm-{{ $permission->value }}-{{ $this->refreshKey }}"
 															@checked($this->isPermissionSelected($permission->value))
+															@disabled(! $canGrant)
 														/>
 														<div class="flex-1">
 															<div class="font-medium text-sm">{{ $permission->description() }}</div>

@@ -75,7 +75,7 @@ shell, which wins over it:
 `DB_CONNECTION=sqlite DB_DATABASE=$PWD/database/database.sqlite php artisan test`.
 
 Test files that write wrap each test in `DatabaseTransactions` (nothing is dropped) and
-build their accounts with the helpers of `tests/Pest.php` (`createMember()`…).
+build their accounts with the helpers of `tests/Pest.php` (`createMember()`, `createAdmin()`).
 `componentSnapshot()` and `livewireRoundTrip()` replay a component's snapshot through the
 real Livewire update endpoint, as a forged request would; they render pages
 `withoutVite()`, so they need no asset build (the homepage test still does).
@@ -123,6 +123,23 @@ set in `config/livewire.php`). Reusable Blade components are in `resources/views
   when the page loads, so an administrator who loses a permission loses the page's actions at
   once. A component action is only as protected as the route of the page it is mounted on:
   keep new admin pages behind `admin` + `admin.permissions:<perm>` in `routes/web.php`.
+- **Privilege ceiling**: an administrator acts only within the permissions they hold
+  (`AdminPermission::implies()`: a category holds its granular permissions, `*` holds all).
+  - They grant or withdraw only those, and edit or remove another administrator only when
+    they hold every permission of that administrator, before and after the change.
+  - Super administrators are never limited. An administrator without permissions stays
+    within everyone's reach, and nobody edits or removes their own record.
+  - `App\Services\AdminService` is the only place that knows the rule (`grantable()`,
+    `withinRights()`, `canActOnAdmin()`) and the only way to write an admin's permissions
+    or remove an admin (`updatePermissions()`, `removeAdmin()`, which check again).
+  - `admins-list-table` badges an administrator beyond reach ("Beyond your rights", no
+    buttons) and disables the permissions the acting one lacks.
+  - A request beyond the ceiling can only be forged: it gets an `AccessDeniedHttpException`,
+    i.e. the site's 403 page. Laravel does not log it.
+  - The acting administrator is read from the session on every request, never from a
+    public property: a replayed snapshot carries its author's state.
+  - GDPR erasure refuses every administrator: remove the admin record first, which the
+    ceiling guards.
 
 ### Two databases
 
@@ -140,6 +157,7 @@ set in `config/livewire.php`). Reusable Blade components are in `resources/views
 - `SitemapService` — builds `sitemap.xml` manually via spatie `Sitemap::create()` /
   `Url::create()`. Served live at `/sitemap.xml` and regenerated daily to `public/`.
   `public/sitemap.xml` is a generated artifact — do not commit a dev copy.
+- `AdminService` — the privilege ceiling of the admin area (see "Admin permission system").
 - `SeoService`, `RecurringEventService`, plus traits `HasSEO`, `BreadcrumbsTrait`.
 
 ### Scheduled tasks & middleware (`bootstrap/app.php`)
