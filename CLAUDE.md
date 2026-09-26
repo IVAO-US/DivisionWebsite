@@ -166,11 +166,12 @@ set in `config/livewire.php`). Reusable Blade components are in `resources/views
   (`withoutOverlapping`, `onOneServer`, `runInBackground`).
 - Global middleware: `App\Http\Middleware\SecurityHeaders` (appended to the web stack).
 - `web` group: `App\Http\Middleware\BlockUnusedVendorRoutes` is prepended and answers 404 on
-  the routes MaryUI registers itself and the site does not use (`mary.upload`,
-  `mary.spotlight`, `mary.toogle-sidebar`), before the session starts. `mary.upload` would
-  otherwise store any file any signed-in user (any IVAO member, through the SSO) sends. To
-  use one of them, protect its route first (validation, permission, throttle), then remove
-  its name from `BlockUnusedVendorRoutes::ROUTES`.
+  the routes MaryUI and Livewire register themselves and the site does not use
+  (`mary.upload`, `mary.spotlight`, `mary.toogle-sidebar`, `livewire.upload-file`,
+  `livewire.preview-file`), before the session starts. `mary.upload` would otherwise store
+  any file any signed-in user (any IVAO member, through the SSO) sends. To use one of them,
+  protect its route first (validation, permission, throttle), then remove its name from
+  `BlockUnusedVendorRoutes::ROUTES`.
 - **Rate limiting**: named limiters, defined in `AppServiceProvider::boot()`, each with a
   counter of its own, keyed by account (signed in) or visitor address (guests, see
   "Trusted proxies"):
@@ -191,9 +192,9 @@ set in `config/livewire.php`). Reusable Blade components are in `resources/views
     on every Livewire request from it, the raw address as cache key) is off: a
     `checksum.fail` listener answers the 419 before Livewire counts the failure, and
     `livewire-update` bounds the sender.
-  - Livewire's upload endpoint keeps its default `throttle:60,1`, as no component uploads.
-    A site that adds an upload gives it a named limiter through
-    `livewire.temporary_file_upload.middleware`.
+  - Livewire's upload endpoint is blocked (404), as no component uploads. A site that adds
+    an upload removes it from `BlockUnusedVendorRoutes::ROUTES` and gives it a named limiter
+    through `livewire.temporary_file_upload.middleware`.
 - **Trusted proxies**: Cloudflare and the Plesk host's local proxy, for `X-Forwarded-For`
   only (`bootstrap/app.php`, `App\Http\ClientAddress`). PHP sees `127.0.0.1`; the visitor's
   address is the right-most one of the header that no trusted proxy added.

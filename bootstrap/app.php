@@ -68,9 +68,11 @@ return Application::configure(basePath: dirname(__DIR__))
          * MaryUI registers an upload, a spotlight and a sidebar-toggle route
          * itself, outside the throttle groups of routes/web.php, and its
          * upload stores whatever file a signed-in user sends - here, any IVAO
-         * member who logs in through the SSO. Prepended to the `web` group,
-         * the check runs before the session starts, so these paths create no
-         * session row either (see the middleware to enable one of them).
+         * member who logs in through the SSO. Livewire registers a file upload
+         * and preview route, of no use to a site without a file input.
+         * Prepended to the `web` group, the check runs before the session
+         * starts, so these paths create no session row either (see the
+         * middleware to enable one of them).
          */
         $middleware->web(prepend: [
             BlockUnusedVendorRoutes::class,
