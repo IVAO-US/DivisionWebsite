@@ -74,7 +74,7 @@ new class extends Component {
     <div class="lg:hidden">
         <x-card class="shadow-lg">
             <h3 class="!text-center font-bold text-primary !mb-5">Flight Operations</h3>
-            <x-tabs wire:model="activeTab"
+            <x-tabs id="flight-ops-tabs" wire:model="activeTab"
                     class="bg-base-100 !p-3 !mb-4 rounded-lg font-semibold whitespace-nowrap overflow-x-auto w-fit mx-auto"
                     active-class="tab-active bg-primary p-3 rounded-lg !text-white font-semibold"
                     label-class="p-3 font-semibold"

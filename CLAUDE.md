@@ -316,6 +316,10 @@ set in `config/livewire.php`). Reusable Blade components are in `resources/views
   - Leave `--btn-color` to daisyUI: set on a theme, it becomes the background of every
     default button (white on white in dark mode), and `.btn-outline` already falls back to
     `--color-base-content`.
+- **Give every `<x-tabs>` of a page its own `id`**: MaryUI derives a tab bar's id from its
+  attributes, and each `<x-tab>` teleports its label into `#<id>-labels`. Two bars with the
+  same attributes (the homepage's mobile Division Highlights and Flight Operations bars) got
+  the same id, so every label landed in the first bar.
 - **Icons** use the `phosphor.*` prefix (blade-phosphor-icons), e.g. `phosphor.shield-warning`.
 - No `api/*` routes exist yet; `bootstrap/app.php` still registers the L13 JSON-exception
   default so any future API renders JSON errors.
