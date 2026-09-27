@@ -8,7 +8,7 @@ use Livewire\Attributes\Locked;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 
-use Mary\Traits\Toast;
+use App\Support\Toast;
 use App\Traits\HasSEO;
 
 new 

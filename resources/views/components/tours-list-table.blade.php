@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Support\Str;
 
-use Mary\Traits\Toast;
+use App\Support\Toast;
 
 new class extends Component {
     use Toast;

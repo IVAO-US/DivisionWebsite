@@ -9,7 +9,7 @@ use App\Models\Admin;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
-use Mary\Traits\Toast;
+use App\Support\Toast;
 
 new 
 #[Layout('layouts.app')]

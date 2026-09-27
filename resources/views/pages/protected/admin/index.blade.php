@@ -4,7 +4,7 @@ use Livewire\Attributes\Locked;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
-use Mary\Traits\Toast;
+use App\Support\Toast;
 use Illuminate\Support\Facades\Auth;
 use App\Enums\AdminPermission;
 use App\Models\User;

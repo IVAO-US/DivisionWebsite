@@ -5,7 +5,7 @@ use Livewire\Attributes\Computed;
 use Livewire\Component;
 use App\Models\VirtualAirline;
 
-use Mary\Traits\Toast;
+use App\Support\Toast;
 use App\Traits\HasSEO;
 
 new 

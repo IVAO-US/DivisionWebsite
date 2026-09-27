@@ -7,7 +7,7 @@ use App\Models\User;
 use App\Http\Controllers\IvaoController;
 use Illuminate\Support\Facades\Auth;
 
-use Mary\Traits\Toast;
+use App\Support\Toast;
 
 new class extends Component
 {
