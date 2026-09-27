@@ -14,7 +14,10 @@ use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\ServiceProvider;
+use Livewire\Component;
+use Livewire\Exceptions\MethodNotFoundException;
 use Livewire\Livewire;
+use Mary\Traits\Toast;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -40,6 +43,27 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        /*
+         * Refuse browser calls of MaryUI's toast methods.
+         *
+         * Mary\Traits\Toast adds toast(), success(), warning(), error() and
+         * info() as public methods, and the browser can call any public
+         * method of a component. toast() compiles its icon with
+         * Blade::render(): a forged icon would be a Blade template run on the
+         * server, reachable without an account on any public page using the
+         * trait (the homepage). The `call` event fires before the method runs
+         * (HandleComponents::callMethods), so Blade::render() is never
+         * reached; a component's own $this->success(...) is a direct PHP call
+         * and does not pass here. MethodNotFoundException is the refusal of an
+         * unknown method: an unlogged 419 outside debug.
+         */
+        Livewire::listen('call', function (Component $component, string $method) {
+            if (in_array($method, ['toast', 'success', 'warning', 'error', 'info'], true)
+                && in_array(Toast::class, class_uses_recursive($component), true)) {
+                throw new MethodNotFoundException($method);
+            }
+        });
+
         /*
          * Re-apply the admin route guards to Livewire round trips.
          *
