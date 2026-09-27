@@ -88,12 +88,9 @@
         /* Tertiary background - Light neutral for depth */
         --color-base-300: #9E9E9E;
         /* Main text - Strong readable dark */
-        --color-base-content: #22201D
+        --color-base-content: #22201D;
 
         /* === REFINED MODERN STYLING === */
-        /* Button outline */
-        --btn-color: var(--color-base-content);
-
         /* Border radius - Contemporary premium feel */
         --radius-selector: 0.5rem;   /* 12px - modern sophistication */
         --radius-field: 0.25rem;       /* 8px - refined elegance */
@@ -163,9 +160,6 @@
         --color-base-content: #F1F5F9;
 
         /* === REFINED MODERN STYLING (Matching Light Theme) === */
-        /* Button outline */
-        --btn-color: var(--color-base-content);
-
         /* Border radius - Contemporary premium feel */
         --radius-selector: 0.5rem;   /* 12px - modern sophistication */
         --radius-field: 0.25rem;       /* 8px - refined elegance */
@@ -515,6 +509,50 @@
     /* MaryUI 2.9 code en dur un conteneur `tabs tabs-border` ; neutraliser la barre animée de 3px */
     .tabs-border > .tab::before {
         display: none;
+    }
+
+    /*
+     * Tables wider than their card scroll sideways: MaryUI's <x-table> and
+     * the GDPR logs, whose <table> sits right in an .overflow-x-auto box.
+     * Keep their scrollbar visible when idle: a styled ::-webkit-scrollbar is
+     * never an overlay (Chrome, Edge, Safari on macOS, Chrome on Android).
+     * Chrome ignores these pseudo-elements once scrollbar-color is set, and
+     * the box inherits it from :root: hence `auto` here.
+     */
+    .overflow-x-auto:has(> table) {
+        scrollbar-color: auto;
+        scrollbar-width: auto;
+    }
+
+    .overflow-x-auto:has(> table)::-webkit-scrollbar {
+        height: 0.5rem;
+    }
+
+    .overflow-x-auto:has(> table)::-webkit-scrollbar-track {
+        background-color: var(--color-base-200);
+        border-radius: 9999px;
+    }
+
+    .overflow-x-auto:has(> table)::-webkit-scrollbar-thumb {
+        background-color: var(--color-secondary);
+        border-radius: 9999px;
+    }
+
+    /*
+     * Firefox, and every browser on iOS, only overlay their scrollbar: a
+     * shadow on each edge that hides more of the table tells there is more
+     * to scroll. The covers, in the card's colour, scroll with the table and
+     * hide the shadow of an end once it is reached.
+     */
+    @supports (-moz-appearance: none) or (-webkit-touch-callout: none) {
+        .overflow-x-auto:has(> table) {
+            scrollbar-color: var(--color-secondary) var(--color-base-200);
+            background:
+                linear-gradient(to right, var(--color-base-100) 30%, transparent) left center / 2.5rem 100% no-repeat local,
+                linear-gradient(to left, var(--color-base-100) 30%, transparent) right center / 2.5rem 100% no-repeat local,
+                radial-gradient(farthest-side at 0 50%, color-mix(in oklab, var(--color-base-content) 25%, transparent), transparent) left center / 0.875rem 100% no-repeat scroll,
+                radial-gradient(farthest-side at 100% 50%, color-mix(in oklab, var(--color-base-content) 25%, transparent), transparent) right center / 0.875rem 100% no-repeat scroll;
+        }
     }
 }
 

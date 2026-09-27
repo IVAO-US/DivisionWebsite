@@ -1,5 +1,6 @@
 <?php
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Locked;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -18,19 +19,13 @@ class extends Component {
 
     public string $search = '';
 
-    // Current user for protection  
-    public int $currentUserVid;
-    public ?Admin $currentUserAdmin = null;
-
+    /*
+     * The acting administrator is read from the session on every request,
+     * never from a public property: the browser sends those back
+     */
     private function checkPermissions(): bool
     {
-        return $this->currentUserAdmin?->canString('admins_edit_permissions') ?? false;
-    }
-
-    public function mount(): void
-    {
-        $this->currentUserVid = Auth::user()->vid;
-        $this->currentUserAdmin = Admin::where('vid', $this->currentUserVid)->first();
+        return Admin::where('vid', Auth::user()->vid)->first()?->canString('admins_edit_permissions') ?? false;
     }
     
     // Modal properties
@@ -38,6 +33,8 @@ class extends Component {
     public int|string $selectedVid = '';
     public string $selectedName = '';
     public string $userSearch = '';
+    // Set by the server only: locked, a forged update is refused with a 419
+    #[Locked]
     public bool $isManualEntry = false;
     
     // Add new admin

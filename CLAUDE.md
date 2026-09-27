@@ -69,7 +69,16 @@ touch database/database.sqlite && php artisan migrate --force
 
 `tests/Pest.php` has `RefreshDatabase` **disabled**, so tests run against whatever DB
 the connection points to and expect the tables to already exist (the homepage test hits
-the DB via `HeadlineService`/`AppSetting`). Migrate before testing.
+the DB via `HeadlineService`/`AppSetting`). Migrate before testing. `phpunit.xml` sets
+`DB_DATABASE=testing` without forcing it, so with SQLite export the absolute path in the
+shell, which wins over it:
+`DB_CONNECTION=sqlite DB_DATABASE=$PWD/database/database.sqlite php artisan test`.
+
+Test files that write wrap each test in `DatabaseTransactions` (nothing is dropped) and
+build their accounts with the helpers of `tests/Pest.php` (`createMember()`, `createAdmin()`).
+`componentSnapshot()` and `livewireRoundTrip()` replay a component's snapshot through the
+real Livewire update endpoint, as a forged request would; they render pages
+`withoutVite()`, so they need no asset build (the homepage test still does).
 
 ## Architecture
 
@@ -85,7 +94,7 @@ the DB via `HeadlineService`/`AppSetting`). Migrate before testing.
   - single-argument pages put the arg last; multi-arg pages use query strings.
 - Auth is IVAO OAuth: `/login` redirects into `IvaoController@handleCallback`
   (`/auth/ivao/callback`). Requires `IVAO_CLIENT_ID`/`IVAO_CLIENT_SECRET`/`OPENID_URL`.
-- Middleware groups: `throttle`, `auth`, then `admin`, then `admin.permissions:<perm>`.
+- Middleware groups: `throttle:pages`, `auth`, then `admin`, then `admin.permissions:<perm>`.
 
 ### Livewire SFC pages (`resources/views/pages/**`)
 
@@ -114,6 +123,23 @@ set in `config/livewire.php`). Reusable Blade components are in `resources/views
   when the page loads, so an administrator who loses a permission loses the page's actions at
   once. A component action is only as protected as the route of the page it is mounted on:
   keep new admin pages behind `admin` + `admin.permissions:<perm>` in `routes/web.php`.
+- **Privilege ceiling**: an administrator acts only within the permissions they hold
+  (`AdminPermission::implies()`: a category holds its granular permissions, `*` holds all).
+  - They grant or withdraw only those, and edit or remove another administrator only when
+    they hold every permission of that administrator, before and after the change.
+  - Super administrators are never limited. An administrator without permissions stays
+    within everyone's reach, and nobody edits or removes their own record.
+  - `App\Services\AdminService` is the only place that knows the rule (`grantable()`,
+    `withinRights()`, `canActOnAdmin()`) and the only way to write an admin's permissions
+    or remove an admin (`updatePermissions()`, `removeAdmin()`, which check again).
+  - `admins-list-table` badges an administrator beyond reach ("Beyond your rights", no
+    buttons) and disables the permissions the acting one lacks.
+  - A request beyond the ceiling can only be forged: it gets an `AccessDeniedHttpException`,
+    i.e. the site's 403 page. Laravel does not log it.
+  - The acting administrator is read from the session on every request, never from a
+    public property: a replayed snapshot carries its author's state.
+  - GDPR erasure refuses every administrator: remove the admin record first, which the
+    ceiling guards.
 
 ### Two databases
 
@@ -131,6 +157,7 @@ set in `config/livewire.php`). Reusable Blade components are in `resources/views
 - `SitemapService` — builds `sitemap.xml` manually via spatie `Sitemap::create()` /
   `Url::create()`. Served live at `/sitemap.xml` and regenerated daily to `public/`.
   `public/sitemap.xml` is a generated artifact — do not commit a dev copy.
+- `AdminService` — the privilege ceiling of the admin area (see "Admin permission system").
 - `SeoService`, `RecurringEventService`, plus traits `HasSEO`, `BreadcrumbsTrait`.
 
 ### Scheduled tasks & middleware (`bootstrap/app.php`)
@@ -139,16 +166,50 @@ set in `config/livewire.php`). Reusable Blade components are in `resources/views
   (`withoutOverlapping`, `onOneServer`, `runInBackground`).
 - Global middleware: `App\Http\Middleware\SecurityHeaders` (appended to the web stack).
 - `web` group: `App\Http\Middleware\BlockUnusedVendorRoutes` is prepended and answers 404 on
-  the routes MaryUI registers itself and the site does not use (`mary.upload`,
-  `mary.spotlight`, `mary.toogle-sidebar`), before the session starts. `mary.upload` would
-  otherwise store any file any signed-in user (any IVAO member, through the SSO) sends. To
-  use one of them, protect its route first (validation, permission, throttle), then remove
-  its name from `BlockUnusedVendorRoutes::ROUTES`.
-- No `trustProxies()`, on purpose: behind Cloudflare and the Plesk host's local proxy, PHP
-  sees `127.0.0.1`, so every per-IP `throttle:` limit is one counter shared by all guests,
-  and the Livewire update endpoint has no throttle for that reason. Trusting the proxies
-  would store visitor IP addresses in the `sessions` table, which the privacy policy does
-  not cover. Read the comment in `bootstrap/app.php` before changing either.
+  the routes MaryUI and Livewire register themselves and the site does not use
+  (`mary.upload`, `mary.spotlight`, `mary.toogle-sidebar`, `livewire.upload-file`,
+  `livewire.preview-file`), before the session starts. `mary.upload` would otherwise store
+  any file any signed-in user (any IVAO member, through the SSO) sends. To use one of them,
+  protect its route first (validation, permission, throttle), then remove its name from
+  `BlockUnusedVendorRoutes::ROUTES`.
+- **Rate limiting**: named limiters, defined in `AppServiceProvider::boot()`, each with a
+  counter of its own, keyed by account (signed in) or visitor address (guests, see
+  "Trusted proxies"):
+
+  | Limiter | Budget | Routes |
+  |---|---|---|
+  | `pages` | 60 / min | every page of `routes/web.php` |
+  | `seo-files` | 100 / min | `robots.txt`, `sitemap.xml` |
+  | `livewire-update` | 600 / min | Livewire's update endpoint, declared in `AppServiceProvider::register()` |
+
+  - A guest whose address is unknown is not limited: one counter for every guest would let
+    a single client turn them all away (`AppServiceProvider::perVisitor()`).
+  - The cache keeps a hash of the address keyed with the app key, never the address itself.
+  - `livewire-update` leaves room for the homepage carousels, which poll every four
+    seconds (up to 60 requests a minute per open tab): past the budget, Livewire shows the
+    429 page in a modal.
+  - Livewire's own lockout on invalid checksums (10 per address in 10 minutes, then a 429
+    on every Livewire request from it, the raw address as cache key) is off: a
+    `checksum.fail` listener answers the 419 before Livewire counts the failure, and
+    `livewire-update` bounds the sender.
+  - Livewire's upload endpoint is blocked (404), as no component uploads. A site that adds
+    an upload removes it from `BlockUnusedVendorRoutes::ROUTES` and gives it a named limiter
+    through `livewire.temporary_file_upload.middleware`.
+- **Trusted proxies**: Cloudflare and the Plesk host's local proxy, for `X-Forwarded-For`
+  only (`bootstrap/app.php`, `App\Http\ClientAddress`). PHP sees `127.0.0.1`; the visitor's
+  address is the right-most one of the header that no trusted proxy added.
+  - Never `'*'`, nor the other `X-Forwarded-*` headers: a client reaching PHP directly
+    could pick its address, host or scheme.
+  - `ClientAddress::of()` gives null when the chain names no visitor (no header): such
+    requests are not limited. Cloudflare's own addresses (a Worker) count like any other.
+  - `ClientAddress::CLOUDFLARE` copies https://www.cloudflare.com/ips/: update it when
+    Cloudflare changes its ranges, or the visitors behind a new range share a counter.
+  - The `sessions` table stores no IP address (`App\Session\DatabaseSessionHandler`,
+    registered in `AppServiceProvider`): the privacy policy does not cover them.
+  - Read the comment in `bootstrap/app.php` before changing any of this.
+- **Error log**: the same error is logged at most ten times a minute for each place it is
+  thrown from (`$exceptions->throttle()`): the log is one file (`LOG_STACK=single`), which
+  a client repeating a request that fails would otherwise fill.
 - Health endpoint at `/laravel-health`.
 
 ## Conventions & gotchas
@@ -174,11 +235,57 @@ set in `config/livewire.php`). Reusable Blade components are in `resources/views
   (e.g. `class="[--modal-box-p:1rem]"`), otherwise the `X` and the action-bar background
   shift by the delta. Note this also overrides `max-h-*` utilities passed in `box-class`
   (`max-h-9/10` → the safe area), which is intended.
+- **Wide tables keep a visible scrollbar** (`app.css`, `.overflow-x-auto:has(> table)`: every
+  `<x-table>` and the GDPR logs). A themed `::-webkit-scrollbar` is never an overlay on
+  Chrome, Edge, Safari on macOS and Chrome on Android; Firefox and iOS only overlay theirs,
+  so an edge shadow tells there is more to scroll.
+  - The box resets `scrollbar-color` to `auto`: Chrome ignores the pseudo-elements once an
+    element has one, and every element inherits the one of `:root`.
+  - A table of your own gets the same when its `<table>` sits right inside an
+    `.overflow-x-auto` box.
+  - Headless Playwright hides every scrollbar (`--hide-scrollbars`): pass
+    `ignoreDefaultArgs: ['--hide-scrollbars']` to check one.
 - **MaryUI toasts render `title`/`description` with Alpine `x-html`**: wrap every user- or
   database-provided value in `e()` (member names, tour/VA fields, exception messages), e.g.
   `$this->success("Tour '" . e($tourTitle) . "' deleted successfully")`. Member names come
   from the IVAO profile, so any IVAO member chooses them, and the CSP keeps `'unsafe-inline'`
   for Livewire/Alpine: escaping is the XSS defence.
+- **A Livewire public property that no `wire:model` writes still receives forged updates**,
+  deep paths included (`user.name`). Give it `#[Locked]` **and** a default, as `auth-button`,
+  the navbar, the transfer and GCA pages and the admin dashboard, manage and GDPR pages do
+  (`#[Locked] public ?User $user = null;`): Livewire then refuses the write with a 419
+  before reading the property. The acting administrator is never a public property: read
+  it from the session (`AdminService`, `admins-list-table`, the manage page).
+  - Typed with no default, it stays uninitialized for a visitor, and reading it is a fatal
+    error (500). Nullable alone lets a forged deep write reach Livewire 4.4.6, which has no
+    synthesizer to write into `null`: that ends in the unlogged 419 below, whereas
+    `#[Locked]` refuses the write before anything is read.
+  - Let the template test the property (`@if ($user)`), not `@auth`: a visitor's snapshot
+    replayed in a session signed in since holds no account.
+  - `#[Locked]` does not cover `calls`: the parameters of an action or of an `#[On]`
+    listener come from the browser and are checked like any input.
+- **A forged Livewire request gets an unlogged 419**, as a corrupt snapshot does
+  (`App\Http\ForgedLivewireRequest`, rendered and kept out of the log in `bootstrap/app.php`).
+  - Forged means that Livewire, or the container, refused the request's updates or calls
+    before any code of the site ran: a deep write into a scalar (`search.x`), an unknown or
+    locked property, a method that is no action, an event nobody listens to, a parameter
+    missing or of the wrong type. Livewire 4.4.6 answered most of them with a logged 500.
+  - An error of the site's own code stays a logged 500, even on a forged parameter, and so
+    does an error while rendering; debug mode shows and logs everything.
+  - The classification follows Livewire's call stack (`HandleComponents`): after a Livewire
+    upgrade, run `ForgedLivewireRequestTest`.
+- **No action's return value reaches the browser**: Livewire returns the value of every
+  method a request calls, and any public method can be called (`with()`, a legacy
+  `get*Property()`, a public helper), which handed out the models they return. A `response`
+  listener in `AppServiceProvider` replaces them with `null`: `$wire.method().then(…)` and
+  `#[Json]` methods get `null`, so exempt them there before using one. Redirects and
+  downloads have effects of their own and still work.
+- **An unnamed `throttle:N,1` counts under one key per account (per IP address for a
+  guest), whatever the route**: every unnamed limit shares that counter and compares it to
+  its own maximum, so two groups at 60 and 100 spend each other's budget.
+  - A limit that must count alone takes a named limiter (`RateLimiter::for()`) **with
+    `->by()`**: without it, the key is empty and one counter serves everybody.
+  - A route that names a limiter nobody defined answers 500 (`MissingRateLimiterException`).
 - **Fonts are self-hosted**: Poppins and Nunito Sans are Google's own WOFF2 files and CSS
   (`resources/fonts/`, `resources/css/{poppins,nunito-sans}.css`, imported at the top of
   `app.css` and bundled by Vite); the error pages use Dosis from
@@ -186,6 +293,11 @@ set in `config/livewire.php`). Reusable Blade components are in `resources/views
   never load fonts, stylesheets or scripts from a third-party host.
 - **daisyUI themes** are defined inline in `app.css`. If you rename a theme, also update
   `resources/js/theme-store.js` and `resources/views/partials/theme-init-script.blade.php`.
+  - Mind the `;` of every custom property: a missing one swallows the next declaration
+    into the value (the light theme's `--color-base-content` was invalid that way).
+  - Leave `--btn-color` to daisyUI: set on a theme, it becomes the background of every
+    default button (white on white in dark mode), and `.btn-outline` already falls back to
+    `--color-base-content`.
 - **Icons** use the `phosphor.*` prefix (blade-phosphor-icons), e.g. `phosphor.shield-warning`.
 - No `api/*` routes exist yet; `bootstrap/app.php` still registers the L13 JSON-exception
   default so any future API renders JSON errors.

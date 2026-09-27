@@ -1,6 +1,7 @@
 <?php
 
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Locked;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -25,12 +26,21 @@ class extends Component {
     // Active tab (Mary 2.9 drives tab selection via wire:model; default = first tab)
     public string $selectedTab = 'deletion-tab';
 
+    /*
+     * The selected member, the search results, the control key and the page
+     * size are set by the server only: locked, a forged update is refused
+     * with a 419. A forged control key would pass the confirmation.
+     */
+
     // User search and selection
     public string $userSearch = '';
+    #[Locked]
     public ?User $selectedUser = null;
+    #[Locked]
     public array $searchResults = [];
     
     // Control key management
+    #[Locked]
     public string $controlKey = '';
     public string $controlKeyInput = '';
     
@@ -40,6 +50,7 @@ class extends Component {
     public string $deletionReason = '';
     
     // Deletion logs
+    #[Locked]
     public int $perPage = 10;
     
     public function mount(): void
