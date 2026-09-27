@@ -10,7 +10,7 @@ trait BreadcrumbsTrait
      * 
      * @return array
      */
-    public function getBreadcrumbs(): array
+    protected function getBreadcrumbs(): array
     {
         // Initialize with Home breadcrumb always present
         $breadcrumbs = [
