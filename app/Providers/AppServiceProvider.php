@@ -55,7 +55,9 @@ class AppServiceProvider extends ServiceProvider
          * (HandleComponents::callMethods), so Blade::render() is never
          * reached; a component's own $this->success(...) is a direct PHP call
          * and does not pass here. MethodNotFoundException is the refusal of an
-         * unknown method: an unlogged 419 outside debug.
+         * unknown method: an unlogged 419 outside debug. For the calls this
+         * guard cannot see (a component relaying a browser value to an icon),
+         * App\Support\Toast, used instead of MaryUI's trait, checks the icon.
          */
         Livewire::listen('call', function (Component $component, string $method) {
             if (in_array($method, ['toast', 'success', 'warning', 'error', 'info'], true)

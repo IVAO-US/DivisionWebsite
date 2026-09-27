@@ -102,7 +102,7 @@ Each page is a single `.blade.php` file with an inline component class:
 
 ```php
 new #[Layout('layouts.homepage')] class extends Component {
-    use Toast, HasSEO;   // MaryUI toasts + custom SEO trait
+    use Toast, HasSEO;   // App\Support\Toast (MaryUI's, icon checked) + custom SEO trait
     public function mount(): void { $this->setSEOWithBreadcrumbs(...); }
 }
 ```
@@ -274,13 +274,21 @@ set in `config/livewire.php`). Reusable Blade components are in `resources/views
     does an error while rendering; debug mode shows and logs everything.
   - The classification follows Livewire's call stack (`HandleComponents`): after a Livewire
     upgrade, run `ForgedLivewireRequestTest`.
-- **The browser may not call MaryUI's toast methods**: `Mary\Traits\Toast` adds `toast()`,
-  `success()`, `warning()`, `error()` and `info()` as public methods, and `toast()` compiles its
-  icon with `Blade::render()`, so a forged icon was a Blade template run on the server (from
-  the homepage, without an account). A `call` listener in `AppServiceProvider` refuses them
-  from the browser (`MethodNotFoundException`: an unlogged 419); `$this->success(...)` from an
-  action is a direct call and still works. Pass only constant icons, never one from input.
-  Should MaryUI add a method to the trait, add it to the listener's list.
+- **A toast's icon is a Blade template to MaryUI**: `toast()` compiles it with
+  `Blade::render("<x-mary-icon name='".$icon."' />")`, so an icon from the browser runs on the
+  server. Two layers keep it out:
+  - the browser may not call `toast()`, `success()`, `warning()`, `error()` or `info()`, which
+    MaryUI's trait makes public: a `call` listener in `AppServiceProvider` refuses them
+    (`MethodNotFoundException`: an unlogged 419), while `$this->success(...)` from an action
+    is a direct call and still works;
+  - every component uses **`App\Support\Toast`, never `Mary\Traits\Toast`**: its `toast()`,
+    which the four helpers end in, replaces an icon that is no plain name (letters, digits,
+    `.`, `-`, `_`) with MaryUI's default one. It covers what the guard cannot see: a
+    component relaying a browser value to an icon from a listener or an action.
+    `ToastIconSanitizerTest` fails if a view or `app/` class imports MaryUI's trait.
+  - Pass constant icons. A component that takes one from the browser checks it against a
+    list of its own: the sanitizer is a safety net, not a licence.
+  - Should MaryUI add a method to the trait, add it to the listener's list.
 - **Keep public only what the browser calls**: every public method of a component, trait
   methods included (`HasSEO`, `BreadcrumbsTrait`, MaryUI's traits), is an action the browser
   can call. A helper only the class itself calls is `protected`, as `getBreadcrumbs()` is.

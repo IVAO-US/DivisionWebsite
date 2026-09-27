@@ -4,7 +4,7 @@ use Livewire\Attributes\Title;
 
 use Livewire\Component;
 
-use Mary\Traits\Toast;
+use App\Support\Toast;
 use App\Traits\HasSEO;
 
 new 

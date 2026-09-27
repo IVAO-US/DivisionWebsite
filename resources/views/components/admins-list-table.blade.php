@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Builder;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
-use Mary\Traits\Toast;
+use App\Support\Toast;
 
 new class extends Component {
     use Toast;
