@@ -274,6 +274,16 @@ set in `config/livewire.php`). Reusable Blade components are in `resources/views
     does an error while rendering; debug mode shows and logs everything.
   - The classification follows Livewire's call stack (`HandleComponents`): after a Livewire
     upgrade, run `ForgedLivewireRequestTest`.
+- **The browser may not call MaryUI's toast methods**: `Mary\Traits\Toast` adds `toast()`,
+  `success()`, `warning()`, `error()` and `info()` as public methods, and `toast()` compiles its
+  icon with `Blade::render()`, so a forged icon was a Blade template run on the server (from
+  the homepage, without an account). A `call` listener in `AppServiceProvider` refuses them
+  from the browser (`MethodNotFoundException`: an unlogged 419); `$this->success(...)` from an
+  action is a direct call and still works. Pass only constant icons, never one from input.
+  Should MaryUI add a method to the trait, add it to the listener's list.
+- **Keep public only what the browser calls**: every public method of a component, trait
+  methods included (`HasSEO`, `BreadcrumbsTrait`, MaryUI's traits), is an action the browser
+  can call. A helper only the class itself calls is `protected`, as `getBreadcrumbs()` is.
 - **No action's return value reaches the browser**: Livewire returns the value of every
   method a request calls, and any public method can be called (`with()`, a legacy
   `get*Property()`, a public helper), which handed out the models they return. A `response`
