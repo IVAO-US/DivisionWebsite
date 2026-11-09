@@ -24,14 +24,21 @@ use Symfony\Component\HttpFoundation\Response;
  * - mary.toogle-sidebar writes to the session: one new session row per
  *   request without a cookie.
  *
- * The site has no editor or markdown upload, no spotlight and no collapsible
- * MaryUI sidebar. This middleware sits at the front of the `web` group, so
- * these paths are answered like any unknown URL, before a session is started
- * or a CSRF token checked.
+ * Livewire registers a file upload and a file preview route of its own
+ * (livewire.upload-file, livewire.preview-file). They only accept the signed
+ * URLs a component using WithFileUploads hands out; the site has none, so
+ * they only answered 401, after starting a session.
+ *
+ * The site has no editor or markdown upload, no spotlight, no collapsible
+ * MaryUI sidebar and no file input. This middleware sits at the front of the
+ * `web` group, so these paths are answered like any unknown URL, before a
+ * session is started or a CSRF token checked.
  *
  * To use one of these features, protect its route before removing its name
  * below: the vendor upload trusts the disk and folder sent by the browser,
- * and <x-spotlight> can be given a `url` of the site's own instead.
+ * <x-spotlight> can be given a `url` of the site's own instead, and a
+ * Livewire upload takes a named limiter through
+ * livewire.temporary_file_upload.middleware.
  */
 class BlockUnusedVendorRoutes
 {
@@ -42,6 +49,8 @@ class BlockUnusedVendorRoutes
         'mary.upload',
         'mary.spotlight',
         'mary.toogle-sidebar',
+        'livewire.upload-file',
+        'livewire.preview-file',
     ];
 
     public function handle(Request $request, Closure $next): Response

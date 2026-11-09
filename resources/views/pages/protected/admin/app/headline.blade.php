@@ -5,7 +5,7 @@ use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\Attributes\Validate;
 
-use Mary\Traits\Toast;
+use App\Support\Toast;
 use Illuminate\Support\Facades\Auth;
 
 use App\Models\Admin;

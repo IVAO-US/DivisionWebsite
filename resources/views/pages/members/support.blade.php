@@ -5,7 +5,7 @@ use Livewire\Attributes\Rule;
 
 use Livewire\Component;
 
-use Mary\Traits\Toast;
+use App\Support\Toast;
 use App\Traits\HasSEO;
 
 new 

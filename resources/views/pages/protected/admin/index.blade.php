@@ -1,9 +1,10 @@
 <?php
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Locked;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
-use Mary\Traits\Toast;
+use App\Support\Toast;
 use Illuminate\Support\Facades\Auth;
 use App\Enums\AdminPermission;
 use App\Models\User;
@@ -15,8 +16,15 @@ new
 class extends Component {
     use Toast;
     
+    /*
+     * Set by mount() only: locked, a forged update is refused with a 419
+     * (see auth-button)
+     */
+    #[Locked]
     public ?User $user = null;
+    #[Locked]
     public ?Admin $admin = null;
+    #[Locked]
     public array $categorizedPermissions = [];
     
     public function mount(): void

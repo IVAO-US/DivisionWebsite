@@ -14,7 +14,7 @@ use App\Models\UserSetting;
 use App\Enums\ATCRating;
 use App\Enums\PilotRating;
 
-use Mary\Traits\Toast;
+use App\Support\Toast;
 
 new 
 #[Layout('layouts.app')]

@@ -1,6 +1,7 @@
 <?php
 
 use Livewire\Component;
+use Livewire\Attributes\Locked;
 
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -16,8 +17,14 @@ new class extends Component
         $this->dispatch('logMobileMenuState', ['state' => $this->mobileMenuOpen]);
     }
 
-    /* mount() */
+    /*
+     * mount(). The account and its admin flag are set by the server only:
+     * locked, a forged update gets Livewire's 419 instead of a 500 (see
+     * auth-button)
+     */
+    #[Locked]
     public ?User $user = null;
+    #[Locked]
     public bool $isAdmin = false;
     public function mount() : void 
     {

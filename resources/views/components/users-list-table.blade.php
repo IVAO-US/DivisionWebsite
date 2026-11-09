@@ -32,13 +32,13 @@ new class extends Component {
 
     public function selectUser(int $vid, string $name): void
     {
-        $this->dispatch('user-selected', vid: $vid, name: $name)->to('protected.admin.manage');;
+        $this->dispatch('user-selected', vid: $vid, name: $name)->to('pages::protected.admin.manage');
     }
 
     public function transferVidToManualEntry(): void
     {
         if (is_numeric($this->search)) {
-            $this->dispatch('vid-transfer', vid: $this->search)->to('protected.admin.manage');
+            $this->dispatch('vid-transfer', vid: $this->search)->to('pages::protected.admin.manage');
         }
     }
 

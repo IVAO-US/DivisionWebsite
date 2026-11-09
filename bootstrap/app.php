@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -7,6 +8,8 @@ use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Http\Request;
 
 use App\Services\SitemapService;
+use App\Http\ClientAddress;
+use App\Http\ForgedLivewireRequest;
 use App\Http\Middleware\SecurityHeaders;
 use App\Http\Middleware\BlockUnusedVendorRoutes;
 
@@ -39,26 +42,25 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->append(SecurityHeaders::class);
 
         /*
-         * No trustProxies(), on purpose.
+         * Trust Cloudflare and the host's local proxy, for the client address
+         * only.
          *
          * The site is reached through Cloudflare, then the local proxy of the
-         * Plesk host, and PHP receives that proxy's address as REMOTE_ADDR
-         * (127.0.0.1 in the sessions table, checked on 2026-09-23). Every
-         * per-IP limit of routes/web.php (throttle:60,1, throttle:100,1) is
-         * therefore one counter shared by all guests; signed-in members are
-         * counted per account. For the same reason the Livewire update
-         * endpoint carries no throttle: it would be one counter for every
-         * guest's polls and clicks.
+         * Plesk host: PHP receives 127.0.0.1 as REMOTE_ADDR (the sessions
+         * table, checked on 2026-09-23) and the visitor's address in
+         * X-Forwarded-For. Trusting these proxies for that header gives every
+         * visitor a rate-limit counter of their own (AppServiceProvider),
+         * instead of one counter for all guests that a single client could
+         * exhaust. Never '*', nor the other X-Forwarded-* headers: anyone who
+         * reaches PHP directly could then pick their address, host or scheme.
          *
-         * Trusting the proxies would give each visitor their own counter, but
-         * Laravel would then store every visitor's IP address in the sessions
-         * table, which the privacy policy does not cover. Should that change,
-         * trust the local proxy and Cloudflare only, and only for the client
-         * address: $middleware->trustProxies(at: ['127.0.0.1', '::1', ...the
-         * ranges of https://www.cloudflare.com/ips/], headers:
-         * Request::HEADER_X_FORWARDED_FOR) - never '*', which lets anyone who
-         * reaches PHP directly pick their IP with X-Forwarded-For.
+         * Should the local proxy stop sending the header, the visitor's
+         * address is unknown (ClientAddress::of()) and guests are not limited
+         * rather than sharing one counter. Laravel would store each visitor's
+         * address in the sessions table, which the privacy policy does not
+         * cover: App\Session\DatabaseSessionHandler stores none.
          */
+        $middleware->trustProxies(at: ClientAddress::PROXIES, headers: Request::HEADER_X_FORWARDED_FOR);
 
         /*
          * Answer 404 on the vendor routes the site does not use.
@@ -66,9 +68,11 @@ return Application::configure(basePath: dirname(__DIR__))
          * MaryUI registers an upload, a spotlight and a sidebar-toggle route
          * itself, outside the throttle groups of routes/web.php, and its
          * upload stores whatever file a signed-in user sends - here, any IVAO
-         * member who logs in through the SSO. Prepended to the `web` group,
-         * the check runs before the session starts, so these paths create no
-         * session row either (see the middleware to enable one of them).
+         * member who logs in through the SSO. Livewire registers a file upload
+         * and preview route, of no use to a site without a file input.
+         * Prepended to the `web` group, the check runs before the session
+         * starts, so these paths create no session row either (see the
+         * middleware to enable one of them).
          */
         $middleware->web(prepend: [
             BlockUnusedVendorRoutes::class,
@@ -83,4 +87,19 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withExceptions(function (Exceptions $exceptions) {
         // Render exceptions as JSON for API routes (Laravel 13 skeleton default)
         $exceptions->shouldRenderJsonWhen(fn (Request $request) => $request->is('api/*') || $request->expectsJson());
+
+        /*
+         * Log a repeated error at most ten times a minute for each place it
+         * is thrown from. The log is one file (LOG_STACK=single), which a
+         * client repeating a request that fails would otherwise fill.
+         */
+        $exceptions->throttle(fn (Throwable $e) => Limit::perMinute(10)->by($e::class.'@'.$e->getFile().':'.$e->getLine()));
+
+        /*
+         * A forged Livewire request (ForgedLivewireRequest) gets the 419
+         * Livewire gives a corrupt snapshot, and is not logged: only its
+         * sender sees it.
+         */
+        $exceptions->dontReportWhen(fn (Throwable $e) => ForgedLivewireRequest::refused($e));
+        $exceptions->render(fn (Throwable $e) => ForgedLivewireRequest::refused($e) ? response('', 419) : null);
     })->create();

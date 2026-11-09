@@ -7,7 +7,7 @@ use App\Models\VirtualAirline;
 use App\Models\Admin;
 use Illuminate\Support\Facades\Auth;
 
-use Mary\Traits\Toast;
+use App\Support\Toast;
 
 
 new 
