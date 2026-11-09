@@ -40,6 +40,7 @@ new class extends Component
                     ['title' => 'Staff', 'link' => 'https://www.ivao.aero/staff/division.asp?Id=US'],
                     ['title' => 'LiveTrack', 'link' => 'https://livetrack.us.ivao.aero/'],
                     ['title' => 'Division Transfer', 'route' => 'division.transfer'],
+                    ['title' => 'Donate', 'link' => 'https://www.ivao.aero/hq/donate.asp'],
                 ]
             ],
             [
